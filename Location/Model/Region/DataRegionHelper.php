@@ -29,6 +29,7 @@ class DataRegionHelper
         HydratorInterface $hydrator
     ) {
         $this->dataObjectHelper = $dataObjectHelper;
+        $this->hydrator = $hydrator;
     }
 
     /**
