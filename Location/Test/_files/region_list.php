@@ -2,13 +2,13 @@
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\Data\RegionInterfaceFactory;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\Location\Model\Region\RegionHydrator;
+use Engine\Location\Model\Region\DataRegionHelper;
 use Magento\TestFramework\Helper\Bootstrap;
 
 /** @var RegionInterfaceFactory $regionFactory */
 $regionFactory = Bootstrap::getObjectManager()->get(RegionInterfaceFactory::class);
-/** @var RegionHydrator $regionHydrator */
-$regionHydrator = Bootstrap::getObjectManager()->get(RegionHydrator::class);
+/** @var DataRegionHelper $dataRegionHelper */
+$dataRegionHelper = Bootstrap::getObjectManager()->get(DataRegionHelper::class);
 /** @var RegionRepositoryInterface $regionRepository */
 $regionRepository = Bootstrap::getObjectManager()->get(RegionRepositoryInterface::class);
 
@@ -32,6 +32,6 @@ $regions = [
 foreach ($regions as $regionData) {
     /** @var RegionInterface $region */
     $region = $regionFactory->create();
-    $region = $regionHydrator->hydrate($region, $regionData);
+    $region = $dataRegionHelper->populateWithArray($region, $regionData);
     $regionRepository->save($region);
 }

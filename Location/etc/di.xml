@@ -72,4 +72,11 @@
             </argument>
         </arguments>
     </virtualType>
+    <type name="Engine\Location\Model\Region\RegionPerStoreFieldsProvider">
+        <arguments>
+            <argument name="fields" xsi:type="array">
+                <item name="0" xsi:type="string">title</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

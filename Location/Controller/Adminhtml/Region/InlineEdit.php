@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Location\Controller\Adminhtml\Region;
 
-use Engine\Location\Model\Region\RegionHydrator;
+use Engine\Location\Model\Region\DataRegionHelper;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -21,9 +21,9 @@ class InlineEdit extends Action
     const ADMIN_RESOURCE = 'Engine_Location::region';
 
     /**
-     * @var RegionHydrator
+     * @var DataRegionHelper
      */
-    private $regionHydrator;
+    private $dataRegionHelper;
 
     /**
      * @var RegionRepositoryInterface
@@ -32,16 +32,16 @@ class InlineEdit extends Action
 
     /**
      * @param Context $context
-     * @param RegionHydrator $regionHydrator
+     * @param DataRegionHelper $dataRegionHelper
      * @param RegionRepositoryInterface $regionRepository
      */
     public function __construct(
         Context $context,
-        RegionHydrator $regionHydrator,
+        DataRegionHelper $dataRegionHelper,
         RegionRepositoryInterface $regionRepository
     ) {
         parent::__construct($context);
-        $this->regionHydrator = $regionHydrator;
+        $this->dataRegionHelper = $dataRegionHelper;
         $this->regionRepository = $regionRepository;
     }
 
@@ -57,7 +57,7 @@ class InlineEdit extends Action
             foreach ($requestData as $itemData) {
                 try {
                     $region = $this->regionRepository->get($itemData['region_id']);
-                    $this->regionHydrator->hydrate($region, $itemData);
+                    $this->dataRegionHelper->populateWithArray($region, $itemData);
                     $this->regionRepository->save($region);
                 } catch (NoSuchEntityException $e) {
                     $errorMessages[] = __('[ID: %1] The region no exists.', $itemData['region_id']);

@@ -3,12 +3,12 @@ namespace Engine\Location\Model\Region;
 
 use Engine\Location\Api\Data\RegionInterface;
 use Magento\Framework\Api\DataObjectHelper;
+use Magento\Framework\EntityManager\HydratorInterface;
 
 /**
- * This class has been created only as extension point for plugins
  * @author  naydav <valeriy.nayda@gmail.com>
  */
-class RegionHydrator
+class DataRegionHelper
 {
     /**
      * @var DataObjectHelper
@@ -16,10 +16,18 @@ class RegionHydrator
     private $dataObjectHelper;
 
     /**
-     * @param DataObjectHelper $dataObjectHelper
+     * @var HydratorInterface
      */
-    public function __construct(DataObjectHelper $dataObjectHelper)
-    {
+    private $hydrator;
+
+    /**
+     * @param DataObjectHelper $dataObjectHelper
+     * @param HydratorInterface $hydrator
+     */
+    public function __construct(
+        DataObjectHelper $dataObjectHelper,
+        HydratorInterface $hydrator
+    ) {
         $this->dataObjectHelper = $dataObjectHelper;
     }
 
@@ -28,9 +36,19 @@ class RegionHydrator
      * @param array $data
      * @return RegionInterface
      */
-    public function hydrate(RegionInterface $region, array $data)
+    public function populateWithArray(RegionInterface $region, array $data)
     {
         $this->dataObjectHelper->populateWithArray($region, $data, RegionInterface::class);
         return $region;
+    }
+
+    /**
+     * @param RegionInterface $region
+     * @return array
+     */
+    public function hydrate(RegionInterface $region)
+    {
+        $data = $this->hydrator->extract($region);
+        return $data;
     }
 }

@@ -3,6 +3,8 @@ namespace Engine\Location\Ui\DataProvider;
 
 use Engine\Backend\Api\StoreContextInterface;
 use Engine\Backend\Api\Ui\DataProvider\StoreMetaModifierInterface;
+use Engine\Location\Model\Region\DataRegionHelper;
+use Engine\Location\Model\Region\RegionPerStoreFieldsProvider;
 use Engine\Location\Model\Region\RegionPerStoreLoader;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
@@ -29,11 +31,6 @@ class RegionDataProvider extends DataProvider
     private $regionPerStoreLoader;
 
     /**
-     * @var array
-     */
-    private $perScopeFields;
-
-    /**
      * @var StoreContextInterface
      */
     private $storeContext;
@@ -42,6 +39,16 @@ class RegionDataProvider extends DataProvider
      * @var StoreMetaModifierInterface
      */
     private $storeMetaModifier;
+
+    /**
+     * @var RegionPerStoreFieldsProvider
+     */
+    private $regionPerStoreFieldsProvider;
+
+    /**
+     * @var DataRegionHelper
+     */
+    private $dataRegionHelper;
 
     /**
      * @param string $name
@@ -56,9 +63,10 @@ class RegionDataProvider extends DataProvider
      * @param Registry $registry
      * @param StoreContextInterface $storeContext
      * @param StoreMetaModifierInterface $storeMetaModifier
+     * @param RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider
+     * @param DataRegionHelper $dataRegionHelper
      * @param array $meta
      * @param array $data
-     * @param array $perScopeFields
      */
     public function __construct(
         $name,
@@ -73,9 +81,10 @@ class RegionDataProvider extends DataProvider
         Registry $registry,
         StoreContextInterface $storeContext,
         StoreMetaModifierInterface $storeMetaModifier,
+        RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider,
+        DataRegionHelper $dataRegionHelper,
         array $meta = [],
-        array $data = [],
-        array $perScopeFields = ['title']
+        array $data = []
     ) {
         parent::__construct(
             $name,
@@ -92,7 +101,8 @@ class RegionDataProvider extends DataProvider
         $this->regionPerStoreLoader = $regionPerStoreLoader;
         $this->storeContext = $storeContext;
         $this->storeMetaModifier = $storeMetaModifier;
-        $this->perScopeFields = $perScopeFields;
+        $this->regionPerStoreFieldsProvider = $regionPerStoreFieldsProvider;
+        $this->dataRegionHelper = $dataRegionHelper;
     }
 
     /**
@@ -151,13 +161,16 @@ class RegionDataProvider extends DataProvider
             $regionId = $this->request->getParam('region_id');
             if (null !== $regionId) {
                 $regionInGlobalScope = $this->regionPerStoreLoader->load($regionId, Store::DEFAULT_STORE_ID);
+                $dataInGlobalScope = $this->dataRegionHelper->hydrate($regionInGlobalScope);
+
                 $regionInCurrentScope = $this->regionPerStoreLoader->load($regionId, $storeId);
+                $dataInCurrentScope = $this->dataRegionHelper->hydrate($regionInCurrentScope);
 
                 $meta = $this->storeMetaModifier->modify(
                     $meta,
-                    $this->perScopeFields,
-                    $regionInGlobalScope,
-                    $regionInCurrentScope
+                    $this->regionPerStoreFieldsProvider->getFields(),
+                    $dataInGlobalScope,
+                    $dataInCurrentScope
                 );
             }
         }

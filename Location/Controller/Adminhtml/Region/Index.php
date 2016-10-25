@@ -20,17 +20,6 @@ class Index extends Action
      */
     public function execute()
     {
-        /** @var \Engine\Location\Api\RegionRepositoryInterface $regionRepository */
-//        $regionRepository = \Magento\Framework\App\ObjectManager::getInstance()->get(\Engine\Location\Api\RegionRepositoryInterface::class);
-//        /** @var \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder */
-//        $searchCriteriaBuilder = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Api\SearchCriteriaBuilder::class);
-//        $searchCriteriaBuilder->addFilter('title', 'region-aa');
-//        $searchCriteria = $searchCriteriaBuilder->create();
-//        $regions = $regionRepository->getList($searchCriteria);
-//        var_dump($regions->getItems()[0]->getTitle());
-//        exit;
-
-
         /** @var Page $resultPage */
         $resultPage = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
         $resultPage->setActiveMenu('Engine_Location::region')

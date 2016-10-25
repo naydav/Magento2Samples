@@ -2,7 +2,7 @@
 namespace Engine\Location\Controller\Adminhtml\Region;
 
 use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Model\Region\RegionHydrator;
+use Engine\Location\Model\Region\DataRegionHelper;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Engine\Location\Model\Region\ResourceModel\RegionCollectionFactory;
 use Magento\Backend\App\Action;
@@ -37,29 +37,29 @@ class MassStatus extends Action
     private $regionCollectionFactory;
 
     /**
-     * @var RegionHydrator
+     * @var DataRegionHelper
      */
-    private $regionHydrator;
+    private $dataRegionHelper;
 
     /**
      * @param Context $context
      * @param RegionRepositoryInterface $regionRepository
      * @param Filter $massActionFilter
      * @param RegionCollectionFactory $regionCollectionFactory
-     * @param RegionHydrator $regionHydrator
+     * @param DataRegionHelper $dataRegionHelper
      */
     public function __construct(
         Context $context,
         RegionRepositoryInterface $regionRepository,
         Filter $massActionFilter,
         RegionCollectionFactory $regionCollectionFactory,
-        RegionHydrator $regionHydrator
+        DataRegionHelper $dataRegionHelper
     ) {
         parent::__construct($context);
         $this->regionRepository = $regionRepository;
         $this->massActionFilter = $massActionFilter;
         $this->regionCollectionFactory = $regionCollectionFactory;
-        $this->regionHydrator = $regionHydrator;
+        $this->dataRegionHelper = $dataRegionHelper;
     }
 
     /**
@@ -74,7 +74,7 @@ class MassStatus extends Action
         foreach ($collection as $region) {
             try {
                 /** @var RegionInterface $region */
-                $this->regionHydrator->hydrate($region, [RegionInterface::IS_ENABLED => $isEnabled]);
+                $this->dataRegionHelper->populateWithArray($region, [RegionInterface::IS_ENABLED => $isEnabled]);
                 $this->regionRepository->save($region);
                 $updatedItemsCount++;
             } catch (CouldNotSaveException $e) {

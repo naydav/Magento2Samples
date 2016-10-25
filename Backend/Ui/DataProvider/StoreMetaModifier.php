@@ -2,7 +2,6 @@
 namespace Engine\Backend\Ui\DataProvider;
 
 use Engine\Backend\Api\Ui\DataProvider\StoreMetaModifierInterface;
-use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Stdlib\ArrayManager;
 
 /**
@@ -16,42 +15,31 @@ class StoreMetaModifier implements StoreMetaModifierInterface
     private $arrayManager;
 
     /**
-     * @var HydratorInterface
-     */
-    private $hydrator;
-
-    /**
      * @var string
      */
     private $helperServiceTemplate;
 
     /**
      * @param ArrayManager $arrayManager
-     * @param HydratorInterface $hydrator
      * @param string $helperServiceTemplate
      */
     public function __construct(
         ArrayManager $arrayManager,
-        HydratorInterface $hydrator,
         $helperServiceTemplate = 'ui/form/element/helper/service'
     ) {
         $this->arrayManager = $arrayManager;
-        $this->hydrator = $hydrator;
         $this->helperServiceTemplate = $helperServiceTemplate;
     }
 
     /**
      * @param array $meta
      * @param array $perStoreFields
-     * @param Object $entityInGlobalScope
-     * @param Object $entityInCurrentScope
+     * @param array $dataInGlobalScope
+     * @param array $dataInCurrentScope
      * @return array
      */
-    public function modify(array $meta, array $perStoreFields, $entityInGlobalScope, $entityInCurrentScope)
+    public function modify(array $meta, array $perStoreFields, $dataInGlobalScope, $dataInCurrentScope)
     {
-        $dataInGlobalScope = $this->hydrator->extract($entityInGlobalScope);
-        $dataInCurrentScope = $this->hydrator->extract($entityInCurrentScope);
-
         foreach ($perStoreFields as $field) {
             $elementPath = $this->arrayManager->findPath($field, $meta);
 

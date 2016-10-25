@@ -3,7 +3,8 @@ namespace Engine\Location\Model\Region\Store;
 
 use Engine\Backend\Api\StoreContextInterface;
 use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Model\Region\RegionHydrator;
+use Engine\Location\Model\Region\DataRegionHelper;
+use Engine\Location\Model\Region\RegionPerStoreFieldsProvider;
 use Magento\Framework\EntityManager\Operation\ExtensionInterface;
 use Magento\Framework\App\ResourceConnection;
 
@@ -23,23 +24,31 @@ class ReadHandler implements ExtensionInterface
     private $storeContext;
 
     /**
-     * @var RegionHydrator
+     * @var DataRegionHelper
      */
-    private $regionHydrator;
+    private $dataRegionHelper;
+
+    /**
+     * @var RegionPerStoreFieldsProvider
+     */
+    private $regionPerStoreFieldsProvider;
 
     /**
      * @param ResourceConnection $resourceConnection
      * @param StoreContextInterface $storeContext
-     * @param RegionHydrator $regionHydrator
+     * @param DataRegionHelper $dataRegionHelper
+     * @param RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         StoreContextInterface $storeContext,
-        RegionHydrator $regionHydrator
+        DataRegionHelper $dataRegionHelper,
+        RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->storeContext = $storeContext;
-        $this->regionHydrator = $regionHydrator;
+        $this->dataRegionHelper = $dataRegionHelper;
+        $this->regionPerStoreFieldsProvider = $regionPerStoreFieldsProvider;
     }
 
     /**
@@ -53,12 +62,15 @@ class ReadHandler implements ExtensionInterface
         $connection = $this->resourceConnection->getConnection();
         $storeId = $this->storeContext->getCurrentStore()->getId();
         $select = $connection->select()
-            ->from($connection->getTableName('engine_location_region_store'), [RegionInterface::TITLE])
+            ->from(
+                $connection->getTableName('engine_location_region_store'),
+                $this->regionPerStoreFieldsProvider->getFields()
+            )
             ->where('store_id = ?', $storeId)
             ->where(RegionInterface::REGION_ID . ' = ?', $region->getRegionId());
         $result = $connection->fetchRow($select);
         if (false !== $result) {
-            $this->regionHydrator->hydrate($region, $result);
+            $this->dataRegionHelper->populateWithArray($region, $result);
         }
         return $region;
     }
