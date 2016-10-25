@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Engine_Location::location"
+             title="Location"
+             translate="title"
+             module="Engine_Location"
+             sortOrder="100"
+             resource="Engine_Location::location"/>
+        <add id="Engine_Location::region"
+             title="Region"
+             translate="title"
+             module="Engine_Location"
+             sortOrder="100"
+             parent="Engine_Location::location"
+             action="location/region/index"
+             resource="Engine_Location::region"/>
+    </menu>
+</config>
