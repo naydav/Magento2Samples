@@ -29,7 +29,7 @@ class DeleteButton implements ButtonProviderInterface
     {
         $data = [];
         $regionId = $this->context->getRequest()->getParam('region_id');
-        if ($regionId) {
+        if (null !== $regionId) {
             $data = [
                 'label' => __('Delete'),
                 'class' => 'delete',

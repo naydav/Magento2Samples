@@ -24,6 +24,6 @@ class RegionPerStoreFieldsProvider
      */
     public function getFields()
     {
-        return ['title'];
+        return $this->fields;
     }
 }

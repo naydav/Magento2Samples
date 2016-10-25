@@ -9,9 +9,9 @@ interface StoreMetaModifierInterface
     /**
      * @param array $meta
      * @param array $perStoreFields
-     * @param Object $entityInGlobalScope
-     * @param Object $entityInCurrentScope
+     * @param array $dataInGlobalScope
+     * @param array $dataInCurrentScope
      * @return array
      */
-    public function modify(array $meta, array $perStoreFields, $entityInGlobalScope, $entityInCurrentScope);
+    public function modify(array $meta, array $perStoreFields, array $dataInGlobalScope, array $dataInCurrentScope);
 }

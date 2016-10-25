@@ -38,7 +38,7 @@ class StoreMetaModifier implements StoreMetaModifierInterface
      * @param array $dataInCurrentScope
      * @return array
      */
-    public function modify(array $meta, array $perStoreFields, $dataInGlobalScope, $dataInCurrentScope)
+    public function modify(array $meta, array $perStoreFields, array $dataInGlobalScope, array $dataInCurrentScope)
     {
         foreach ($perStoreFields as $field) {
             $elementPath = $this->arrayManager->findPath($field, $meta);
