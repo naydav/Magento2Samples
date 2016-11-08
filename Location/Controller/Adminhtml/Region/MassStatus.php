@@ -2,12 +2,12 @@
 namespace Engine\Location\Controller\Adminhtml\Region;
 
 use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Model\Region\DataRegionHelper;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Engine\Location\Model\Region\ResourceModel\RegionCollectionFactory;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Ui\Component\MassAction\Filter;
 
@@ -37,29 +37,29 @@ class MassStatus extends Action
     private $regionCollectionFactory;
 
     /**
-     * @var DataRegionHelper
+     * @var HydratorInterface
      */
-    private $dataRegionHelper;
+    private $hydrator;
 
     /**
      * @param Context $context
      * @param RegionRepositoryInterface $regionRepository
      * @param Filter $massActionFilter
      * @param RegionCollectionFactory $regionCollectionFactory
-     * @param DataRegionHelper $dataRegionHelper
+     * @param HydratorInterface $hydrator
      */
     public function __construct(
         Context $context,
         RegionRepositoryInterface $regionRepository,
         Filter $massActionFilter,
         RegionCollectionFactory $regionCollectionFactory,
-        DataRegionHelper $dataRegionHelper
+        HydratorInterface $hydrator
     ) {
         parent::__construct($context);
         $this->regionRepository = $regionRepository;
         $this->massActionFilter = $massActionFilter;
         $this->regionCollectionFactory = $regionCollectionFactory;
-        $this->dataRegionHelper = $dataRegionHelper;
+        $this->hydrator = $hydrator;
     }
 
     /**
@@ -74,7 +74,7 @@ class MassStatus extends Action
         foreach ($collection as $region) {
             try {
                 /** @var RegionInterface $region */
-                $this->dataRegionHelper->populateWithArray($region, [RegionInterface::IS_ENABLED => $isEnabled]);
+                $this->hydrator->hydrate($region, [RegionInterface::IS_ENABLED => $isEnabled]);
                 $this->regionRepository->save($region);
                 $updatedItemsCount++;
             } catch (CouldNotSaveException $e) {

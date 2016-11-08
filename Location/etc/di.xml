@@ -32,46 +32,15 @@
                         <item name="store_data_read" xsi:type="string">Engine\Location\Model\Region\Store\ReadHandler</item>
                     </item>
                     <item name="create" xsi:type="array">
-                        <item name="store_data_create" xsi:type="string">Engine\Location\Model\Region\Store\SaveHandler</item>
+                        <item name="store_data_create" xsi:type="string">Engine\Location\Model\Region\Store\CreateHandler</item>
                     </item>
                     <item name="update" xsi:type="array">
-                        <item name="store_data_update" xsi:type="string">Engine\Location\Model\Region\Store\SaveHandler</item>
+                        <item name="store_data_update" xsi:type="string">Engine\Location\Model\Region\Store\UpdateHandler</item>
                     </item>
                 </item>
             </argument>
         </arguments>
     </type>
-    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
-        <arguments>
-            <argument name="appliers" xsi:type="array">
-                <item name="store" xsi:type="object">Engine\Location\Ui\DataProvider\FilterApplier\StoreFilter</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Engine\Location\Api\RegionRepositoryInterface">
-        <arguments>
-            <argument name="collectionProcessor" xsi:type="object">Engine\Location\Model\Api\SearchCriteria\CollectionProcessor\RegionCollectionProcessor</argument>
-        </arguments>
-    </type>
-    <virtualType name="Engine\Location\Model\Api\SearchCriteria\CollectionProcessor\RegionCollectionProcessor"
-                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
-        <arguments>
-            <argument name="processors" xsi:type="array">
-                <item name="joins" xsi:type="object">Engine\Location\Model\Api\SearchCriteria\CollectionProcessor\StoreDataJoinProcessor</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="Engine\Location\Model\Api\SearchCriteria\CollectionProcessor\StoreDataJoinProcessor"
-                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\JoinProcessor">
-        <arguments>
-            <argument name="customJoins" xsi:type="array">
-                <item name="region_store.title" xsi:type="object">Engine\Location\Model\Region\Api\SearchCriteria\CollectionProcessor\JoinProcessor\StoreData</item>
-            </argument>
-            <argument name="fieldMapping" xsi:type="array">
-                <item name="title" xsi:type="string">region_store.title</item>
-            </argument>
-        </arguments>
-    </virtualType>
     <type name="Engine\Location\Model\Region\RegionPerStoreFieldsProvider">
         <arguments>
             <argument name="fields" xsi:type="array">

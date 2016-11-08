@@ -4,9 +4,9 @@ namespace Engine\Location\Controller\Adminhtml\Region;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\Data\RegionInterfaceFactory;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\Location\Model\Region\DataRegionHelper;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -32,26 +32,26 @@ class Save extends Action
     private $regionRepository;
 
     /**
-     * @var DataRegionHelper
+     * @var HydratorInterface
      */
-    private $dataRegionHelper;
+    private $hydrator;
 
     /**
      * @param Context $context
      * @param RegionInterfaceFactory $regionFactory
      * @param RegionRepositoryInterface $regionRepository
-     * @param DataRegionHelper $dataRegionHelper
+     * @param HydratorInterface $hydrator
      */
     public function __construct(
         Context $context,
         RegionInterfaceFactory $regionFactory,
         RegionRepositoryInterface $regionRepository,
-        DataRegionHelper $dataRegionHelper
+        HydratorInterface $hydrator
     ) {
         parent::__construct($context);
         $this->regionFactory = $regionFactory;
         $this->regionRepository = $regionRepository;
-        $this->dataRegionHelper = $dataRegionHelper;
+        $this->hydrator = $hydrator;
     }
 
     /**
@@ -73,7 +73,7 @@ class Save extends Action
                 /** @var RegionInterface $region */
                 $region = $this->regionFactory->create();
             }
-            $this->dataRegionHelper->populateWithArray($region, $requestData);
+            $this->hydrator->hydrate($region, $requestData);
             $this->regionRepository->save($region);
 
             $this->messageManager->addSuccessMessage(__('The Region has been saved'));

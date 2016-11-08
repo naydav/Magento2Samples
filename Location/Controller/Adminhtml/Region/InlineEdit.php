@@ -1,12 +1,12 @@
 <?php
 namespace Engine\Location\Controller\Adminhtml\Region;
 
-use Engine\Location\Model\Region\DataRegionHelper;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
@@ -21,9 +21,9 @@ class InlineEdit extends Action
     const ADMIN_RESOURCE = 'Engine_Location::region';
 
     /**
-     * @var DataRegionHelper
+     * @var HydratorInterface
      */
-    private $dataRegionHelper;
+    private $hydrator;
 
     /**
      * @var RegionRepositoryInterface
@@ -32,16 +32,16 @@ class InlineEdit extends Action
 
     /**
      * @param Context $context
-     * @param DataRegionHelper $dataRegionHelper
+     * @param HydratorInterface $hydrator
      * @param RegionRepositoryInterface $regionRepository
      */
     public function __construct(
         Context $context,
-        DataRegionHelper $dataRegionHelper,
+        HydratorInterface $hydrator,
         RegionRepositoryInterface $regionRepository
     ) {
         parent::__construct($context);
-        $this->dataRegionHelper = $dataRegionHelper;
+        $this->hydrator = $hydrator;
         $this->regionRepository = $regionRepository;
     }
 
@@ -57,7 +57,7 @@ class InlineEdit extends Action
             foreach ($requestData as $itemData) {
                 try {
                     $region = $this->regionRepository->get($itemData['region_id']);
-                    $this->dataRegionHelper->populateWithArray($region, $itemData);
+                    $this->hydrator->hydrate($region, $itemData);
                     $this->regionRepository->save($region);
                 } catch (NoSuchEntityException $e) {
                     $errorMessages[] = __('[ID: %1] The region no exists.', $itemData['region_id']);

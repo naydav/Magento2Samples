@@ -10,8 +10,13 @@ interface StoreMetaModifierInterface
      * @param array $meta
      * @param array $perStoreFields
      * @param array $dataInGlobalScope
-     * @param array $dataInCurrentScope
+     * @param array|null $dataInCurrentScope
      * @return array
      */
-    public function modify(array $meta, array $perStoreFields, array $dataInGlobalScope, array $dataInCurrentScope);
+    public function modify(
+        array $meta,
+        array $perStoreFields,
+        array $dataInGlobalScope,
+        array $dataInCurrentScope = null
+    );
 }

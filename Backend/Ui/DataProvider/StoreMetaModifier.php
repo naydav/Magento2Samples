@@ -38,12 +38,16 @@ class StoreMetaModifier implements StoreMetaModifierInterface
      * @param array $dataInCurrentScope
      * @return array
      */
-    public function modify(array $meta, array $perStoreFields, array $dataInGlobalScope, array $dataInCurrentScope)
-    {
+    public function modify(
+        array $meta,
+        array $perStoreFields,
+        array $dataInGlobalScope,
+        array $dataInCurrentScope = null
+    ) {
         foreach ($perStoreFields as $field) {
             $elementPath = $this->arrayManager->findPath($field, $meta);
 
-            $config = isset($dataInCurrentScope[$field])
+            $config = (null !== $dataInCurrentScope) && isset($dataInCurrentScope[$field])
                 ? [
                     'default' => $dataInCurrentScope[$field],
                     'disabled' => false,

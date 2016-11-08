@@ -89,6 +89,7 @@ class RegionRepository implements RegionRepositoryInterface
         $region = $this->get($regionId);
         try {
             $this->entityManager->delete($region);
+            return true;
         } catch (\Exception $exception) {
             throw new CouldNotDeleteException(__($exception->getMessage()));
         }
@@ -101,7 +102,7 @@ class RegionRepository implements RegionRepositoryInterface
     {
         try {
             $this->entityManager->save($region);
-            return $region;
+            return $region->getRegionId();
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(__($exception->getMessage()));
         }
@@ -117,8 +118,9 @@ class RegionRepository implements RegionRepositoryInterface
         $this->collectionProcessor->process($searchCriteria, $collection);
 
         $items = [];
-        foreach ($collection->getAllIds() as $id) {
-            $items[] = $this->get($id);
+        foreach ($collection->getItems() as $item) {
+            /** @var RegionInterface $item */
+            $items[] = $this->get($item->getRegionId());
         }
 
         /** @var RegionSearchResultInterface $searchResult */

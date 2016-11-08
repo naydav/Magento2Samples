@@ -2,6 +2,8 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Engine\Backend\Api\StoreContextInterface" type="Engine\Backend\Model\StoreContext"/>
     <preference for="Engine\Backend\Api\Ui\DataProvider\StoreMetaModifierInterface" type="Engine\Backend\Ui\DataProvider\StoreMetaModifier"/>
+    <type name="Magento\Framework\App\Action\AbstractAction">
+        <plugin name="current_store_setter" type="Engine\Backend\App\Action\Plugin\DefaultStore"/>
+    </type>
 </config>

@@ -10,7 +10,7 @@ $regionRepository = Bootstrap::getObjectManager()->get(RegionRepositoryInterface
 $searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
 
 $searchCriteria = $searchCriteriaBuilder
-    ->addFilter(RegionInterface::TITLE, ['title-1', 'region-aa'], 'in')
+    ->addFilter(RegionInterface::TITLE, ['region-1', 'region-2', 'region-3'], 'in')
     ->create();
 
 $regions = $regionRepository->getList($searchCriteria)->getItems();

@@ -2,36 +2,41 @@
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\Data\RegionInterfaceFactory;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\Location\Model\Region\DataRegionHelper;
+use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
 /** @var RegionInterfaceFactory $regionFactory */
 $regionFactory = Bootstrap::getObjectManager()->get(RegionInterfaceFactory::class);
-/** @var DataRegionHelper $dataRegionHelper */
-$dataRegionHelper = Bootstrap::getObjectManager()->get(DataRegionHelper::class);
+/** @var HydratorInterface $hydrator */
+$hydrator = Bootstrap::getObjectManager()->get(HydratorInterface::class);
 /** @var RegionRepositoryInterface $regionRepository */
 $regionRepository = Bootstrap::getObjectManager()->get(RegionRepositoryInterface::class);
 
-$regions = [
+$regionsData = [
     [
-        RegionInterface::TITLE => 'title-1',
+        RegionInterface::TITLE => 'region-3',
         RegionInterface::IS_ENABLED => true,
         RegionInterface::POSITION => 100,
     ],
     [
-        RegionInterface::TITLE => 'region-aa',
+        RegionInterface::TITLE => 'region-2',
         RegionInterface::IS_ENABLED => true,
         RegionInterface::POSITION => 200,
     ],
     [
-        RegionInterface::TITLE => 'region-aa',
-        RegionInterface::IS_ENABLED => true,
+        RegionInterface::TITLE => 'region-2',
+        RegionInterface::IS_ENABLED => false,
         RegionInterface::POSITION => 200,
     ],
+    [
+        RegionInterface::TITLE => 'region-1',
+        RegionInterface::IS_ENABLED => false,
+        RegionInterface::POSITION => 300,
+    ],
 ];
-foreach ($regions as $regionData) {
+foreach ($regionsData as $regionData) {
     /** @var RegionInterface $region */
     $region = $regionFactory->create();
-    $region = $dataRegionHelper->populateWithArray($region, $regionData);
+    $region = $hydrator->hydrate($region, $regionData);
     $regionRepository->save($region);
 }

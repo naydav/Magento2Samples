@@ -40,21 +40,4 @@ class RegionSearchResultCollection extends SearchResult
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
         $this->regionPerStoreFieldsProvider = $regionPerStoreFieldsProvider;
     }
-
-    /**
-     * @param int $storeId
-     * @return void
-     */
-    public function addStoreData($storeId)
-    {
-        $regionStoreTableAlias = 'store_table';
-        if (!isset($this->_joinedTables[$regionStoreTableAlias])) {
-            $this->getSelect()->joinLeft(
-                [$regionStoreTableAlias => $this->getTable('engine_location_region_store')],
-                'store_table.region_id = main_table.region_id AND store_table.store_id = ' . (int)$storeId,
-                $this->regionPerStoreFieldsProvider->getFields()
-            );
-            $this->_joinedTables[$regionStoreTableAlias] = true;
-        }
-    }
 }

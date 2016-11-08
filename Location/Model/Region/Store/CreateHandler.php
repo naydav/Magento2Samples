@@ -1,15 +1,16 @@
 <?php
 namespace Engine\Location\Model\Region\Store;
 
-use Engine\Backend\Api\StoreContextInterface;
 use Engine\Location\Api\Data\RegionInterface;
+use Engine\Location\Model\Region\RegionPerStoreFieldsProvider;
 use Magento\Framework\EntityManager\Operation\ExtensionInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Store\Model\Store;
 
 /**
  * @author naydav <valeriy.nayda@gmail.com>
  */
-class SaveHandler implements ExtensionInterface
+class CreateHandler implements ExtensionInterface
 {
     /**
      * @var ResourceConnection
@@ -17,20 +18,20 @@ class SaveHandler implements ExtensionInterface
     private $resourceConnection;
 
     /**
-     * @var StoreContextInterface
+     * @var RegionPerStoreFieldsProvider
      */
-    private $storeContext;
+    private $regionPerStoreFieldsProvider;
 
     /**
      * @param ResourceConnection $resourceConnection
-     * @param StoreContextInterface $storeContext
+     * @param RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        StoreContextInterface $storeContext
+        RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->storeContext = $storeContext;
+        $this->regionPerStoreFieldsProvider = $regionPerStoreFieldsProvider;
     }
 
     /**
@@ -41,15 +42,14 @@ class SaveHandler implements ExtensionInterface
      */
     public function execute($region, $arguments = [])
     {
-        $storeId = $this->storeContext->getCurrentStore()->getId();
         $storeData = [
-            'store_id' => $storeId,
+            'store_id' => Store::DEFAULT_STORE_ID,
             RegionInterface::REGION_ID => $region->getRegionId(),
             RegionInterface::TITLE => $region->getTitle(),
         ];
         $connection = $this->resourceConnection->getConnection();
-        $table = $connection->getTableName('engine_location_region_store');
-        $connection->insertOnDuplicate($table, $storeData, [RegionInterface::TITLE]);
+        $regionStoreTable = $connection->getTableName('engine_location_region_store');
+        $connection->insert($regionStoreTable, $storeData);
         return $region;
     }
 }

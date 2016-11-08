@@ -10,18 +10,21 @@ interface RegionRepositoryInterface
     /**
      * @param int $regionId
      * @return \Engine\Location\Api\Data\RegionInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function get($regionId);
 
     /**
      * @param int $regionId
-     * @return void
+     * @return bool
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
     public function deleteById($regionId);
 
     /**
      * @param \Engine\Location\Api\Data\RegionInterface $region
-     * @return \Engine\Location\Api\Data\RegionInterface
+     * @return int
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function save(\Engine\Location\Api\Data\RegionInterface $region);
 

@@ -19,7 +19,7 @@ interface RegionInterface extends ExtensibleDataInterface
     /**#@-*/
 
     /**
-     * @return int|null
+     * @return int
      */
     public function getRegionId();
 
