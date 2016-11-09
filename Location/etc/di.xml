@@ -5,15 +5,6 @@
     <preference for="Engine\Location\Api\Data\RegionInterface" type="Engine\Location\Model\Region\Region"/>
     <preference for="Engine\Location\Api\RegionRepositoryInterface" type="Engine\Location\Model\Region\RegionRepository"/>
     <preference for="Engine\Location\Api\Data\RegionSearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
-    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
-        <!-- located in global area because magento replaces global area in arguments merging -->
-        <arguments>
-            <argument name="collections" xsi:type="array">
-                <item name="region_listing_data_source" xsi:type="string">Engine\Location\Ui\DataProvider\RegionSearchResultCollection</item>
-                <item name="region_form_data_source" xsi:type="string">Engine\Location\Ui\DataProvider\RegionSearchResultCollection</item>
-            </argument>
-        </arguments>
-    </type>
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>
             <argument name="metadata" xsi:type="array">

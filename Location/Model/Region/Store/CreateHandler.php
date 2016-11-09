@@ -3,6 +3,7 @@ namespace Engine\Location\Model\Region\Store;
 
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Model\Region\RegionPerStoreFieldsProvider;
+use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\EntityManager\Operation\ExtensionInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Store\Model\Store;
@@ -23,15 +24,23 @@ class CreateHandler implements ExtensionInterface
     private $regionPerStoreFieldsProvider;
 
     /**
+     * @var HydratorInterface
+     */
+    private $hydrator;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider
+     * @param HydratorInterface $hydrator
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider
+        RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider,
+        HydratorInterface $hydrator
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->regionPerStoreFieldsProvider = $regionPerStoreFieldsProvider;
+        $this->hydrator = $hydrator;
     }
 
     /**
@@ -42,11 +51,12 @@ class CreateHandler implements ExtensionInterface
      */
     public function execute($region, $arguments = [])
     {
-        $storeData = [
-            'store_id' => Store::DEFAULT_STORE_ID,
-            RegionInterface::REGION_ID => $region->getRegionId(),
-            RegionInterface::TITLE => $region->getTitle(),
-        ];
+        $regionPerStoreFields = $this->regionPerStoreFieldsProvider->getFields();
+        $entityData = $this->hydrator->extract($region);
+        $storeData = array_intersect_key($entityData, array_flip($regionPerStoreFields));
+        $storeData[RegionInterface::REGION_ID] = $region->getRegionId();
+        $storeData['store_id'] = Store::DEFAULT_STORE_ID;
+
         $connection = $this->resourceConnection->getConnection();
         $regionStoreTable = $connection->getTableName('engine_location_region_store');
         $connection->insert($regionStoreTable, $storeData);

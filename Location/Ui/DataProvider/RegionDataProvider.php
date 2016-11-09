@@ -208,7 +208,6 @@ class RegionDataProvider extends DataProvider
             $itemData = $this->hydrator->extract($item);
             $itemId = $itemData[RegionInterface::REGION_ID];
 
-            $attributes = [];
             $attribute = $this->attributeValueFactory->create();
             $attribute->setAttributeCode('id_field_name');
             $attribute->setValue(RegionInterface::REGION_ID);
