@@ -1,5 +1,5 @@
 <?php
-namespace Engine\Backend\App\Action\Plugin;
+namespace Engine\PerStoreDataSupport\App\Action\Plugin;
 
 use Magento\Framework\App\Action\AbstractAction;
 use Magento\Framework\App\RequestInterface;

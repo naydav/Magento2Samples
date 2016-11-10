@@ -15,27 +15,48 @@
             </argument>
         </arguments>
     </type>
+    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\ReadHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\StoreData\ReadHandler">
+        <arguments>
+            <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\RegionInterface</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\CreateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\StoreData\CreateHandler">
+        <arguments>
+            <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\RegionInterface</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\UpdateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\StoreData\UpdateHandler">
+        <arguments>
+            <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\RegionInterface</argument>
+        </arguments>
+    </virtualType>
     <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
         <arguments>
             <argument name="extensionActions" xsi:type="array">
                 <item name="Engine\Location\Api\Data\RegionInterface" xsi:type="array">
                     <item name="read" xsi:type="array">
-                        <item name="store_data_read" xsi:type="string">Engine\Location\Model\Region\Store\ReadHandler</item>
+                        <item name="store_data_read" xsi:type="string">Engine\Location\Model\Region\EntityManager\ReadHandler</item>
                     </item>
                     <item name="create" xsi:type="array">
-                        <item name="store_data_create" xsi:type="string">Engine\Location\Model\Region\Store\CreateHandler</item>
+                        <item name="store_data_create" xsi:type="string">Engine\Location\Model\Region\EntityManager\CreateHandler</item>
                     </item>
                     <item name="update" xsi:type="array">
-                        <item name="store_data_update" xsi:type="string">Engine\Location\Model\Region\Store\UpdateHandler</item>
+                        <item name="store_data_update" xsi:type="string">Engine\Location\Model\Region\EntityManager\UpdateHandler</item>
                     </item>
                 </item>
             </argument>
         </arguments>
     </type>
-    <type name="Engine\Location\Model\Region\RegionPerStoreFieldsProvider">
+    <type name="Engine\PerStoreDataSupport\Model\StoreDataConfigurationProvider">
         <arguments>
-            <argument name="fields" xsi:type="array">
-                <item name="0" xsi:type="string">title</item>
+            <argument name="configuration" xsi:type="array">
+                <item name="Engine\Location\Api\Data\RegionInterface" xsi:type="array">
+                    <item name="fields" xsi:type="array">
+                        <item name="0" xsi:type="string">title</item>
+                    </item>
+                    <item name="storeDataTable" xsi:type="string">engine_location_region_store</item>
+                    <item name="referenceField" xsi:type="string">region_id</item>
+                </item>
             </argument>
         </arguments>
     </type>

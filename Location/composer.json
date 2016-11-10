@@ -9,7 +9,7 @@
         "magento/ui": "100.1.*",
         "magento/store": "100.1.*",
         "magento/framework": "100.1.*",
-        "engine/backend": "100.1.*"
+        "engine/per-store-data-support": "100.1.*"
     },
     "autoload": {
       "files": [

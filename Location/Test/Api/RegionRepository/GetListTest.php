@@ -78,7 +78,7 @@ class GetListTest extends WebapiAbstract
                         RegionInterface::TITLE => 'region-1',
                         RegionInterface::IS_ENABLED => false,
                     ],
-                ]
+                ],
             ],
             'filteringByScopedFieldIfValueIsGlobal' => [
                 [

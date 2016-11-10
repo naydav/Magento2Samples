@@ -51,11 +51,9 @@ class Edit extends Action
             $result->getConfig()->getTitle()->prepend(__('Edit Region: %1', $region->getTitle()));
         } catch (NoSuchEntityException $e) {
             /** @var Redirect $result */
-//            $result = $this->resultRedirectFactory->create();
+            $result = $this->resultRedirectFactory->create();
             $this->messageManager->addErrorMessage(__('The region no exists.'));
-//            $result->setPath('*/*/');
-            echo __('The region no exists.');
-
+            $result->setPath('*/*/');
         }
         return $result;
     }

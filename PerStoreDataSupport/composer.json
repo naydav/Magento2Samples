@@ -1,5 +1,5 @@
 {
-    "name": "engine/module-backend",
+    "name": "engine/module-per-store-data-support",
     "description": "N/A",    
     "type": "engine-module",
     "version": "2.1.0",
@@ -15,7 +15,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "Engine\\Backend\\": ""
+            "Engine\\PerStoreDataSupport\\": ""
         }
     }
 }

@@ -1,25 +1,18 @@
 <?php
 namespace Engine\Location\Ui\DataProvider;
 
-use Engine\Backend\Api\Ui\DataProvider\StoreMetaModifierInterface;
+use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
+use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
 use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Model\Region\RegionPerStoreFieldsProvider;
-use Engine\Location\Model\Region\RegionPerStoreDataLoader;
 use Engine\Location\Model\Region\ResourceModel\RegionCollection;
 use Engine\Location\Model\Region\ResourceModel\RegionCollectionFactory;
-use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\DocumentFactory;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
-use Magento\Framework\Api\Search\SearchResultFactory;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\EntityManager\HydratorInterface;
-use Magento\Framework\Registry;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
-use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -33,32 +26,17 @@ class RegionDataProvider extends DataProvider
     private $urlBuilder;
 
     /**
-     * @var RegionPerStoreDataLoader
-     */
-    private $regionPerStoreDataLoader;
-
-    /**
      * @var StoreManagerInterface
      */
     private $storeManager;
 
     /**
-     * @var StoreMetaModifierInterface
+     * @var DataProviderMetaModifierInterface
      */
-    private $storeMetaModifier;
+    private $dataProviderMetaModifier;
 
     /**
-     * @var RegionPerStoreFieldsProvider
-     */
-    private $regionPerStoreFieldsProvider;
-
-    /**
-     * @var HydratorInterface
-     */
-    private $hydrator;
-
-    /**
-     * @var RegionPerStoreDataLoader
+     * @var RegionCollectionFactory
      */
     private $regionCollectionFactory;
 
@@ -68,19 +46,9 @@ class RegionDataProvider extends DataProvider
     private $collectionProcessor;
 
     /**
-     * @var DocumentFactory
+     * @var DataProviderSearchResultFactoryInterface
      */
-    private $documentFactory;
-
-    /**
-     * @var SearchResultFactory
-     */
-    private $searchResultFactory;
-
-    /**
-     * @var AttributeValueFactory
-     */
-    private $attributeValueFactory;
+    private $dataProviderSearchResultFactory;
 
     /**
      * @param string $name
@@ -91,17 +59,11 @@ class RegionDataProvider extends DataProvider
      * @param RequestInterface $request
      * @param FilterBuilder $filterBuilder
      * @param UrlInterface $urlBuilder
-     * @param RegionPerStoreDataLoader $regionPerStoreDataLoader
-     * @param Registry $registry
      * @param StoreManagerInterface $storeManager
-     * @param StoreMetaModifierInterface $storeMetaModifier
-     * @param RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider
-     * @param HydratorInterface $hydrator
+     * @param DataProviderMetaModifierInterface $dataProviderMetaModifier
      * @param RegionCollectionFactory $regionCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
-     * @param DocumentFactory $documentFactory
-     * @param SearchResultFactory $searchResultFactory
-     * @param AttributeValueFactory $attributeValueFactory
+     * @param DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory
      * @param array $meta
      * @param array $data
      */
@@ -114,17 +76,11 @@ class RegionDataProvider extends DataProvider
         RequestInterface $request,
         FilterBuilder $filterBuilder,
         UrlInterface $urlBuilder,
-        RegionPerStoreDataLoader $regionPerStoreDataLoader,
-        Registry $registry,
         StoreManagerInterface $storeManager,
-        StoreMetaModifierInterface $storeMetaModifier,
-        RegionPerStoreFieldsProvider $regionPerStoreFieldsProvider,
-        HydratorInterface $hydrator,
+        DataProviderMetaModifierInterface $dataProviderMetaModifier,
         RegionCollectionFactory $regionCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
-        DocumentFactory $documentFactory,
-        SearchResultFactory $searchResultFactory,
-        AttributeValueFactory $attributeValueFactory,
+        DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory,
         array $meta = [],
         array $data = []
     ) {
@@ -140,16 +96,11 @@ class RegionDataProvider extends DataProvider
             $data
         );
         $this->urlBuilder = $urlBuilder;
-        $this->regionPerStoreDataLoader = $regionPerStoreDataLoader;
         $this->storeManager = $storeManager;
-        $this->storeMetaModifier = $storeMetaModifier;
-        $this->regionPerStoreFieldsProvider = $regionPerStoreFieldsProvider;
-        $this->hydrator = $hydrator;
+        $this->dataProviderMetaModifier = $dataProviderMetaModifier;
         $this->regionCollectionFactory = $regionCollectionFactory;
         $this->collectionProcessor = $collectionProcessor;
-        $this->documentFactory = $documentFactory;
-        $this->searchResultFactory = $searchResultFactory;
-        $this->attributeValueFactory = $attributeValueFactory;
+        $this->dataProviderSearchResultFactory = $dataProviderSearchResultFactory;
     }
 
     /**
@@ -172,21 +123,9 @@ class RegionDataProvider extends DataProvider
     public function getMeta()
     {
         $meta = parent::getMeta();
-        $storeId = $this->storeManager->getStore()->getId();
-
-        if (Store::DEFAULT_STORE_ID !== (int)$storeId) {
-            $regionId = $this->request->getParam('region_id');
-            if (null !== $regionId) {
-                $perStoreFields = $this->regionPerStoreFieldsProvider->getFields();
-                $dataInGlobalScope = $this->regionPerStoreDataLoader->load($regionId, Store::DEFAULT_STORE_ID);
-                $dataInCurrentScope = $this->regionPerStoreDataLoader->load($regionId, $storeId);
-                $meta = $this->storeMetaModifier->modify(
-                    $meta,
-                    $perStoreFields,
-                    $dataInGlobalScope,
-                    $dataInCurrentScope
-                );
-            }
+        $regionId = $this->request->getParam('region_id');
+        if (null !== $regionId) {
+            $meta = $this->dataProviderMetaModifier->modify(RegionInterface::class, $regionId, $meta);
         }
         return $meta;
     }
@@ -202,36 +141,12 @@ class RegionDataProvider extends DataProvider
         $collection->addStoreData();
         $this->collectionProcessor->process($searchCriteria, $collection);
 
-        $items = $collection->getItems();
-        $documents = [];
-        foreach ($items as $item) {
-            $itemData = $this->hydrator->extract($item);
-            $itemId = $itemData[RegionInterface::REGION_ID];
-
-            $attribute = $this->attributeValueFactory->create();
-            $attribute->setAttributeCode('id_field_name');
-            $attribute->setValue(RegionInterface::REGION_ID);
-            $attributes[] = $attribute;
-            foreach ($itemData as $key => $value) {
-                $attribute = $this->attributeValueFactory->create();
-                $attribute->setAttributeCode($key);
-                if (!is_array($value)) {
-                    $value = (string)$value;
-                }
-                $attribute->setValue($value);
-                $attributes[] = $attribute;
-            }
-
-            $document = $this->documentFactory->create();
-            $document->setId($itemId);
-            $document->setCustomAttributes($attributes);
-            $documents[] = $document;
-        }
-
-        $searchResult = $this->searchResultFactory->create();
-        $searchResult->setItems($documents);
-        $searchResult->setTotalCount($collection->getSize());
-        $searchResult->setSearchCriteria($searchCriteria);
+        $searchResult = $this->dataProviderSearchResultFactory->create(
+            $collection->getItems(),
+            $collection->getSize(),
+            $searchCriteria,
+            RegionInterface::REGION_ID
+        );
         return $searchResult;
     }
 }
