@@ -4,8 +4,11 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
-                <resource id="Engine_Location::location" title="Location" translate="title" sortOrder="100">
-                    <resource id="Engine_Location::region" title="Region" translate="title" sortOrder="100"/>
+                <resource id="Engine_Backend::backend">
+                    <resource id="Engine_Location::location" title="Location" translate="title" sortOrder="100">
+                        <resource id="Engine_Location::region" title="Region" translate="title" sortOrder="100"/>
+                        <resource id="Engine_Location::city" title="City" translate="title" sortOrder="200"/>
+                    </resource>
                 </resource>
             </resource>
         </resources>

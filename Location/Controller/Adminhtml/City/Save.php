@@ -1,9 +1,9 @@
 <?php
-namespace Engine\Location\Controller\Adminhtml\Region;
+namespace Engine\Location\Controller\Adminhtml\City;
 
-use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Api\Data\RegionInterfaceFactory;
-use Engine\Location\Api\RegionRepositoryInterface;
+use Engine\Location\Api\Data\CityInterface;
+use Engine\Location\Api\Data\CityInterfaceFactory;
+use Engine\Location\Api\CityRepositoryInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\EntityManager\HydratorInterface;
@@ -19,17 +19,17 @@ class Save extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::region';
+    const ADMIN_RESOURCE = 'Engine_Location::city';
 
     /**
-     * @var RegionInterfaceFactory
+     * @var CityInterfaceFactory
      */
-    private $regionFactory;
+    private $cityFactory;
 
     /**
-     * @var RegionRepositoryInterface
+     * @var CityRepositoryInterface
      */
-    private $regionRepository;
+    private $cityRepository;
 
     /**
      * @var HydratorInterface
@@ -38,19 +38,19 @@ class Save extends Action
 
     /**
      * @param Context $context
-     * @param RegionInterfaceFactory $regionFactory
-     * @param RegionRepositoryInterface $regionRepository
+     * @param CityInterfaceFactory $cityFactory
+     * @param CityRepositoryInterface $cityRepository
      * @param HydratorInterface $hydrator
      */
     public function __construct(
         Context $context,
-        RegionInterfaceFactory $regionFactory,
-        RegionRepositoryInterface $regionRepository,
+        CityInterfaceFactory $cityFactory,
+        CityRepositoryInterface $cityRepository,
         HydratorInterface $hydrator
     ) {
         parent::__construct($context);
-        $this->regionFactory = $regionFactory;
-        $this->regionRepository = $regionRepository;
+        $this->cityFactory = $cityFactory;
+        $this->cityRepository = $cityRepository;
         $this->hydrator = $hydrator;
     }
 
@@ -73,30 +73,30 @@ class Save extends Action
                     }
                 }
             }
-            $regionId = !empty($requestData['region_id']) ? $requestData['region_id'] : null;
+            $cityId = !empty($requestData['city_id']) ? $requestData['city_id'] : null;
 
-            if ($regionId) {
-                $region = $this->regionRepository->get($regionId);
+            if ($cityId) {
+                $city = $this->cityRepository->get($cityId);
             } else {
-                /** @var RegionInterface $region */
-                $region = $this->regionFactory->create();
+                /** @var CityInterface $city */
+                $city = $this->cityFactory->create();
             }
-            $this->hydrator->hydrate($region, $requestData);
-            $this->regionRepository->save($region);
+            $this->hydrator->hydrate($city, $requestData);
+            $this->cityRepository->save($city);
 
-            $this->messageManager->addSuccessMessage(__('The Region has been saved'));
+            $this->messageManager->addSuccessMessage(__('The City has been saved'));
             if ($this->getRequest()->getParam('back')) {
-                $resultRedirect->setPath('*/*/edit', ['region_id' => $region->getRegionId(), '_current' => true]);
+                $resultRedirect->setPath('*/*/edit', ['city_id' => $city->getCityId(), '_current' => true]);
             } else {
                 $resultRedirect->setPath('*/*/');
             }
         } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('The region no exists.'));
+            $this->messageManager->addErrorMessage(__('The city no exists.'));
             $resultRedirect->setPath('*/*/');
         } catch (CouldNotSaveException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
-            if ($regionId) {
-                $resultRedirect->setPath('*/*/edit', ['region_id' => $regionId, '_current' => true]);
+            if ($cityId) {
+                $resultRedirect->setPath('*/*/edit', ['city_id' => $cityId, '_current' => true]);
             } else {
                 $resultRedirect->setPath('*/*/');
             }

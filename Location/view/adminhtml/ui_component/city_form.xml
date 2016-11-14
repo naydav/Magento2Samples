@@ -4,13 +4,13 @@
       xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">region_form.region_form_data_source</item>
-            <item name="deps" xsi:type="string">region_form.region_form_data_source</item>
+            <item name="provider" xsi:type="string">city_form.city_form_data_source</item>
+            <item name="deps" xsi:type="string">city_form.city_form_data_source</item>
         </item>
-        <item name="label" xsi:type="string" translate="true">Region Information</item>
+        <item name="label" xsi:type="string" translate="true">City Information</item>
         <item name="config" xsi:type="array">
             <item name="dataScope" xsi:type="string">data</item>
-            <item name="namespace" xsi:type="string">region_form</item>
+            <item name="namespace" xsi:type="string">city_form</item>
         </item>
         <item name="template" xsi:type="string">templates/form/collapsible</item>
         <item name="buttons" xsi:type="array">
@@ -26,7 +26,7 @@
                 <item name="class" xsi:type="string">reset</item>
                 <item name="on_click" xsi:type="string">location.reload();</item>
             </item>
-            <item name="delete" xsi:type="string">Engine\Location\Ui\Component\Control\Region\DeleteButton</item>
+            <item name="delete" xsi:type="string">Engine\Location\Ui\Component\Control\City\DeleteButton</item>
             <item name="save" xsi:type="array">
                 <item name="name" xsi:type="string">save</item>
                 <item name="label" xsi:type="string" translate="true">Save and Return</item>
@@ -36,12 +36,12 @@
             <item name="save_and_continue" xsi:type="string">Engine\Backend\Ui\Component\Control\SaveAndContinueButton</item>
         </item>
     </argument>
-    <dataSource name="region_form_data_source">
+    <dataSource name="city_form_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
-            <argument name="class" xsi:type="string">Engine\Location\Ui\DataProvider\RegionDataProvider</argument>
-            <argument name="name" xsi:type="string">region_form_data_source</argument>
-            <argument name="primaryFieldName" xsi:type="string">main_table.region_id</argument>
-            <argument name="requestFieldName" xsi:type="string">region_id</argument>
+            <argument name="class" xsi:type="string">Engine\Location\Ui\DataProvider\CityDataProvider</argument>
+            <argument name="name" xsi:type="string">city_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">main_table.city_id</argument>
+            <argument name="requestFieldName" xsi:type="string">city_id</argument>
         </argument>
         <argument name="data" xsi:type="array">
             <item name="js_config" xsi:type="array">
@@ -56,13 +56,13 @@
                 <item name="collapsible" xsi:type="boolean">true</item>
                 <item name="opened" xsi:type="boolean">true</item>
                 <item name="dataScope" xsi:type="string">general</item>
-                <item name="sortOrder" xsi:type="number">100</item>
+                <item name="sortOrder" xsi:type="number">10</item>
             </item>
         </argument>
         <field name="title">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="sortOrder" xsi:type="number">10</item>
+                    <item name="sortOrder" xsi:type="number">100</item>
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="formElement" xsi:type="string">input</item>
                     <item name="label" xsi:type="string" translate="true">Title</item>
@@ -73,10 +73,25 @@
                 </item>
             </argument>
         </field>
+        <field name="region_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Engine\Location\Model\Region\Source\Region</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Region</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="sortOrder" xsi:type="number">200</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                </item>
+            </argument>
+        </field>
         <field name="is_enabled">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="sortOrder" xsi:type="number">200</item>
+                    <item name="sortOrder" xsi:type="number">300</item>
                     <item name="dataType" xsi:type="string">boolean</item>
                     <item name="formElement" xsi:type="string">checkbox</item>
                     <item name="prefer" xsi:type="string">toggle</item>
@@ -96,7 +111,7 @@
                     <item name="label" xsi:type="string" translate="true">Sort Position</item>
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="formElement" xsi:type="string">input</item>
-                    <item name="sortOrder" xsi:type="number">300</item>
+                    <item name="sortOrder" xsi:type="number">400</item>
                     <item name="validation" xsi:type="array">
                         <item name="validate-digits" xsi:type="boolean">true</item>
                     </item>

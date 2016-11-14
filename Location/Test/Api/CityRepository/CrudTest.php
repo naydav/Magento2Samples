@@ -1,8 +1,8 @@
 <?php
-namespace Engine\Location\Test\Api\RegionRepository;
+namespace Engine\Location\Test\Api\CityRepository;
 
-use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Api\RegionRepositoryInterface;
+use Engine\Location\Api\Data\CityInterface;
+use Engine\Location\Api\CityRepositoryInterface;
 use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -16,16 +16,16 @@ class CrudTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/location/regions';
-    const SERVICE_NAME = 'locationRegionRepositoryV1';
+    const RESOURCE_PATH = '/V1/location/cities';
+    const SERVICE_NAME = 'locationCityRepositoryV1';
     /**#@-*/
 
     public function testCreate()
     {
         $data = [
-            RegionInterface::TITLE => 'region-title',
-            RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 10,
+            CityInterface::TITLE => 'city-title',
+            CityInterface::IS_ENABLED => true,
+            CityInterface::POSITION => 10,
         ];
         $serviceInfo = [
             'rest' => [
@@ -37,32 +37,32 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Get',
             ],
         ];
-        $regionId = $this->_webApiCall($serviceInfo, ['region' => $data]);
-        $this->assertNotEmpty($regionId);
+        $cityId = $this->_webApiCall($serviceInfo, ['city' => $data]);
+        $this->assertNotEmpty($cityId);
 
-        $region = $this->getRegion($regionId);
-        $this->checkRegion($data, $region);
+        $city = $this->getCity($cityId);
+        $this->checkCity($data, $city);
 
-        /** @var RegionRepositoryInterface $regionRepository */
-        $regionRepository = Bootstrap::getObjectManager()->get(RegionRepositoryInterface::class);
-        $regionRepository->deleteById($regionId);
+        /** @var CityRepositoryInterface $cityRepository */
+        $cityRepository = Bootstrap::getObjectManager()->get(CityRepositoryInterface::class);
+        $cityRepository->deleteById($cityId);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/store.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/store.php
      */
     public function testUpdateInGlobalScope()
     {
-        $regionId = 100;
+        $cityId = 100;
         $data = [
-            RegionInterface::TITLE => 'region-title-updated',
-            RegionInterface::IS_ENABLED => false,
-            RegionInterface::POSITION => 20,
+            CityInterface::TITLE => 'city-title-updated',
+            CityInterface::IS_ENABLED => false,
+            CityInterface::POSITION => 20,
         ];
         $serviceInfo = [
             'rest' => [
-                'resourcePath' => self::RESOURCE_PATH . '/' . $regionId,
+                'resourcePath' => self::RESOURCE_PATH . '/' . $cityId,
                 'httpMethod' => Request::HTTP_METHOD_PUT,
             ],
             'soap' => [
@@ -70,27 +70,27 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Save',
             ],
         ];
-        $this->_webApiCall($serviceInfo, ['region' => $data], null, 'all');
+        $this->_webApiCall($serviceInfo, ['city' => $data], null, 'all');
 
-        $this->checkRegion($data, $this->getRegion($regionId, 'default'));
-        $this->checkRegion($data, $this->getRegion($regionId, 'test_store'));
+        $this->checkCity($data, $this->getCity($cityId, 'default'));
+        $this->checkCity($data, $this->getCity($cityId, 'test_store'));
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/store.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/store.php
      */
     public function testUpdateInStoreScope()
     {
-        $regionId = 100;
+        $cityId = 100;
         $storeCode = 'test_store';
-        $title = 'region-title-per-store';
+        $title = 'city-title-per-store';
         $data = [
-            RegionInterface::TITLE => $title,
+            CityInterface::TITLE => $title,
         ];
         $serviceInfo = [
             'rest' => [
-                'resourcePath' => self::RESOURCE_PATH . '/' . $regionId,
+                'resourcePath' => self::RESOURCE_PATH . '/' . $cityId,
                 'httpMethod' => Request::HTTP_METHOD_PUT,
             ],
             'soap' => [
@@ -98,28 +98,28 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Save',
             ],
         ];
-        $this->_webApiCall($serviceInfo, ['region' => $data], null, $storeCode);
+        $this->_webApiCall($serviceInfo, ['city' => $data], null, $storeCode);
 
-        $region = $this->getRegion($regionId, 'default');
-        $this->assertEquals('title-0', $region[RegionInterface::TITLE]);
+        $city = $this->getCity($cityId, 'default');
+        $this->assertEquals('title-0', $city[CityInterface::TITLE]);
 
-        $region = $this->getRegion($regionId, $storeCode);
-        $this->assertEquals($title, $region[RegionInterface::TITLE]);
+        $city = $this->getCity($cityId, $storeCode);
+        $this->assertEquals($title, $city[CityInterface::TITLE]);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_store_scope_data.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope_data.php
      */
     public function testDeleteValueInStoreScope()
     {
-        $regionId = 100;
+        $cityId = 100;
         $storeCode = 'test_store';
         $data = [
-            RegionInterface::TITLE => null,
+            CityInterface::TITLE => null,
         ];
         $serviceInfo = [
             'rest' => [
-                'resourcePath' => self::RESOURCE_PATH . '/' . $regionId,
+                'resourcePath' => self::RESOURCE_PATH . '/' . $cityId,
                 'httpMethod' => Request::HTTP_METHOD_PUT,
             ],
             'soap' => [
@@ -127,21 +127,21 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Save',
             ],
         ];
-        $this->_webApiCall($serviceInfo, ['region' => $data], null, $storeCode);
+        $this->_webApiCall($serviceInfo, ['city' => $data], null, $storeCode);
 
-        $region = $this->getRegion($regionId, $storeCode);
-        $this->assertEquals('title-0', $region[RegionInterface::TITLE]);
+        $city = $this->getCity($cityId, $storeCode);
+        $this->assertEquals('title-0', $city[CityInterface::TITLE]);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
      */
     public function testDeleteById()
     {
-        $regionId = 100;
+        $cityId = 100;
         $serviceInfo = [
             'rest' => [
-                'resourcePath' => self::RESOURCE_PATH . '/' . $regionId,
+                'resourcePath' => self::RESOURCE_PATH . '/' . $cityId,
                 'httpMethod' => Request::HTTP_METHOD_DELETE,
             ],
             'soap' => [
@@ -152,29 +152,29 @@ class CrudTest extends WebapiAbstract
         $this->_webApiCall($serviceInfo);
 
         try {
-            $this->getRegion($regionId);
+            $this->getCity($cityId);
             $this->fail('Expected throwing exception');
         } catch (\Exception $e) {
             $errorObj = $this->processRestExceptionResult($e);
-            $this->assertEquals('Region with id "%1" does not exist.', $errorObj['message']);
+            $this->assertEquals('City with id "%1" does not exist.', $errorObj['message']);
             $this->assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
         }
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_store_scope_data.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope_data.php
      */
     public function testGetIfValueIsPerStore()
     {
-        $regionId = 100;
+        $cityId = 100;
         $storeCode = 'test_store';
         $expectedData = [
-            RegionInterface::TITLE => 'per-store-title-0',
-            RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 1000,
+            CityInterface::TITLE => 'per-store-title-0',
+            CityInterface::IS_ENABLED => true,
+            CityInterface::POSITION => 1000,
         ];
-        $region = $this->getRegion($regionId, $storeCode);
-        $this->checkRegion($expectedData, $region);
+        $city = $this->getCity($cityId, $storeCode);
+        $this->checkCity($expectedData, $city);
     }
 
     public function testGetNoSuchEntityException()
@@ -191,7 +191,7 @@ class CrudTest extends WebapiAbstract
             ],
         ];
 
-        $expectedMessage = "Region with id \"%1\" does not exist.";
+        $expectedMessage = "City with id \"%1\" does not exist.";
         try {
             $this->_webApiCall($serviceInfo);
             $this->fail('Expected throwing exception');
@@ -209,11 +209,11 @@ class CrudTest extends WebapiAbstract
      * @param array $expected
      * @param array $actual
      */
-    protected function checkRegion($expected, $actual)
+    protected function checkCity($expected, $actual)
     {
-        $this->assertEquals($expected[RegionInterface::TITLE], $actual[RegionInterface::TITLE]);
-        $this->assertEquals($expected[RegionInterface::IS_ENABLED], $actual[RegionInterface::IS_ENABLED]);
-        $this->assertEquals($expected[RegionInterface::POSITION], $actual[RegionInterface::POSITION]);
+        $this->assertEquals($expected[CityInterface::TITLE], $actual[CityInterface::TITLE]);
+        $this->assertEquals($expected[CityInterface::IS_ENABLED], $actual[CityInterface::IS_ENABLED]);
+        $this->assertEquals($expected[CityInterface::POSITION], $actual[CityInterface::POSITION]);
     }
 
     /**
@@ -221,7 +221,7 @@ class CrudTest extends WebapiAbstract
      * @param string|null $storeCode
      * @return array|int|string|float|bool Web API call results
      */
-    protected function getRegion($id, $storeCode = null)
+    protected function getCity($id, $storeCode = null)
     {
         $serviceInfo = [
             'rest' => [

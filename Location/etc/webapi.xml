@@ -2,6 +2,7 @@
 
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- Region -->
     <route url="/V1/location/regions" method="GET">
         <service class="Engine\Location\Api\RegionRepositoryInterface" method="getList"/>
         <resources>
@@ -30,6 +31,37 @@
         <service class="Engine\Location\Api\RegionRepositoryInterface" method="deleteById"/>
         <resources>
             <resource ref="Engine_Location::region"/>
+        </resources>
+    </route>
+    <!-- City -->
+    <route url="/V1/location/cities" method="GET">
+        <service class="Engine\Location\Api\CityRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Engine_Location::city"/>
+        </resources>
+    </route>
+    <route url="/V1/location/cities/:cityId" method="GET">
+        <service class="Engine\Location\Api\CityRepositoryInterface" method="get"/>
+        <resources>
+            <resource ref="Engine_Location::city"/>
+        </resources>
+    </route>
+    <route url="/V1/location/cities" method="POST">
+        <service class="Engine\Location\Api\CityRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Engine_Location::city"/>
+        </resources>
+    </route>
+    <route url="/V1/location/cities/:cityId" method="PUT">
+        <service class="Engine\Location\Api\CityRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Engine_Location::city"/>
+        </resources>
+    </route>
+    <route url="/V1/location/cities/:cityId" method="DELETE">
+        <service class="Engine\Location\Api\CityRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="Engine_Location::city"/>
         </resources>
     </route>
 </routes>

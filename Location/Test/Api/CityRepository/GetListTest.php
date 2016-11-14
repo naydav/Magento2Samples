@@ -1,7 +1,7 @@
 <?php
-namespace Engine\Location\Test\Api\RegionRepository;
+namespace Engine\Location\Test\Api\CityRepository;
 
-use Engine\Location\Api\Data\RegionInterface;
+use Engine\Location\Api\Data\CityInterface;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\TestCase\WebapiAbstract;
@@ -14,13 +14,13 @@ class GetListTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/location/regions';
-    const SERVICE_NAME = 'locationRegionRepositoryV1';
+    const RESOURCE_PATH = '/V1/location/cities';
+    const SERVICE_NAME = 'locationCityRepositoryV1';
     /**#@-*/
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/store.php
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list_global_scope_data.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/store.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope_data.php
      * @param array $searchCriteria
      * @param array $expectedItemsData
      * @dataProvider dataProviderGetListIfValueIsInGlobalScope
@@ -57,7 +57,7 @@ class GetListTest extends WebapiAbstract
                         [
                             'filters' => [
                                 [
-                                    'field' => RegionInterface::IS_ENABLED,
+                                    'field' => CityInterface::IS_ENABLED,
                                     'value' => '0',
                                     'condition_type' => 'eq',
                                 ],
@@ -67,12 +67,12 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
-                        RegionInterface::TITLE => 'region-2',
-                        RegionInterface::IS_ENABLED => false,
+                        CityInterface::TITLE => 'city-2',
+                        CityInterface::IS_ENABLED => false,
                     ],
                     [
-                        RegionInterface::TITLE => 'region-1',
-                        RegionInterface::IS_ENABLED => false,
+                        CityInterface::TITLE => 'city-1',
+                        CityInterface::IS_ENABLED => false,
                     ],
                 ],
             ],
@@ -82,8 +82,8 @@ class GetListTest extends WebapiAbstract
                         [
                             'filters' => [
                                 [
-                                    'field' => RegionInterface::TITLE,
-                                    'value' => 'region-2',
+                                    'field' => CityInterface::TITLE,
+                                    'value' => 'city-2',
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -92,10 +92,10 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
-                        RegionInterface::TITLE => 'region-2',
+                        CityInterface::TITLE => 'city-2',
                     ],
                     [
-                        RegionInterface::TITLE => 'region-2',
+                        CityInterface::TITLE => 'city-2',
                     ],
                 ],
             ],
@@ -103,27 +103,27 @@ class GetListTest extends WebapiAbstract
                 [
                     'sort_orders' => [
                         [
-                            'field' => RegionInterface::POSITION,
+                            'field' => CityInterface::POSITION,
                             'direction' => SortOrder::SORT_DESC,
                         ],
                     ],
                 ],
                 [
                     [
-                        RegionInterface::TITLE => 'region-1',
-                        RegionInterface::POSITION => 300,
+                        CityInterface::TITLE => 'city-1',
+                        CityInterface::POSITION => 300,
                     ],
                     [
-                        RegionInterface::TITLE => 'region-2',
-                        RegionInterface::POSITION => 200,
+                        CityInterface::TITLE => 'city-2',
+                        CityInterface::POSITION => 200,
                     ],
                     [
-                        RegionInterface::TITLE => 'region-2',
-                        RegionInterface::POSITION => 200,
+                        CityInterface::TITLE => 'city-2',
+                        CityInterface::POSITION => 200,
                     ],
                     [
-                        RegionInterface::TITLE => 'region-3',
-                        RegionInterface::POSITION => 100,
+                        CityInterface::TITLE => 'city-3',
+                        CityInterface::POSITION => 100,
                     ],
                 ],
             ],
@@ -131,27 +131,27 @@ class GetListTest extends WebapiAbstract
                 [
                     'sort_orders' => [
                         [
-                            'field' => RegionInterface::TITLE,
+                            'field' => CityInterface::TITLE,
                             'direction' => SortOrder::SORT_DESC,
                         ],
                     ],
                 ],
                 [
                     [
-                        RegionInterface::TITLE => 'region-3',
-                        RegionInterface::POSITION => 100,
+                        CityInterface::TITLE => 'city-3',
+                        CityInterface::POSITION => 100,
                     ],
                     [
-                        RegionInterface::TITLE => 'region-2',
-                        RegionInterface::POSITION => 200,
+                        CityInterface::TITLE => 'city-2',
+                        CityInterface::POSITION => 200,
                     ],
                     [
-                        RegionInterface::TITLE => 'region-2',
-                        RegionInterface::POSITION => 200,
+                        CityInterface::TITLE => 'city-2',
+                        CityInterface::POSITION => 200,
                     ],
                     [
-                        RegionInterface::TITLE => 'region-1',
-                        RegionInterface::POSITION => 300,
+                        CityInterface::TITLE => 'city-1',
+                        CityInterface::POSITION => 300,
                     ],
                 ],
             ],
@@ -159,7 +159,7 @@ class GetListTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list_store_scope_data.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_store_scope_data.php
      * @param array $searchCriteria
      * @param array $expectedItemsData
      * @dataProvider dataProviderGetListIfValueIsPerStore
@@ -196,8 +196,8 @@ class GetListTest extends WebapiAbstract
                         [
                             'filters' => [
                                 [
-                                    'field' => RegionInterface::TITLE,
-                                    'value' => 'per-store-region-2',
+                                    'field' => CityInterface::TITLE,
+                                    'value' => 'per-store-city-2',
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -206,7 +206,7 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
-                        RegionInterface::TITLE => 'per-store-region-2',
+                        CityInterface::TITLE => 'per-store-city-2',
                     ],
                 ],
             ],
@@ -214,27 +214,27 @@ class GetListTest extends WebapiAbstract
                 [
                     'sort_orders' => [
                         [
-                            'field' => RegionInterface::TITLE,
+                            'field' => CityInterface::TITLE,
                             'direction' => SortOrder::SORT_DESC,
                         ],
                     ],
                 ],
                 [
                     [
-                        RegionInterface::TITLE => 'region-2',
-                        RegionInterface::POSITION => 200,
+                        CityInterface::TITLE => 'city-2',
+                        CityInterface::POSITION => 200,
                     ],
                     [
-                        RegionInterface::TITLE => 'per-store-region-3',
-                        RegionInterface::POSITION => 100,
+                        CityInterface::TITLE => 'per-store-city-3',
+                        CityInterface::POSITION => 100,
                     ],
                     [
-                        RegionInterface::TITLE => 'per-store-region-2',
-                        RegionInterface::POSITION => 200,
+                        CityInterface::TITLE => 'per-store-city-2',
+                        CityInterface::POSITION => 200,
                     ],
                     [
-                        RegionInterface::TITLE => 'per-store-region-1',
-                        RegionInterface::POSITION => 300,
+                        CityInterface::TITLE => 'per-store-city-1',
+                        CityInterface::POSITION => 300,
                     ],
                 ],
             ],

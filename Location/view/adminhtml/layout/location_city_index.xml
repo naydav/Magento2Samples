@@ -11,7 +11,7 @@
             </block>
         </referenceContainer>
         <referenceContainer name="content">
-            <uiComponent name="region_listing"/>
+            <uiComponent name="city_listing"/>
         </referenceContainer>
     </body>
 </page>

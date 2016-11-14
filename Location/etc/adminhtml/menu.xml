@@ -8,6 +8,7 @@
              translate="title"
              module="Engine_Location"
              sortOrder="100"
+             parent="Engine_Backend::backend"
              resource="Engine_Location::location"/>
         <add id="Engine_Location::region"
              title="Region"
@@ -17,5 +18,13 @@
              parent="Engine_Location::location"
              action="location/region/index"
              resource="Engine_Location::region"/>
+        <add id="Engine_Location::city"
+             title="City"
+             translate="title"
+             module="Engine_Location"
+             sortOrder="100"
+             parent="Engine_Location::location"
+             action="location/city/index"
+             resource="Engine_Location::city"/>
     </menu>
 </config>

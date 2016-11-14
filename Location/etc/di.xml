@@ -5,6 +5,9 @@
     <preference for="Engine\Location\Api\Data\RegionInterface" type="Engine\Location\Model\Region\Region"/>
     <preference for="Engine\Location\Api\RegionRepositoryInterface" type="Engine\Location\Model\Region\RegionRepository"/>
     <preference for="Engine\Location\Api\Data\RegionSearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Engine\Location\Api\Data\CityInterface" type="Engine\Location\Model\City\City"/>
+    <preference for="Engine\Location\Api\CityRepositoryInterface" type="Engine\Location\Model\City\CityRepository"/>
+    <preference for="Engine\Location\Api\Data\CitySearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>
             <argument name="metadata" xsi:type="array">
@@ -12,22 +15,41 @@
                     <item name="entityTableName" xsi:type="string">engine_location_region</item>
                     <item name="identifierField" xsi:type="string">region_id</item>
                 </item>
+                <item name="Engine\Location\Api\Data\CityInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">engine_location_city</item>
+                    <item name="identifierField" xsi:type="string">city_id</item>
+                </item>
             </argument>
         </arguments>
     </type>
-    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\ReadHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\StoreData\ReadHandler">
+    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\ReadHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\ReadHandler">
         <arguments>
             <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\RegionInterface</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\CreateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\StoreData\CreateHandler">
+    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\CreateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\CreateHandler">
         <arguments>
             <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\RegionInterface</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\UpdateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\StoreData\UpdateHandler">
+    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\UpdateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\UpdateHandler">
         <arguments>
             <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\RegionInterface</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\Location\Model\City\EntityManager\StoreData\ReadHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\ReadHandler">
+        <arguments>
+            <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\CityInterface</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\Location\Model\City\EntityManager\StoreData\CreateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\CreateHandler">
+        <arguments>
+            <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\CityInterface</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\Location\Model\City\EntityManager\StoreData\UpdateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\UpdateHandler">
+        <arguments>
+            <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\CityInterface</argument>
         </arguments>
     </virtualType>
     <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
@@ -35,13 +57,24 @@
             <argument name="extensionActions" xsi:type="array">
                 <item name="Engine\Location\Api\Data\RegionInterface" xsi:type="array">
                     <item name="read" xsi:type="array">
-                        <item name="store_data_read" xsi:type="string">Engine\Location\Model\Region\EntityManager\ReadHandler</item>
+                        <item name="store_data_read" xsi:type="string">Engine\Location\Model\Region\EntityManager\StoreData\ReadHandler</item>
                     </item>
                     <item name="create" xsi:type="array">
-                        <item name="store_data_create" xsi:type="string">Engine\Location\Model\Region\EntityManager\CreateHandler</item>
+                        <item name="store_data_create" xsi:type="string">Engine\Location\Model\Region\EntityManager\StoreData\CreateHandler</item>
                     </item>
                     <item name="update" xsi:type="array">
-                        <item name="store_data_update" xsi:type="string">Engine\Location\Model\Region\EntityManager\UpdateHandler</item>
+                        <item name="store_data_update" xsi:type="string">Engine\Location\Model\Region\EntityManager\StoreData\UpdateHandler</item>
+                    </item>
+                </item>
+                <item name="Engine\Location\Api\Data\CityInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="store_data_read" xsi:type="string">Engine\Location\Model\City\EntityManager\StoreData\ReadHandler</item>
+                    </item>
+                    <item name="create" xsi:type="array">
+                        <item name="store_data_create" xsi:type="string">Engine\Location\Model\City\EntityManager\StoreData\CreateHandler</item>
+                    </item>
+                    <item name="update" xsi:type="array">
+                        <item name="store_data_update" xsi:type="string">Engine\Location\Model\City\EntityManager\StoreData\UpdateHandler</item>
                     </item>
                 </item>
             </argument>
@@ -56,6 +89,13 @@
                     </item>
                     <item name="storeDataTable" xsi:type="string">engine_location_region_store</item>
                     <item name="referenceField" xsi:type="string">region_id</item>
+                </item>
+                <item name="Engine\Location\Api\Data\CityInterface" xsi:type="array">
+                    <item name="fields" xsi:type="array">
+                        <item name="0" xsi:type="string">title</item>
+                    </item>
+                    <item name="storeDataTable" xsi:type="string">engine_location_city_store</item>
+                    <item name="referenceField" xsi:type="string">city_id</item>
                 </item>
             </argument>
         </arguments>

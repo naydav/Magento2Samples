@@ -3,9 +3,9 @@ namespace Engine\Location\Ui\DataProvider;
 
 use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
 use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
-use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Model\Region\ResourceModel\RegionCollection;
-use Engine\Location\Model\Region\ResourceModel\RegionCollectionFactory;
+use Engine\Location\Api\Data\CityInterface;
+use Engine\Location\Model\City\ResourceModel\CityCollection;
+use Engine\Location\Model\City\ResourceModel\CityCollectionFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
@@ -18,7 +18,7 @@ use Magento\Store\Model\StoreManagerInterface;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  */
-class RegionDataProvider extends DataProvider
+class CityDataProvider extends DataProvider
 {
     /**
      * @var UrlInterface
@@ -36,9 +36,9 @@ class RegionDataProvider extends DataProvider
     private $dataProviderMetaModifier;
 
     /**
-     * @var RegionCollectionFactory
+     * @var CityCollectionFactory
      */
-    private $regionCollectionFactory;
+    private $cityCollectionFactory;
 
     /**
      * @var CollectionProcessorInterface
@@ -61,7 +61,7 @@ class RegionDataProvider extends DataProvider
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
      * @param DataProviderMetaModifierInterface $dataProviderMetaModifier
-     * @param RegionCollectionFactory $regionCollectionFactory
+     * @param CityCollectionFactory $cityCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory
      * @param array $meta
@@ -78,7 +78,7 @@ class RegionDataProvider extends DataProvider
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
         DataProviderMetaModifierInterface $dataProviderMetaModifier,
-        RegionCollectionFactory $regionCollectionFactory,
+        CityCollectionFactory $cityCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
         DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory,
         array $meta = [],
@@ -98,7 +98,7 @@ class RegionDataProvider extends DataProvider
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
         $this->dataProviderMetaModifier = $dataProviderMetaModifier;
-        $this->regionCollectionFactory = $regionCollectionFactory;
+        $this->cityCollectionFactory = $cityCollectionFactory;
         $this->collectionProcessor = $collectionProcessor;
         $this->dataProviderSearchResultFactory = $dataProviderSearchResultFactory;
     }
@@ -126,9 +126,9 @@ class RegionDataProvider extends DataProvider
     public function getMeta()
     {
         $meta = parent::getMeta();
-        $regionId = $this->request->getParam('region_id');
-        if (null !== $regionId) {
-            $meta = $this->dataProviderMetaModifier->modify(RegionInterface::class, $regionId, $meta);
+        $cityId = $this->request->getParam('city_id');
+        if (null !== $cityId) {
+            $meta = $this->dataProviderMetaModifier->modify(CityInterface::class, $cityId, $meta);
         }
         return $meta;
     }
@@ -139,8 +139,8 @@ class RegionDataProvider extends DataProvider
     public function getSearchResult()
     {
         $searchCriteria = $this->getSearchCriteria();
-        /** @var RegionCollection $collection */
-        $collection = $this->regionCollectionFactory->create();
+        /** @var CityCollection $collection */
+        $collection = $this->cityCollectionFactory->create();
         $collection->addStoreData();
         $this->collectionProcessor->process($searchCriteria, $collection);
 
@@ -148,7 +148,7 @@ class RegionDataProvider extends DataProvider
             $collection->getItems(),
             $collection->getSize(),
             $searchCriteria,
-            RegionInterface::REGION_ID
+            CityInterface::CITY_ID
         );
         return $searchResult;
     }
