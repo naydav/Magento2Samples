@@ -58,19 +58,23 @@ class MassDelete extends Action
      */
     public function execute()
     {
-        $deletedItemsCount = 0;
-        $collection = $this->massActionFilter->getCollection($this->regionCollectionFactory->create());
-        foreach ($collection as $region) {
-            try {
-                /** @var RegionInterface $region */
-                $this->regionRepository->deleteById($region->getRegionId());
-                $deletedItemsCount++;
-            } catch (CouldNotDeleteException $e) {
-                $errorMessage = __('[ID: %1] ', $region->getRegionId()) . $e->getMessage();
-                $this->messageManager->addErrorMessage($errorMessage);
+        if ($this->getRequest()->isPost()) {
+            $deletedItemsCount = 0;
+            $collection = $this->massActionFilter->getCollection($this->regionCollectionFactory->create());
+            foreach ($collection as $region) {
+                try {
+                    /** @var RegionInterface $region */
+                    $this->regionRepository->deleteById($region->getRegionId());
+                    $deletedItemsCount++;
+                } catch (CouldNotDeleteException $e) {
+                    $errorMessage = __('[ID: %1] ', $region->getRegionId()) . $e->getMessage();
+                    $this->messageManager->addErrorMessage($errorMessage);
+                }
             }
+            $this->messageManager->addSuccessMessage(__('You deleted %1 region(s).', $deletedItemsCount));
+        } else {
+            $this->messageManager->addErrorMessage(__('Wrong request.'));
         }
-        $this->messageManager->addSuccessMessage(__('You deleted %1 region(s).', $deletedItemsCount));
-        return $this->resultRedirectFactory->create()->setPath('*/*/');
+        return $this->resultRedirectFactory->create()->setPath('*/*/index');
     }
 }

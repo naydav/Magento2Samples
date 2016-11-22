@@ -39,19 +39,24 @@ class Delete extends Action
      */
     public function execute()
     {
-        $cityId = $this->getRequest()->getParam('city_id');
         $resultRedirect = $this->resultRedirectFactory->create();
 
-        try {
-            $this->cityRepository->deleteById($cityId);
-            $this->messageManager->addSuccessMessage(__('The city has been deleted.'));
-            $resultRedirect->setPath('*/*/');
-        } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('The city no exists.'));
-            $resultRedirect->setPath('*/*/');
-        } catch (CouldNotDeleteException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
-            $resultRedirect->setPath('*/*/edit', ['city_id' => $cityId, '_current' => true]);
+        $cityId = $this->getRequest()->getPost('city_id');
+        if ($this->getRequest()->isPost() && null !== $cityId) {
+            try {
+                $this->cityRepository->deleteById($cityId);
+                $this->messageManager->addSuccessMessage(__('The city has been deleted.'));
+                $resultRedirect->setPath('*/*/index');
+            } catch (NoSuchEntityException $e) {
+                $this->messageManager->addErrorMessage(__('City with id "%1" does not exist.', $cityId));
+                $resultRedirect->setPath('*/*/index');
+            } catch (CouldNotDeleteException $e) {
+                $this->messageManager->addErrorMessage($e->getMessage());
+                $resultRedirect->setPath('*/*/edit', ['city_id' => $cityId, '_current' => true]);
+            }
+        } else {
+            $this->messageManager->addErrorMessage(__('Wrong request.'));
+            $resultRedirect->setPath('*/*/index');
         }
         return $resultRedirect;
     }

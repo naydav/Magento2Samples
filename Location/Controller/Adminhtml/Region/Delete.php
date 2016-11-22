@@ -39,19 +39,24 @@ class Delete extends Action
      */
     public function execute()
     {
-        $regionId = $this->getRequest()->getParam('region_id');
         $resultRedirect = $this->resultRedirectFactory->create();
 
-        try {
-            $this->regionRepository->deleteById($regionId);
-            $this->messageManager->addSuccessMessage(__('The region has been deleted.'));
-            $resultRedirect->setPath('*/*/');
-        } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('The region no exists.'));
-            $resultRedirect->setPath('*/*/');
-        } catch (CouldNotDeleteException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
-            $resultRedirect->setPath('*/*/edit', ['region_id' => $regionId, '_current' => true]);
+        $regionId = $this->getRequest()->getPost('region_id');
+        if ($this->getRequest()->isPost() && null !== $regionId) {
+            try {
+                $this->regionRepository->deleteById($regionId);
+                $this->messageManager->addSuccessMessage(__('The region has been deleted.'));
+                $resultRedirect->setPath('*/*/index');
+            } catch (NoSuchEntityException $e) {
+                $this->messageManager->addErrorMessage(__('Region with id "%1" does not exist.', $regionId));
+                $resultRedirect->setPath('*/*/index');
+            } catch (CouldNotDeleteException $e) {
+                $this->messageManager->addErrorMessage($e->getMessage());
+                $resultRedirect->setPath('*/*/edit', ['region_id' => $regionId, '_current' => true]);
+            }
+        } else {
+            $this->messageManager->addErrorMessage(__('Wrong request.'));
+            $resultRedirect->setPath('*/*/index');
         }
         return $resultRedirect;
     }

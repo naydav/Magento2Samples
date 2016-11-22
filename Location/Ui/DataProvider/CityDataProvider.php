@@ -126,9 +126,18 @@ class CityDataProvider extends DataProvider
     public function getMeta()
     {
         $meta = parent::getMeta();
-        $cityId = $this->request->getParam('city_id');
-        if (null !== $cityId) {
+        if ('city_form_data_source' === $this->name) {
+            $cityId = $this->request->getParam('city_id');
             $meta = $this->dataProviderMetaModifier->modify(CityInterface::class, $cityId, $meta);
+        }
+
+        if ('city_listing_data_source' === $this->name) {
+            $storeId = $this->storeManager->getStore()->getId();
+            $inlineEditUrl = $this->urlBuilder->getUrl('*/*/inlineEdit', [
+                'store' => $storeId,
+            ]);
+            $meta['city_columns']['arguments']['data']['config']['editorConfig']['clientConfig']['saveUrl']
+                = $inlineEditUrl;
         }
         return $meta;
     }

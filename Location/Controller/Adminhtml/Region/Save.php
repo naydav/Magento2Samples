@@ -4,6 +4,7 @@ namespace Engine\Location\Controller\Adminhtml\Region;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\Data\RegionInterfaceFactory;
 use Engine\Location\Api\RegionRepositoryInterface;
+use Engine\Location\Model\RegionCityRelationProcessor;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\EntityManager\HydratorInterface;
@@ -37,21 +38,29 @@ class Save extends Action
     private $hydrator;
 
     /**
+     * @var RegionCityRelationProcessor
+     */
+    private $regionCityRelationProcessor;
+
+    /**
      * @param Context $context
      * @param RegionInterfaceFactory $regionFactory
      * @param RegionRepositoryInterface $regionRepository
      * @param HydratorInterface $hydrator
+     * @param RegionCityRelationProcessor $regionCityRelationProcessor
      */
     public function __construct(
         Context $context,
         RegionInterfaceFactory $regionFactory,
         RegionRepositoryInterface $regionRepository,
-        HydratorInterface $hydrator
+        HydratorInterface $hydrator,
+        RegionCityRelationProcessor $regionCityRelationProcessor
     ) {
         parent::__construct($context);
         $this->regionFactory = $regionFactory;
         $this->regionRepository = $regionRepository;
         $this->hydrator = $hydrator;
+        $this->regionCityRelationProcessor = $regionCityRelationProcessor;
     }
 
     /**
@@ -61,19 +70,19 @@ class Save extends Action
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         try {
-            $requestData = $this->getRequest()->getParam('general');
-            if (!$requestData) {
+            $regionRequestData = $this->getRequest()->getParam('general');
+            if (!$regionRequestData) {
                 throw new LocalizedException(__('Please correct the data sent.'));
             }
             $useDefaults = $this->getRequest()->getParam('use_default', []);
             if ($useDefaults) {
                 foreach ($useDefaults as $field => $useDefaultState) {
                     if (1 === (int)$useDefaultState) {
-                        $requestData[$field] = null;
+                        $regionRequestData[$field] = null;
                     }
                 }
             }
-            $regionId = !empty($requestData['region_id']) ? $requestData['region_id'] : null;
+            $regionId = !empty($regionRequestData['region_id']) ? $regionRequestData['region_id'] : null;
 
             if ($regionId) {
                 $region = $this->regionRepository->get($regionId);
@@ -81,8 +90,14 @@ class Save extends Action
                 /** @var RegionInterface $region */
                 $region = $this->regionFactory->create();
             }
-            $this->hydrator->hydrate($region, $requestData);
+            $this->hydrator->hydrate($region, $regionRequestData);
             $this->regionRepository->save($region);
+
+            $citiesRequestData = $this->getRequest()->getParam('cities');
+            $this->regionCityRelationProcessor->process(
+                $region->getRegionId(),
+                $citiesRequestData['assigned_cities']
+            );
 
             $this->messageManager->addSuccessMessage(__('The Region has been saved'));
             if ($this->getRequest()->getParam('back')) {

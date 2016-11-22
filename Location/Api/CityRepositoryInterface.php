@@ -17,6 +17,7 @@ interface CityRepositoryInterface
     /**
      * @param int $cityId
      * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
     public function deleteById($cityId);

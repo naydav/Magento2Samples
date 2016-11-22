@@ -6,7 +6,7 @@
             <item name="provider" xsi:type="string">region_listing.region_listing_data_source</item>
             <item name="deps" xsi:type="string">region_listing.region_listing_data_source</item>
         </item>
-        <item name="spinner" xsi:type="string">engine_location_region_columns</item>
+        <item name="spinner" xsi:type="string">region_columns</item>
         <item name="buttons" xsi:type="array">
             <item name="add" xsi:type="array">
                 <item name="name" xsi:type="string">add</item>
@@ -100,21 +100,20 @@
         </massaction>
         <paging name="listing_paging"/>
     </listingToolbar>
-    <columns name="engine_location_region_columns">
+    <columns name="region_columns">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
                 <item name="editorConfig" xsi:type="array">
-                    <item name="selectProvider" xsi:type="string">region_listing.region_listing.engine_location_region_columns.ids</item>
+                    <item name="selectProvider" xsi:type="string">region_listing.region_listing.region_columns.ids</item>
                     <item name="enabled" xsi:type="boolean">true</item>
                     <item name="indexField" xsi:type="string">region_id</item>
                     <item name="clientConfig" xsi:type="array">
-                        <item name="saveUrl" xsi:type="url" path="*/*/inlineEdit"/>
                         <item name="validateBeforeSave" xsi:type="boolean">false</item>
                     </item>
                 </item>
                 <item name="childDefaults" xsi:type="array">
                     <item name="fieldAction" xsi:type="array">
-                        <item name="provider" xsi:type="string">region_listing.region_listing.engine_location_region_columns_editor</item>
+                        <item name="provider" xsi:type="string">region_listing.region_listing.region_columns_editor</item>
                         <item name="target" xsi:type="string">startEdit</item>
                         <item name="params" xsi:type="array">
                             <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>

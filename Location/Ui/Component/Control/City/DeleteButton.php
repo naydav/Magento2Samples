@@ -30,13 +30,12 @@ class DeleteButton implements ButtonProviderInterface
         $data = [];
         $cityId = $this->context->getRequest()->getParam('city_id');
         if (null !== $cityId) {
+            $message = __('Are you sure you want to do this?');
+            $url = $this->context->getUrlBuilder()->getUrl('*/*/delete');
             $data = [
                 'label' => __('Delete'),
                 'class' => 'delete',
-                'on_click' => 'deleteConfirm(\''
-                    . __('Are you sure you want to do this?')
-                    . '\', \'' . $this->context->getUrlBuilder()->getUrl('*/*/delete', ['city_id' => $cityId])
-                    . '\')',
+                'on_click' => "deleteConfirm('{$message}', '{$url}', {data:{city_id:{$cityId}}})",
                 'sort_order' => 20,
             ];
         }

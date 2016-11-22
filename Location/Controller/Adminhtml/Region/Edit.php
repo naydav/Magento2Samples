@@ -52,8 +52,8 @@ class Edit extends Action
         } catch (NoSuchEntityException $e) {
             /** @var Redirect $result */
             $result = $this->resultRedirectFactory->create();
-            $this->messageManager->addErrorMessage(__('The region no exists.'));
-            $result->setPath('*/*/');
+            $this->messageManager->addErrorMessage(__('Region with id "%1" does not exist.', $regionId));
+            $result->setPath('*/*/index');
         }
         return $result;
     }

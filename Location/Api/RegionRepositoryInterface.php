@@ -17,6 +17,7 @@ interface RegionRepositoryInterface
     /**
      * @param int $regionId
      * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
     public function deleteById($regionId);

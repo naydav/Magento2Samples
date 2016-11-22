@@ -19,7 +19,7 @@ class GetListTest extends WebapiAbstract
     /**#@-*/
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/store.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list_global_scope_data.php
      * @param array $searchCriteria
      * @param array $expectedItemsData
@@ -51,6 +51,27 @@ class GetListTest extends WebapiAbstract
     public function dataProviderGetListIfValueIsInGlobalScope()
     {
         return [
+            'filteringById' => [
+                [
+                    'filter_groups' => [
+                        [
+                            'filters' => [
+                                [
+                                    'field' => RegionInterface::REGION_ID,
+                                    'value' => '100',
+                                    'condition_type' => 'eq',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    [
+                        RegionInterface::TITLE => 'region-3',
+                        RegionInterface::IS_ENABLED => true,
+                    ],
+                ],
+            ],
             'filteringByNotScopedField' => [
                 [
                     'filter_groups' => [
@@ -190,14 +211,23 @@ class GetListTest extends WebapiAbstract
     public function dataProviderGetListIfValueIsPerStore()
     {
         return [
-            'filteringByScopedFieldIfValueIsPerStore' => [
+            'filteringByIdAndPerStoreFieldValue' => [
                 [
                     'filter_groups' => [
                         [
                             'filters' => [
                                 [
+                                    'field' => RegionInterface::REGION_ID,
+                                    'value' => '100',
+                                    'condition_type' => 'eq',
+                                ],
+                            ],
+                        ],
+                        [
+                            'filters' => [
+                                [
                                     'field' => RegionInterface::TITLE,
-                                    'value' => 'per-store-region-2',
+                                    'value' => 'z-per-store-region-3',
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -206,7 +236,28 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
-                        RegionInterface::TITLE => 'per-store-region-2',
+                        RegionInterface::TITLE => 'z-per-store-region-3',
+                        RegionInterface::IS_ENABLED => true,
+                    ],
+                ],
+            ],
+            'filteringByScopedFieldIfValueIsPerStore' => [
+                [
+                    'filter_groups' => [
+                        [
+                            'filters' => [
+                                [
+                                    'field' => RegionInterface::TITLE,
+                                    'value' => 'z-per-store-region-2',
+                                    'condition_type' => 'eq',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    [
+                        RegionInterface::TITLE => 'z-per-store-region-2',
                     ],
                 ],
             ],
@@ -221,20 +272,20 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
-                        RegionInterface::TITLE => 'region-2',
-                        RegionInterface::POSITION => 200,
-                    ],
-                    [
-                        RegionInterface::TITLE => 'per-store-region-3',
+                        RegionInterface::TITLE => 'z-per-store-region-3',
                         RegionInterface::POSITION => 100,
                     ],
                     [
-                        RegionInterface::TITLE => 'per-store-region-2',
+                        RegionInterface::TITLE => 'z-per-store-region-2',
                         RegionInterface::POSITION => 200,
                     ],
                     [
-                        RegionInterface::TITLE => 'per-store-region-1',
+                        RegionInterface::TITLE => 'z-per-store-region-1',
                         RegionInterface::POSITION => 300,
+                    ],
+                    [
+                        RegionInterface::TITLE => 'region-2',
+                        RegionInterface::POSITION => 200,
                     ],
                 ],
             ],

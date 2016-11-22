@@ -26,7 +26,7 @@ $city = $hydrator->hydrate($city, [
 $cityId = $cityRepository->save($city);
 
 // save per store data
-require 'store.php';
+require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
 $currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);

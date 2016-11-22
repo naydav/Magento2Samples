@@ -52,8 +52,8 @@ class Edit extends Action
         } catch (NoSuchEntityException $e) {
             /** @var Redirect $result */
             $result = $this->resultRedirectFactory->create();
-            $this->messageManager->addErrorMessage(__('The city no exists.'));
-            $result->setPath('*/*/');
+            $this->messageManager->addErrorMessage(__('City with id "%1" does not exist.', $cityId));
+            $result->setPath('*/*/index');
         }
         return $result;
     }

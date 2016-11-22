@@ -14,21 +14,25 @@ $cityRepository = Bootstrap::getObjectManager()->get(CityRepositoryInterface::cl
 
 $citiesData = [
     [
+        CityInterface::CITY_ID => 100,
         CityInterface::TITLE => 'city-3',
         CityInterface::IS_ENABLED => true,
         CityInterface::POSITION => 100,
     ],
     [
+        CityInterface::CITY_ID => 200,
         CityInterface::TITLE => 'city-2',
         CityInterface::IS_ENABLED => true,
         CityInterface::POSITION => 200,
     ],
     [
+        CityInterface::CITY_ID => 300,
         CityInterface::TITLE => 'city-2',
         CityInterface::IS_ENABLED => false,
         CityInterface::POSITION => 200,
     ],
     [
+        CityInterface::CITY_ID => 400,
         CityInterface::TITLE => 'city-1',
         CityInterface::IS_ENABLED => false,
         CityInterface::POSITION => 300,

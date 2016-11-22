@@ -51,16 +51,17 @@ class InlineEdit extends Action
     public function execute()
     {
         $errorMessages = [];
-        $requestData = $this->getRequest()->getParam('items', []);
+        $request = $this->getRequest();
+        $requestData = $request->getParam('items', []);
 
-        if ($this->getRequest()->getParam('isAjax') && $requestData) {
+        if ($request->isXmlHttpRequest() && $requestData) {
             foreach ($requestData as $itemData) {
                 try {
                     $region = $this->regionRepository->get($itemData['region_id']);
                     $this->hydrator->hydrate($region, $itemData);
                     $this->regionRepository->save($region);
                 } catch (NoSuchEntityException $e) {
-                    $errorMessages[] = __('[ID: %1] The region no exists.', $itemData['region_id']);
+                    $errorMessages[] = __('[ID: %1] The region does not exist.', $itemData['region_id']);
                 } catch (CouldNotSaveException $e) {
                     $errorMessages[] = __('[ID: %1] ', $itemData['region_id']) . $e->getMessage();
                 }

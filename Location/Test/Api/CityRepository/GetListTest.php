@@ -19,7 +19,7 @@ class GetListTest extends WebapiAbstract
     /**#@-*/
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/store.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope_data.php
      * @param array $searchCriteria
      * @param array $expectedItemsData
@@ -51,6 +51,27 @@ class GetListTest extends WebapiAbstract
     public function dataProviderGetListIfValueIsInGlobalScope()
     {
         return [
+            'filteringById' => [
+                [
+                    'filter_groups' => [
+                        [
+                            'filters' => [
+                                [
+                                    'field' => CityInterface::CITY_ID,
+                                    'value' => '100',
+                                    'condition_type' => 'eq',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    [
+                        CityInterface::TITLE => 'city-3',
+                        CityInterface::IS_ENABLED => true,
+                    ],
+                ],
+            ],
             'filteringByNotScopedField' => [
                 [
                     'filter_groups' => [
@@ -190,14 +211,23 @@ class GetListTest extends WebapiAbstract
     public function dataProviderGetListIfValueIsPerStore()
     {
         return [
-            'filteringByScopedFieldIfValueIsPerStore' => [
+            'filteringByIdAndPerStoreFieldValue' => [
                 [
                     'filter_groups' => [
                         [
                             'filters' => [
                                 [
+                                    'field' => CityInterface::CITY_ID,
+                                    'value' => '100',
+                                    'condition_type' => 'eq',
+                                ],
+                            ],
+                        ],
+                        [
+                            'filters' => [
+                                [
                                     'field' => CityInterface::TITLE,
-                                    'value' => 'per-store-city-2',
+                                    'value' => 'z-per-store-city-3',
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -206,7 +236,28 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
-                        CityInterface::TITLE => 'per-store-city-2',
+                        CityInterface::TITLE => 'z-per-store-city-3',
+                        CityInterface::IS_ENABLED => true,
+                    ],
+                ],
+            ],
+            'filteringByScopedFieldIfValueIsPerStore' => [
+                [
+                    'filter_groups' => [
+                        [
+                            'filters' => [
+                                [
+                                    'field' => CityInterface::TITLE,
+                                    'value' => 'z-per-store-city-2',
+                                    'condition_type' => 'eq',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    [
+                        CityInterface::TITLE => 'z-per-store-city-2',
                     ],
                 ],
             ],
@@ -221,20 +272,20 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
-                        CityInterface::TITLE => 'city-2',
-                        CityInterface::POSITION => 200,
-                    ],
-                    [
-                        CityInterface::TITLE => 'per-store-city-3',
+                        CityInterface::TITLE => 'z-per-store-city-3',
                         CityInterface::POSITION => 100,
                     ],
                     [
-                        CityInterface::TITLE => 'per-store-city-2',
+                        CityInterface::TITLE => 'z-per-store-city-2',
                         CityInterface::POSITION => 200,
                     ],
                     [
-                        CityInterface::TITLE => 'per-store-city-1',
+                        CityInterface::TITLE => 'z-per-store-city-1',
                         CityInterface::POSITION => 300,
+                    ],
+                    [
+                        CityInterface::TITLE => 'city-2',
+                        CityInterface::POSITION => 200,
                     ],
                 ],
             ],

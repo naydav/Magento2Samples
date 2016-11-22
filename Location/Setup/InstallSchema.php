@@ -148,7 +148,7 @@ class InstallSchema implements InstallSchemaInterface
             CityInterface::REGION_ID,
             Table::TYPE_INTEGER,
             null,
-            ['unsigned' => true, 'nullable' => false],
+            ['unsigned' => true, 'nullable' => true],
             'Region Id'
         )->addColumn(
             CityInterface::IS_ENABLED,
@@ -178,7 +178,7 @@ class InstallSchema implements InstallSchemaInterface
             CityInterface::REGION_ID,
             $regionTable,
             RegionInterface::REGION_ID,
-            AdapterInterface::FK_ACTION_CASCADE
+            AdapterInterface::FK_ACTION_SET_NULL
         );
     }
 

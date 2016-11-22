@@ -51,16 +51,17 @@ class InlineEdit extends Action
     public function execute()
     {
         $errorMessages = [];
-        $requestData = $this->getRequest()->getParam('items', []);
+        $request = $this->getRequest();
+        $requestData = $request->getParam('items', []);
 
-        if ($this->getRequest()->getParam('isAjax') && $requestData) {
+        if ($request->isXmlHttpRequest() && $requestData) {
             foreach ($requestData as $itemData) {
                 try {
                     $city = $this->cityRepository->get($itemData['city_id']);
                     $this->hydrator->hydrate($city, $itemData);
                     $this->cityRepository->save($city);
                 } catch (NoSuchEntityException $e) {
-                    $errorMessages[] = __('[ID: %1] The city no exists.', $itemData['city_id']);
+                    $errorMessages[] = __('[ID: %1] The city  does not exist.', $itemData['city_id']);
                 } catch (CouldNotSaveException $e) {
                     $errorMessages[] = __('[ID: %1] ', $itemData['city_id']) . $e->getMessage();
                 }

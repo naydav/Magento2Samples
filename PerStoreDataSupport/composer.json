@@ -2,7 +2,7 @@
     "name": "engine/module-per-store-data-support",
     "description": "N/A",    
     "type": "engine-module",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "license": "MIT",
     "require": {
         "php": "~5.6.0|~7.0.0",

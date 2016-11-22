@@ -17,21 +17,25 @@ $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class)
 
 $regionsData = [
     [
+        RegionInterface::REGION_ID => 100,
         RegionInterface::TITLE => 'region-3',
         RegionInterface::IS_ENABLED => true,
         RegionInterface::POSITION => 100,
     ],
     [
+        RegionInterface::REGION_ID => 200,
         RegionInterface::TITLE => 'region-2',
         RegionInterface::IS_ENABLED => true,
         RegionInterface::POSITION => 200,
     ],
     [
+        RegionInterface::REGION_ID => 300,
         RegionInterface::TITLE => 'region-2',
         RegionInterface::IS_ENABLED => false,
         RegionInterface::POSITION => 200,
     ],
     [
+        RegionInterface::REGION_ID => 400,
         RegionInterface::TITLE => 'region-1',
         RegionInterface::IS_ENABLED => false,
         RegionInterface::POSITION => 300,
@@ -46,7 +50,7 @@ foreach ($regionsData as $regionData) {
 }
 
 // save per store data
-require 'store.php';
+require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
 $currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);
@@ -57,7 +61,7 @@ foreach ($regionIds as $key => $regionId) {
         continue;
     }
     $region = $regionRepository->get($regionId);
-    $region->setTitle('per-store-' . $region->getTitle());
+    $region->setTitle('z-per-store-' . $region->getTitle());
     $regionRepository->save($region);
 }
 $storeManager->setCurrentStore($currentStore);

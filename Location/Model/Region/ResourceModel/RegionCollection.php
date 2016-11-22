@@ -80,19 +80,15 @@ class RegionCollection extends AbstractCollection
      */
     public function addFieldToFilter($field, $condition = null)
     {
-        $fields = is_array($field) ? $field : [$field];
-        $storeDataConfiguration = $this->storeDataConfigurationProvider->provide(RegionInterface::class);
-        $perStoreFields = $storeDataConfiguration->getFields();
-
-        foreach ($fields as &$field) {
-            if (in_array($field, $perStoreFields, true)) {
-                $this->addStoreData();
-                $field = $this->storeDataSelectProcessor->resolveField($field);
+        if (is_array($field)) {
+            foreach ($field as &$value) {
+                $value = $this->processField($value);
             }
+            unset($value);
+        } else {
+            $field = $this->processField($field);
         }
-        unset($field);
-
-        return parent::addFieldToFilter($fields, $condition);
+        return parent::addFieldToFilter($field, $condition);
     }
 
     /**
@@ -100,12 +96,7 @@ class RegionCollection extends AbstractCollection
      */
     public function setOrder($field, $direction = self::SORT_ORDER_DESC)
     {
-        $storeDataConfiguration = $this->storeDataConfigurationProvider->provide(RegionInterface::class);
-        $perStoreFields = $storeDataConfiguration->getFields();
-        if (in_array($field, $perStoreFields, true)) {
-            $this->addStoreData();
-            $field = $this->storeDataSelectProcessor->resolveField($field);
-        }
+        $field = $this->processField($field);
         return parent::setOrder($field, $direction);
     }
 
@@ -114,13 +105,28 @@ class RegionCollection extends AbstractCollection
      */
     public function addOrder($field, $direction = self::SORT_ORDER_DESC)
     {
+        $field = $this->processField($field);
+        return parent::addOrder($field, $direction);
+    }
+
+    /**
+     * @param string $field
+     * @return string|\Zend_Db_Expr
+     */
+    private function processField($field)
+    {
         $storeDataConfiguration = $this->storeDataConfigurationProvider->provide(RegionInterface::class);
         $perStoreFields = $storeDataConfiguration->getFields();
-        if (in_array($field, $perStoreFields, true)) {
+
+        if ($this->getIdFieldName() === $field) {
+            $field = "main_table.{$field}";
+        } elseif (in_array($field, $perStoreFields, true)) {
             $this->addStoreData();
             $field = $this->storeDataSelectProcessor->resolveField($field);
+        } elseif ($storeDataConfiguration->getReferenceField() === $field) {
+            $field = $this->storeDataSelectProcessor->resolveField($field);
         }
-        return parent::addOrder($field, $direction);
+        return $field;
     }
 
     /**

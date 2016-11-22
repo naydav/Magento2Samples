@@ -50,7 +50,7 @@ class CrudTest extends WebapiAbstract
 
     /**
      * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/store.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      */
     public function testUpdateInGlobalScope()
     {
@@ -78,7 +78,7 @@ class CrudTest extends WebapiAbstract
 
     /**
      * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/store.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      */
     public function testUpdateInStoreScope()
     {

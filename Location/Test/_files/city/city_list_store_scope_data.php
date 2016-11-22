@@ -17,21 +17,25 @@ $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class)
 
 $citiesData = [
     [
+        CityInterface::CITY_ID => 100,
         CityInterface::TITLE => 'city-3',
         CityInterface::IS_ENABLED => true,
         CityInterface::POSITION => 100,
     ],
     [
+        CityInterface::CITY_ID => 200,
         CityInterface::TITLE => 'city-2',
         CityInterface::IS_ENABLED => true,
         CityInterface::POSITION => 200,
     ],
     [
+        CityInterface::CITY_ID => 300,
         CityInterface::TITLE => 'city-2',
         CityInterface::IS_ENABLED => false,
         CityInterface::POSITION => 200,
     ],
     [
+        CityInterface::CITY_ID => 400,
         CityInterface::TITLE => 'city-1',
         CityInterface::IS_ENABLED => false,
         CityInterface::POSITION => 300,
@@ -46,7 +50,7 @@ foreach ($citiesData as $cityData) {
 }
 
 // save per store data
-require 'store.php';
+require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
 $currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);
@@ -57,7 +61,7 @@ foreach ($cityIds as $key => $cityId) {
         continue;
     }
     $city = $cityRepository->get($cityId);
-    $city->setTitle('per-store-' . $city->getTitle());
+    $city->setTitle('z-per-store-' . $city->getTitle());
     $cityRepository->save($city);
 }
 $storeManager->setCurrentStore($currentStore);
