@@ -17,10 +17,10 @@
 
 <h3>PerStoreDataSupport module</h3>
 * Simple Data Per Store support
+* Work with DI  (plugin example)
 
 <h3>Backend module</h3>
 * General backend classes
-* Work with DI  (plugin example)
 
 <h2>Related Links</h2>
 * <a href="http://devdocs.magento.com/">Magento 2 Dev Docs</a>
