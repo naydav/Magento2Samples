@@ -23,4 +23,4 @@
 
 <h2>Related Links</h2>
 * <a href="http://devdocs.magento.com/">Magento 2 Dev Docs</a>
-* <a href="http://devdocs.magento.com/guides/v2.0/install-gde/basics/basics_login.html">Magento 2 github</a>
+* <a href="https://github.com/magento/">Magento 2 github</a>
