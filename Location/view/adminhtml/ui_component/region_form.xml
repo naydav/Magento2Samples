@@ -108,7 +108,7 @@
     <fieldset name="cities">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">Assigned Cities</item>
+                <item name="label" xsi:type="string" translate="true">Cities</item>
                 <item name="collapsible" xsi:type="boolean">true</item>
                 <item name="dataScope" xsi:type="string">cities</item>
             </item>
@@ -147,16 +147,14 @@
         <dynamicRows name="assigned_cities">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="additionalClasses" xsi:type="string">admin__field-wide</item>
-                    <item name="label" xsi:type="null"/>
+                    <item name="label" xsi:type="string">Assigned Cities</item>
                     <item name="renderDefaultRecord" xsi:type="boolean">false</item>
-                    <item name="template" xsi:type="string">ui/dynamic-rows/templates/grid</item>
+                    <!--<item name="template" xsi:type="string">ui/dynamic-rows/templates/grid</item>-->
                     <item name="component" xsi:type="string">Magento_Ui/js/dynamic-rows/dynamic-rows-grid</item>
                     <item name="addButtonLabel" xsi:type="string">Add City</item>
                     <item name="addButton" xsi:type="boolean">true</item>
                     <item name="recordTemplate" xsi:type="string">record</item>
                     <item name="dataScope" xsi:type="string"/>
-                    <item name="deleteButtonLabel" translate="true" xsi:type="string">Remove City</item>
                     <item name="dataProvider" xsi:type="string">data.cities.assign_cities_grid</item>
                     <item name="sortOrder" xsi:type="number">100</item>
                     <item name="map" xsi:type="array">
@@ -168,7 +166,7 @@
                         <item name="insertData" xsi:type="string">${ $.provider }:${ $.dataProvider }</item>
                     </item>
                     <item name="dndConfig" xsi:type="array">
-                        <item name="enabled" xsi:type="boolean">false</item>
+                        <item name="enabled" xsi:type="boolean">true</item>
                     </item>
                     <item name="renderColumnsHeader" xsi:type="boolean">true</item>
                 </item>
@@ -215,7 +213,6 @@
                             <item name="component" xsi:type="string">Magento_Ui/js/form/element/select</item>
                             <item name="dataScope" xsi:type="string">is_enabled</item>
                             <item name="label" xsi:type="string" translate="true">Is Enabled</item>
-                            <item name="disabled" xsi:type="boolean">true</item>
                         </item>
                     </argument>
                 </field>

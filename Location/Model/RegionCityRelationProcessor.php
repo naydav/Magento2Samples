@@ -92,12 +92,12 @@ class RegionCityRelationProcessor
             if (empty($cityData['id'])) {
                 /** @var CityInterface $city */
                 $city = $this->cityFactory->create();
-                $this->hydrator->hydrate($city, $cityData);
             } else {
                 $cityId = $cityData['id'];
                 $city = $this->cityRepository->get($cityId);
                 unset($currentAssignedCitiesMap[$cityId]);
             }
+            $this->hydrator->hydrate($city, $cityData);
             $position = ($key + 1) * 10;
             $city->setPosition($position);
             $city->setRegionId($region->getRegionId());

@@ -13,7 +13,7 @@ class NewAction extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::Region';
+    const ADMIN_RESOURCE = 'Engine_Location::region';
 
     /**
      * {@inheritdoc}
@@ -22,7 +22,7 @@ class NewAction extends Action
     {
         /** @var Page $resultPage */
         $resultPage = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
-        $resultPage->setActiveMenu('Engine_Location::Region');
+        $resultPage->setActiveMenu('Engine_Location::region');
         $resultPage->getConfig()->getTitle()->prepend(__('New Region'));
         return $resultPage;
     }

@@ -20,3 +20,5 @@ $cities = $cityRepository->getList($searchCriteria)->getItems();
 foreach ($cities as $city) {
     $cityRepository->deleteById($city->getCityId());
 }
+
+require '../../../app/code/Engine/Location/Test/_files/region/region_rollback.php';

@@ -1,6 +1,7 @@
 <?php
 namespace Engine\Location\Model\Region\Source;
 
+use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Model\Region\ResourceModel\RegionCollection;
 use Engine\Location\Model\Region\ResourceModel\RegionCollectionFactory;
@@ -17,7 +18,7 @@ class Region implements OptionSourceInterface
     private $regionCollectionFactory;
 
     /**
-     * @var null|array
+     * @var array|null
      */
     private $data;
 
@@ -35,9 +36,11 @@ class Region implements OptionSourceInterface
     public function toOptionArray()
     {
         if (null === $this->data) {
+            $this->data = [];
             /** @var RegionCollection $regionCollection */
             $regionCollection = $this->regionCollectionFactory->create();
-            $regionCollection->addStoreData();
+            $regionCollection->addStoreData()
+                ->setOrder(CityInterface::POSITION, RegionCollection::SORT_ORDER_ASC);
             foreach ($regionCollection as $region) {
                 /** @var RegionInterface $region */
                 $this->data[] = [

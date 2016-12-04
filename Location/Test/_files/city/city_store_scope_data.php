@@ -15,10 +15,13 @@ $cityRepository = Bootstrap::getObjectManager()->get(CityRepositoryInterface::cl
 /** @var StoreManagerInterface $storeManager */
 $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
 
+require '../../../app/code/Engine/Location/Test/_files/region/region.php';
+
 /** @var CityInterface $city */
 $city = $cityFactory->create();
 $city = $hydrator->hydrate($city, [
     CityInterface::CITY_ID => 100,
+    CityInterface::REGION_ID => 100,
     CityInterface::TITLE => 'title-0',
     CityInterface::IS_ENABLED => true,
     CityInterface::POSITION => 1000,

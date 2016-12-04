@@ -15,15 +15,19 @@ $cityRepository = Bootstrap::getObjectManager()->get(CityRepositoryInterface::cl
 /** @var StoreManagerInterface $storeManager */
 $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
 
+require '../../../app/code/Engine/Location/Test/_files/region/region.php';
+
 $citiesData = [
     [
         CityInterface::CITY_ID => 100,
+        CityInterface::REGION_ID => 100,
         CityInterface::TITLE => 'city-3',
         CityInterface::IS_ENABLED => true,
         CityInterface::POSITION => 100,
     ],
     [
         CityInterface::CITY_ID => 200,
+        CityInterface::REGION_ID => 100,
         CityInterface::TITLE => 'city-2',
         CityInterface::IS_ENABLED => true,
         CityInterface::POSITION => 200,

@@ -5,7 +5,6 @@ use Engine\Location\Api\CityRepositoryInterface;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\Data\CitySearchResultInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Api\SortOrderBuilder;
 
 /**
@@ -19,27 +18,27 @@ class CitiesByRegionList
     private $cityRepository;
 
     /**
-     * @var SearchCriteriaBuilderFactory
+     * @var SearchCriteriaBuilder
      */
-    private $searchCriteriaBuilderFactory;
+    private $searchCriteriaBuilder;
 
     /**
-     * @var SortOrderBuilder
+     * @var \Magento\Framework\Api\SortOrderBuilder
      */
     private $sortOrderBuilder;
 
     /**
      * @param CityRepositoryInterface $cityRepository
-     * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param SortOrderBuilder $sortOrderBuilder
      */
     public function __construct(
         CityRepositoryInterface $cityRepository,
-        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         SortOrderBuilder $sortOrderBuilder
     ) {
         $this->cityRepository = $cityRepository;
-        $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
     }
 
@@ -49,14 +48,12 @@ class CitiesByRegionList
      */
     public function getList($regionId)
     {
-        /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-        $searchCriteriaBuilder->addFilter(CityInterface::REGION_ID, (int)$regionId);
+        $this->searchCriteriaBuilder->addFilter(CityInterface::REGION_ID, (int)$regionId);
         $this->sortOrderBuilder->setField(CityInterface::POSITION)
             ->setAscendingDirection();
         $sortOrder = $this->sortOrderBuilder->create();
-        $this->searchCriteriaBuilderFactory->addSortOrder($sortOrder);
-        $searchCriteria = $this->searchCriteriaBuilderFactory->create();
+        $this->searchCriteriaBuilder->addSortOrder($sortOrder);
+        $searchCriteria = $this->searchCriteriaBuilder->create();
         $result = $this->cityRepository->getList($searchCriteria);
         return $result;
     }

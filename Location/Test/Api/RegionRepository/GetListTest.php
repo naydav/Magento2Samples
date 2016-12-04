@@ -2,6 +2,7 @@
 namespace Engine\Location\Test\Api\RegionRepository;
 
 use Engine\Location\Api\Data\RegionInterface;
+use Engine\Location\Test\AssertArrayContains;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\TestCase\WebapiAbstract;
@@ -40,9 +41,9 @@ class GetListTest extends WebapiAbstract
         ];
         $response = $this->_webApiCall($serviceInfo, [], null, $storeCode);
 
-        $this->assertEquals(count($response['items']), $response['total_count']);
-        $this->assertArrayContains($searchCriteria, $response['search_criteria']);
-        $this->assertArrayContains($expectedItemsData, $response['items']);
+        self::assertEquals(count($response['items']), $response['total_count']);
+        AssertArrayContains::assertArrayContains($searchCriteria, $response['search_criteria']);
+        AssertArrayContains::assertArrayContains($expectedItemsData, $response['items']);
     }
 
     /**
@@ -58,7 +59,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => RegionInterface::REGION_ID,
-                                    'value' => '100',
+                                    'value' => 100,
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -67,8 +68,8 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
+                        RegionInterface::REGION_ID => 100,
                         RegionInterface::TITLE => 'region-3',
-                        RegionInterface::IS_ENABLED => true,
                     ],
                 ],
             ],
@@ -79,7 +80,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => RegionInterface::IS_ENABLED,
-                                    'value' => '0',
+                                    'value' => 0,
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -88,10 +89,12 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
+                        RegionInterface::REGION_ID => 300,
                         RegionInterface::TITLE => 'region-2',
                         RegionInterface::IS_ENABLED => false,
                     ],
                     [
+                        RegionInterface::REGION_ID => 400,
                         RegionInterface::TITLE => 'region-1',
                         RegionInterface::IS_ENABLED => false,
                     ],
@@ -110,12 +113,20 @@ class GetListTest extends WebapiAbstract
                             ],
                         ],
                     ],
+                    'sort_orders' => [
+                        [
+                            'field' => RegionInterface::REGION_ID,
+                            'direction' => SortOrder::SORT_DESC,
+                        ],
+                    ],
                 ],
                 [
                     [
+                        RegionInterface::REGION_ID => 300,
                         RegionInterface::TITLE => 'region-2',
                     ],
                     [
+                        RegionInterface::REGION_ID => 200,
                         RegionInterface::TITLE => 'region-2',
                     ],
                 ],
@@ -127,22 +138,30 @@ class GetListTest extends WebapiAbstract
                             'field' => RegionInterface::POSITION,
                             'direction' => SortOrder::SORT_DESC,
                         ],
+                        [
+                            'field' => RegionInterface::REGION_ID,
+                            'direction' => SortOrder::SORT_DESC,
+                        ],
                     ],
                 ],
                 [
                     [
+                        RegionInterface::REGION_ID => 400,
                         RegionInterface::TITLE => 'region-1',
                         RegionInterface::POSITION => 300,
                     ],
                     [
+                        RegionInterface::REGION_ID => 300,
                         RegionInterface::TITLE => 'region-2',
                         RegionInterface::POSITION => 200,
                     ],
                     [
+                        RegionInterface::REGION_ID => 200,
                         RegionInterface::TITLE => 'region-2',
                         RegionInterface::POSITION => 200,
                     ],
                     [
+                        RegionInterface::REGION_ID => 100,
                         RegionInterface::TITLE => 'region-3',
                         RegionInterface::POSITION => 100,
                     ],
@@ -155,24 +174,28 @@ class GetListTest extends WebapiAbstract
                             'field' => RegionInterface::TITLE,
                             'direction' => SortOrder::SORT_DESC,
                         ],
+                        [
+                            'field' => RegionInterface::REGION_ID,
+                            'direction' => SortOrder::SORT_DESC,
+                        ],
                     ],
                 ],
                 [
                     [
+                        RegionInterface::REGION_ID => 100,
                         RegionInterface::TITLE => 'region-3',
-                        RegionInterface::POSITION => 100,
                     ],
                     [
+                        RegionInterface::REGION_ID => 300,
                         RegionInterface::TITLE => 'region-2',
-                        RegionInterface::POSITION => 200,
                     ],
                     [
+                        RegionInterface::REGION_ID => 200,
                         RegionInterface::TITLE => 'region-2',
-                        RegionInterface::POSITION => 200,
                     ],
                     [
+                        RegionInterface::REGION_ID => 400,
                         RegionInterface::TITLE => 'region-1',
-                        RegionInterface::POSITION => 300,
                     ],
                 ],
             ],
@@ -200,9 +223,9 @@ class GetListTest extends WebapiAbstract
         ];
         $response = $this->_webApiCall($serviceInfo, [], null, $storeCode);
 
-        $this->assertEquals(count($response['items']), $response['total_count']);
-        $this->assertArrayContains($searchCriteria, $response['search_criteria']);
-        $this->assertArrayContains($expectedItemsData, $response['items']);
+        self::assertEquals(count($response['items']), $response['total_count']);
+        AssertArrayContains::assertArrayContains($searchCriteria, $response['search_criteria']);
+        AssertArrayContains::assertArrayContains($expectedItemsData, $response['items']);
     }
 
     /**
@@ -218,7 +241,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => RegionInterface::REGION_ID,
-                                    'value' => '100',
+                                    'value' => 100,
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -236,8 +259,8 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
+                        RegionInterface::REGION_ID => 100,
                         RegionInterface::TITLE => 'z-per-store-region-3',
-                        RegionInterface::IS_ENABLED => true,
                     ],
                 ],
             ],
@@ -257,6 +280,7 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
+                        RegionInterface::REGION_ID => 300,
                         RegionInterface::TITLE => 'z-per-store-region-2',
                     ],
                 ],
@@ -272,43 +296,23 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
+                        RegionInterface::REGION_ID => 100,
                         RegionInterface::TITLE => 'z-per-store-region-3',
-                        RegionInterface::POSITION => 100,
                     ],
                     [
+                        RegionInterface::REGION_ID => 300,
                         RegionInterface::TITLE => 'z-per-store-region-2',
-                        RegionInterface::POSITION => 200,
                     ],
                     [
+                        RegionInterface::REGION_ID => 400,
                         RegionInterface::TITLE => 'z-per-store-region-1',
-                        RegionInterface::POSITION => 300,
                     ],
                     [
+                        RegionInterface::REGION_ID => 200,
                         RegionInterface::TITLE => 'region-2',
-                        RegionInterface::POSITION => 200,
                     ],
                 ],
             ],
         ];
-    }
-
-    /**
-     * @param array $actual
-     * @param array $expected
-     * @return void
-     */
-    private function assertArrayContains(array $actual, array $expected)
-    {
-        foreach (array_keys($actual) as $dataKey) {
-            if (is_array($actual[$dataKey])) {
-                $this->assertArrayContains($actual[$dataKey], $expected[$dataKey]);
-            } else {
-                $this->assertEquals(
-                    $expected[$dataKey],
-                    $actual[$dataKey],
-                    "Expected value for key '{$dataKey}' doesn't match"
-                );
-            }
-        }
     }
 }

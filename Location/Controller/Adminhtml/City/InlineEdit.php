@@ -61,7 +61,7 @@ class InlineEdit extends Action
                     $this->hydrator->hydrate($city, $itemData);
                     $this->cityRepository->save($city);
                 } catch (NoSuchEntityException $e) {
-                    $errorMessages[] = __('[ID: %1] The city  does not exist.', $itemData['city_id']);
+                    $errorMessages[] = __('[ID: %1] The city does not exist.', $itemData['city_id']);
                 } catch (CouldNotSaveException $e) {
                     $errorMessages[] = __('[ID: %1] ', $itemData['city_id']) . $e->getMessage();
                 }

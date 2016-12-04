@@ -158,7 +158,7 @@ class RegionDataProvider extends DataProvider
     public function getData()
     {
         $data = parent::getData();
-        if ('region_form_data_source' === $this->name) {
+        if ('region_form_data_source' === $this->name && $data['items']) {
             $regionId = $data['items'][0][RegionInterface::REGION_ID];
             $dataForSingle[$regionId] = [
                 'general' => $data['items'][0],

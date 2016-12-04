@@ -3,6 +3,7 @@ namespace Engine\Location\Test\Api\RegionRepository;
 
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
+use Engine\Location\Test\AssertArrayContains;
 use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -38,10 +39,10 @@ class CrudTest extends WebapiAbstract
             ],
         ];
         $regionId = $this->_webApiCall($serviceInfo, ['region' => $data]);
-        $this->assertNotEmpty($regionId);
+        self::assertNotEmpty($regionId);
 
-        $region = $this->getRegion($regionId);
-        $this->checkRegion($data, $region);
+        $region = $this->getRegionById($regionId);
+        AssertArrayContains::assertArrayContains($data, $region);
 
         /** @var RegionRepositoryInterface $regionRepository */
         $regionRepository = Bootstrap::getObjectManager()->get(RegionRepositoryInterface::class);
@@ -72,8 +73,9 @@ class CrudTest extends WebapiAbstract
         ];
         $this->_webApiCall($serviceInfo, ['region' => $data], null, 'all');
 
-        $this->checkRegion($data, $this->getRegion($regionId, 'default'));
-        $this->checkRegion($data, $this->getRegion($regionId, 'test_store'));
+        $data[RegionInterface::REGION_ID] = $regionId;
+        AssertArrayContains::assertArrayContains($data, $this->getRegionById($regionId, 'default'));
+        AssertArrayContains::assertArrayContains($data, $this->getRegionById($regionId, 'test_store'));
     }
 
     /**
@@ -100,11 +102,11 @@ class CrudTest extends WebapiAbstract
         ];
         $this->_webApiCall($serviceInfo, ['region' => $data], null, $storeCode);
 
-        $region = $this->getRegion($regionId, 'default');
-        $this->assertEquals('title-0', $region[RegionInterface::TITLE]);
+        $region = $this->getRegionById($regionId, 'default');
+        self::assertEquals('title-0', $region[RegionInterface::TITLE]);
 
-        $region = $this->getRegion($regionId, $storeCode);
-        $this->assertEquals($title, $region[RegionInterface::TITLE]);
+        $region = $this->getRegionById($regionId, $storeCode);
+        self::assertEquals($title, $region[RegionInterface::TITLE]);
     }
 
     /**
@@ -129,8 +131,8 @@ class CrudTest extends WebapiAbstract
         ];
         $this->_webApiCall($serviceInfo, ['region' => $data], null, $storeCode);
 
-        $region = $this->getRegion($regionId, $storeCode);
-        $this->assertEquals('title-0', $region[RegionInterface::TITLE]);
+        $region = $this->getRegionById($regionId, $storeCode);
+        self::assertEquals('title-0', $region[RegionInterface::TITLE]);
     }
 
     /**
@@ -152,13 +154,29 @@ class CrudTest extends WebapiAbstract
         $this->_webApiCall($serviceInfo);
 
         try {
-            $this->getRegion($regionId);
+            $this->getRegionById($regionId);
             $this->fail('Expected throwing exception');
         } catch (\Exception $e) {
             $errorObj = $this->processRestExceptionResult($e);
-            $this->assertEquals('Region with id "%1" does not exist.', $errorObj['message']);
-            $this->assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
+            self::assertEquals('Region with id "%1" does not exist.', $errorObj['message']);
+            self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
         }
+    }
+
+    /**
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
+     */
+    public function testGet()
+    {
+        $regionId = 100;
+        $data = [
+            RegionInterface::REGION_ID => $regionId,
+            RegionInterface::TITLE => 'title-0',
+            RegionInterface::IS_ENABLED => true,
+            RegionInterface::POSITION => 1000,
+        ];
+        $region = $this->getRegionById($regionId);
+        AssertArrayContains::assertArrayContains($data, $region);
     }
 
     /**
@@ -168,13 +186,14 @@ class CrudTest extends WebapiAbstract
     {
         $regionId = 100;
         $storeCode = 'test_store';
-        $expectedData = [
+        $data = [
+            RegionInterface::REGION_ID => $regionId,
             RegionInterface::TITLE => 'per-store-title-0',
             RegionInterface::IS_ENABLED => true,
             RegionInterface::POSITION => 1000,
         ];
-        $region = $this->getRegion($regionId, $storeCode);
-        $this->checkRegion($expectedData, $region);
+        $region = $this->getRegionById($regionId, $storeCode);
+        AssertArrayContains::assertArrayContains($data, $region);
     }
 
     public function testGetNoSuchEntityException()
@@ -196,24 +215,13 @@ class CrudTest extends WebapiAbstract
             $this->_webApiCall($serviceInfo);
             $this->fail('Expected throwing exception');
         } catch (\SoapFault $e) {
-            $this->assertContains($expectedMessage, $e->getMessage(), 'SoapFault does not contain expected message.');
+            self::assertContains($expectedMessage, $e->getMessage(), 'SoapFault does not contain expected message.');
         } catch (\Exception $e) {
             $errorObj = $this->processRestExceptionResult($e);
-            $this->assertEquals($expectedMessage, $errorObj['message']);
-            $this->assertEquals($notExistingId, $errorObj['parameters'][0]);
-            $this->assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
+            self::assertEquals($expectedMessage, $errorObj['message']);
+            self::assertEquals($notExistingId, $errorObj['parameters'][0]);
+            self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
         }
-    }
-
-    /**
-     * @param array $expected
-     * @param array $actual
-     */
-    protected function checkRegion($expected, $actual)
-    {
-        $this->assertEquals($expected[RegionInterface::TITLE], $actual[RegionInterface::TITLE]);
-        $this->assertEquals($expected[RegionInterface::IS_ENABLED], $actual[RegionInterface::IS_ENABLED]);
-        $this->assertEquals($expected[RegionInterface::POSITION], $actual[RegionInterface::POSITION]);
     }
 
     /**
@@ -221,7 +229,7 @@ class CrudTest extends WebapiAbstract
      * @param string|null $storeCode
      * @return array|int|string|float|bool Web API call results
      */
-    protected function getRegion($id, $storeCode = null)
+    private function getRegionById($id, $storeCode = null)
     {
         $serviceInfo = [
             'rest' => [

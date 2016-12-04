@@ -10,3 +10,5 @@ try {
 } catch (NoSuchEntityException $e) {
     // city doesn't exist
 }
+
+require '../../../app/code/Engine/Location/Test/_files/region/region_rollback.php';

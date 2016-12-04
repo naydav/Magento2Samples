@@ -9,7 +9,6 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
@@ -69,52 +68,56 @@ class Save extends Action
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-        try {
-            $regionRequestData = $this->getRequest()->getParam('general');
-            if (!$regionRequestData) {
-                throw new LocalizedException(__('Please correct the data sent.'));
-            }
-            $useDefaults = $this->getRequest()->getParam('use_default', []);
-            if ($useDefaults) {
-                foreach ($useDefaults as $field => $useDefaultState) {
-                    if (1 === (int)$useDefaultState) {
-                        $regionRequestData[$field] = null;
+        $regionRequestData = $this->getRequest()->getParam('general');
+        if ($this->getRequest()->isPost() && $regionRequestData) {
+            try {
+                $useDefaults = $this->getRequest()->getParam('use_default', []);
+                if ($useDefaults) {
+                    foreach ($useDefaults as $field => $useDefaultState) {
+                        if (1 === (int)$useDefaultState) {
+                            $regionRequestData[$field] = null;
+                        }
                     }
                 }
-            }
-            $regionId = !empty($regionRequestData['region_id']) ? $regionRequestData['region_id'] : null;
+                $regionId = !empty($regionRequestData['region_id']) ? $regionRequestData['region_id'] : null;
 
-            if ($regionId) {
-                $region = $this->regionRepository->get($regionId);
-            } else {
-                /** @var RegionInterface $region */
-                $region = $this->regionFactory->create();
-            }
-            $this->hydrator->hydrate($region, $regionRequestData);
-            $this->regionRepository->save($region);
+                if ($regionId) {
+                    $region = $this->regionRepository->get($regionId);
+                } else {
+                    /** @var RegionInterface $region */
+                    $region = $this->regionFactory->create();
+                }
+                $this->hydrator->hydrate($region, $regionRequestData);
+                $this->regionRepository->save($region);
 
-            $citiesRequestData = $this->getRequest()->getParam('cities');
-            $this->regionCityRelationProcessor->process(
-                $region->getRegionId(),
-                $citiesRequestData['assigned_cities']
-            );
+                $citiesRequestData = $this->getRequest()->getParam('cities', []);
+                if ($citiesRequestData) {
+                    $this->regionCityRelationProcessor->process(
+                        $region->getRegionId(),
+                        $citiesRequestData['assigned_cities']
+                    );
+                }
 
-            $this->messageManager->addSuccessMessage(__('The Region has been saved'));
-            if ($this->getRequest()->getParam('back')) {
-                $resultRedirect->setPath('*/*/edit', ['region_id' => $region->getRegionId(), '_current' => true]);
-            } else {
+                $this->messageManager->addSuccessMessage(__('The Region has been saved.'));
+                if ($this->getRequest()->getParam('back')) {
+                    $resultRedirect->setPath('*/*/edit', ['region_id' => $region->getRegionId(), '_current' => true]);
+                } else {
+                    $resultRedirect->setPath('*/*/');
+                }
+            } catch (NoSuchEntityException $e) {
+                $this->messageManager->addErrorMessage(__('The region does not exist.'));
                 $resultRedirect->setPath('*/*/');
+            } catch (CouldNotSaveException $e) {
+                $this->messageManager->addErrorMessage($e->getMessage());
+                if ($regionId) {
+                    $resultRedirect->setPath('*/*/edit', ['region_id' => $regionId, '_current' => true]);
+                } else {
+                    $resultRedirect->setPath('*/*/');
+                }
             }
-        } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('The region no exists.'));
-            $resultRedirect->setPath('*/*/');
-        } catch (CouldNotSaveException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
-            if ($regionId) {
-                $resultRedirect->setPath('*/*/edit', ['region_id' => $regionId, '_current' => true]);
-            } else {
-                $resultRedirect->setPath('*/*/');
-            }
+        } else {
+            $this->messageManager->addErrorMessage(__('Wrong request.'));
+            $resultRedirect->setPath('*/*/index');
         }
         return $resultRedirect;
     }

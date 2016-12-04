@@ -67,22 +67,26 @@ class MassStatus extends Action
      */
     public function execute()
     {
-        $isEnabled = (int)$this->getRequest()->getParam('is_enabled');
+        if ($this->getRequest()->isPost()) {
+            $isEnabled = (int)$this->getRequest()->getParam('is_enabled');
 
-        $updatedItemsCount = 0;
-        $collection = $this->massActionFilter->getCollection($this->cityCollectionFactory->create());
-        foreach ($collection as $city) {
-            try {
-                /** @var CityInterface $city */
-                $this->hydrator->hydrate($city, [CityInterface::IS_ENABLED => $isEnabled]);
-                $this->cityRepository->save($city);
-                $updatedItemsCount++;
-            } catch (CouldNotSaveException $e) {
-                $errorMessage = __('[ID: %1] ', $city->getCityId()) . $e->getMessage();
-                $this->messageManager->addErrorMessage($errorMessage);
+            $updatedItemsCount = 0;
+            $collection = $this->massActionFilter->getCollection($this->cityCollectionFactory->create());
+            foreach ($collection as $city) {
+                try {
+                    /** @var CityInterface $city */
+                    $this->hydrator->hydrate($city, [CityInterface::IS_ENABLED => $isEnabled]);
+                    $this->cityRepository->save($city);
+                    $updatedItemsCount++;
+                } catch (CouldNotSaveException $e) {
+                    $errorMessage = __('[ID: %1] ', $city->getCityId()) . $e->getMessage();
+                    $this->messageManager->addErrorMessage($errorMessage);
+                }
             }
+            $this->messageManager->addSuccessMessage(__('You updated %1 city(s).', $updatedItemsCount));
+        } else {
+            $this->messageManager->addErrorMessage(__('Wrong request.'));
         }
-        $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been updated.', $updatedItemsCount));
-        return $this->resultRedirectFactory->create()->setPath('*/*/');
+        return $this->resultRedirectFactory->create()->setPath('*/*/index');
     }
 }

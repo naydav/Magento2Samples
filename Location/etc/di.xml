@@ -100,4 +100,14 @@
             </argument>
         </arguments>
     </type>
+    <virtualType name="Engine\Location\Ui\Component\Control\Region\DeleteButton" type="Engine\PerStoreDataSupport\Ui\Component\Control\DeleteButton">
+        <arguments>
+            <argument name="idFieldName" xsi:type="string">region_id</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\Location\Ui\Component\Control\City\DeleteButton" type="Engine\PerStoreDataSupport\Ui\Component\Control\DeleteButton">
+        <arguments>
+            <argument name="idFieldName" xsi:type="string">city_id</argument>
+        </arguments>
+    </virtualType>
 </config>

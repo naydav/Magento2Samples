@@ -1,5 +1,5 @@
 <?php
-namespace Engine\Location\Ui\Component\Control\City;
+namespace Engine\PerStoreDataSupport\Ui\Component\Control;
 
 use Magento\Backend\Block\Widget\Context;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
@@ -15,11 +15,20 @@ class DeleteButton implements ButtonProviderInterface
     private $context;
 
     /**
-     * @param Context $context
+     * @var string
      */
-    public function __construct(Context $context)
-    {
+    private $idFieldName;
+
+    /**
+     * @param Context $context
+     * @param string $idFieldName
+     */
+    public function __construct(
+        Context $context,
+        $idFieldName
+    ) {
         $this->context = $context;
+        $this->idFieldName = $idFieldName;
     }
 
     /**
@@ -28,14 +37,14 @@ class DeleteButton implements ButtonProviderInterface
     public function getButtonData()
     {
         $data = [];
-        $cityId = $this->context->getRequest()->getParam('city_id');
-        if (null !== $cityId) {
+        $id = $this->context->getRequest()->getParam($this->idFieldName);
+        if (null !== $id) {
             $message = __('Are you sure you want to do this?');
             $url = $this->context->getUrlBuilder()->getUrl('*/*/delete');
             $data = [
                 'label' => __('Delete'),
                 'class' => 'delete',
-                'on_click' => "deleteConfirm('{$message}', '{$url}', {data:{city_id:{$cityId}}})",
+                'on_click' => "deleteConfirm('{$message}', '{$url}', {data:{{$this->idFieldName}:{$id}}})",
                 'sort_order' => 20,
             ];
         }

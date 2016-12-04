@@ -31,12 +31,12 @@ interface CityInterface extends ExtensibleDataInterface
     public function setCityId($cityId);
 
     /**
-     * @return null|int
+     * @return int|null
      */
     public function getRegionId();
 
     /**
-     * @param null|int $regionId
+     * @param int|null $regionId int(on first position)|null(on second position) it is need for properly work of web api
      * @return void
      */
     public function setRegionId($regionId);
