@@ -8,18 +8,19 @@
 * Data Per Store example
 * CRUD example
 * Repository example
-* Work with Entity manager
+* Work with Entity Manager
 * UI elements configuration (grid, form)
 * Data Provider example
-* Web api example
-* Work with DI
-* Api tests, integration tests
+* Web Api example
+* Work with DI  (virtual types, preferences)
+* Api tests, Integration tests
 
 <h3>PerStoreDataSupport module</h3>
 * Simple Data Per Store support
 
 <h3>Backend module</h3>
 * General backend classes
+* Work with DI  (plugin example)
 
 <h2>Related Links</h2>
 * <a href="http://devdocs.magento.com/">Magento 2 Dev Docs</a>
