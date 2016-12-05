@@ -13,7 +13,7 @@ $searchCriteriaBuilderFactory = Bootstrap::getObjectManager()->get(SearchCriteri
 $searchCriteriaBuilder = $searchCriteriaBuilderFactory->create();
 
 $searchCriteria = $searchCriteriaBuilder
-    ->addFilter(CityInterface::REGION_ID, [100, 200, 300, 400], 'in')
+    ->addFilter(CityInterface::CITY_ID, [100, 200, 300, 400], 'in')
     ->create();
 
 $cities = $cityRepository->getList($searchCriteria)->getItems();
