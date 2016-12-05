@@ -41,8 +41,8 @@ class Edit extends Action
      */
     public function execute()
     {
+        $cityId = $this->getRequest()->getParam('city_id');
         try {
-            $cityId = $this->getRequest()->getParam('city_id');
             $city = $this->cityRepository->get($cityId);
 
             /** @var Page $result */

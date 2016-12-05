@@ -117,9 +117,7 @@ class DataProviderMetaModifier implements DataProviderMetaModifierInterface
                 ];
             $config['service']['template'] = $this->helperServiceTemplate;
 
-            if (null === $elementPath) {
-                $meta['general']['children'][$field]['arguments']['data']['config'] = $config;
-            } else {
+            if (null !== $elementPath) {
                 $meta = $this->arrayManager->merge($elementPath . '/arguments/data/config', $meta, $config);
             }
         }

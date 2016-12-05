@@ -78,7 +78,7 @@ class InstallSchema implements InstallSchemaInterface
             Table::TYPE_INTEGER,
             null,
             ['unsigned' => true, 'nullable' => false],
-            'Translatable id'
+            'Region id'
         )->addColumn(
             'store_id',
             Table::TYPE_SMALLINT,
@@ -199,7 +199,7 @@ class InstallSchema implements InstallSchemaInterface
             Table::TYPE_INTEGER,
             null,
             ['unsigned' => true, 'nullable' => false],
-            'Translatable id'
+            'City id'
         )->addColumn(
             'store_id',
             Table::TYPE_SMALLINT,

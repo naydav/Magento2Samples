@@ -88,7 +88,7 @@ class Save extends Action
                     $resultRedirect->setPath('*/*/');
                 }
             } catch (NoSuchEntityException $e) {
-                $this->messageManager->addErrorMessage(__('The city does not exist.'));
+                $this->messageManager->addErrorMessage(__('The City does not exist.'));
                 $resultRedirect->setPath('*/*/');
             } catch (CouldNotSaveException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());

@@ -123,7 +123,7 @@ class InlineEditTest extends AbstractBackendController
         $jsonResponse = json_decode($body);
         self::assertNotEmpty($jsonResponse);
         self::assertEquals(1, $jsonResponse->error);
-        self::assertContains("[ID: {$regionId}] The region does not exist.", $jsonResponse->messages);
+        self::assertContains("[ID: {$regionId}] The Region does not exist.", $jsonResponse->messages);
     }
 
     public function testInlineEditWithEmptyItems()

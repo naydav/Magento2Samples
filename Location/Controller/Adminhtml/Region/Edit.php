@@ -41,8 +41,8 @@ class Edit extends Action
      */
     public function execute()
     {
+        $regionId = $this->getRequest()->getParam('region_id');
         try {
-            $regionId = $this->getRequest()->getParam('region_id');
             $region = $this->regionRepository->get($regionId);
 
             /** @var Page $result */

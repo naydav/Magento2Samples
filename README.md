@@ -4,12 +4,14 @@
 
 <h3>Location module</h3>
 * Module base configuration example
-* One to Many relation example (Region -> Cities)
+* One to Many relation example (Region <- Cities)
 * Data Per Store example
-* CRUD example
+* Controllers example (massStatus, massDelete, inlineEdit etc)
+* CRUD operations example
 * Repository example
 * Work with Entity Manager
 * UI elements configuration (grid, form)
+* UI elements configuration for one to many relations management (dynamicRows, modal, insertListing)
 * Data Provider example
 * Web Api example
 * Work with DI  (virtual types, preferences)

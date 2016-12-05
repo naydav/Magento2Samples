@@ -159,7 +159,7 @@ class UpdateTest extends AbstractBackendController
         $this->dispatch($uri);
 
         $this->assertRedirect($this->stringContains('backend/location/region/index'));
-        $this->assertSessionMessages($this->contains('The region does not exist.'), MessageInterface::TYPE_ERROR);
+        $this->assertSessionMessages($this->contains('The Region does not exist.'), MessageInterface::TYPE_ERROR);
     }
 
     /**

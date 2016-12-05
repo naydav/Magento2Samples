@@ -61,7 +61,7 @@ class InlineEdit extends Action
                     $this->hydrator->hydrate($region, $itemData);
                     $this->regionRepository->save($region);
                 } catch (NoSuchEntityException $e) {
-                    $errorMessages[] = __('[ID: %1] The region does not exist.', $itemData['region_id']);
+                    $errorMessages[] = __('[ID: %1] The Region does not exist.', $itemData['region_id']);
                 } catch (CouldNotSaveException $e) {
                     $errorMessages[] = __('[ID: %1] ', $itemData['region_id']) . $e->getMessage();
                 }

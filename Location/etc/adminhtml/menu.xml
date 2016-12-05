@@ -22,7 +22,7 @@
              title="City"
              translate="title"
              module="Engine_Location"
-             sortOrder="100"
+             sortOrder="200"
              parent="Engine_Location::location"
              action="location/city/index"
              resource="Engine_Location::city"/>

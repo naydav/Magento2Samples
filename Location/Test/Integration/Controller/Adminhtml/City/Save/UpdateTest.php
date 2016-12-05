@@ -161,7 +161,7 @@ class UpdateTest extends AbstractBackendController
         $this->dispatch($uri);
 
         $this->assertRedirect($this->stringContains('backend/location/city/index'));
-        $this->assertSessionMessages($this->contains('The city does not exist.'), MessageInterface::TYPE_ERROR);
+        $this->assertSessionMessages($this->contains('The City does not exist.'), MessageInterface::TYPE_ERROR);
     }
 
     /**
