@@ -3,7 +3,9 @@ namespace Engine\Location\Test\Integration\Controller\Adminhtml\Region;
 
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
+use Engine\Location\Test\AssertArrayContains;
 use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
@@ -25,6 +27,12 @@ class InlineEditTest extends AbstractBackendController
     public function testInlineEdit()
     {
         $regionId = 100;
+        $itemData = [
+            RegionInterface::REGION_ID => $regionId,
+            RegionInterface::IS_ENABLED => false,
+            RegionInterface::POSITION => 1000,
+            RegionInterface::TITLE => 'inline-edit-title',
+        ];
 
         $request = $this->getRequest();
         $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
@@ -32,12 +40,7 @@ class InlineEditTest extends AbstractBackendController
         $request->setPostValue([
             'form_key' => $this->getFormKey(),
             'items' => [
-                [
-                    RegionInterface::REGION_ID => $regionId,
-                    RegionInterface::IS_ENABLED => false,
-                    RegionInterface::POSITION => 1000,
-                    RegionInterface::TITLE => 'inline-edit-title',
-                ],
+                $itemData,
             ],
         ]);
 
@@ -52,9 +55,7 @@ class InlineEditTest extends AbstractBackendController
         self::assertEmpty($jsonResponse->messages);
 
         $region = $this->getRegionById($regionId);
-        self::assertEquals(false, $region->getIsEnabled());
-        self::assertEquals(1000, $region->getPosition());
-        self::assertEquals('inline-edit-title', $region->getTitle());
+        AssertArrayContains::assertArrayContains($itemData, $this->extractData($region));
     }
 
     /**
@@ -64,6 +65,12 @@ class InlineEditTest extends AbstractBackendController
     {
         $storeCode = 'test_store';
         $regionId = 100;
+        $itemDataPerScope = [
+            RegionInterface::REGION_ID => $regionId,
+            RegionInterface::IS_ENABLED => false,
+            RegionInterface::POSITION => 1000,
+            RegionInterface::TITLE => 'inline-edit-title-per-scope',
+        ];
 
         $request = $this->getRequest();
         $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
@@ -71,12 +78,7 @@ class InlineEditTest extends AbstractBackendController
         $request->setPostValue([
             'form_key' => $this->getFormKey(),
             'items' => [
-                [
-                    RegionInterface::REGION_ID => $regionId,
-                    RegionInterface::IS_ENABLED => false,
-                    RegionInterface::POSITION => 1000,
-                    RegionInterface::TITLE => 'inline-edit-title-per-scope',
-                ],
+                $itemDataPerScope,
             ],
         ]);
 
@@ -91,12 +93,13 @@ class InlineEditTest extends AbstractBackendController
         self::assertEmpty($jsonResponse->messages);
 
         $region = $this->getRegionById($regionId, 'default');
-        self::assertEquals('title-0', $region->getTitle());
+        $itemDataForGlobalScope = array_merge($itemDataPerScope, [
+            RegionInterface::TITLE => 'title-0',
+        ]);
+        AssertArrayContains::assertArrayContains($itemDataForGlobalScope, $this->extractData($region));
 
         $region = $this->getRegionById($regionId, $storeCode);
-        self::assertEquals(false, $region->getIsEnabled());
-        self::assertEquals(1000, $region->getPosition());
-        self::assertEquals('inline-edit-title-per-scope', $region->getTitle());
+        AssertArrayContains::assertArrayContains($itemDataPerScope, $this->extractData($region));
     }
 
     public function testInlineEditWithNotExistEntityId()
@@ -207,5 +210,16 @@ class InlineEditTest extends AbstractBackendController
             $storeManager->setCurrentStore($currentStore);
         }
         return $region;
+    }
+
+    /**
+     * @param RegionInterface $region
+     * @return array
+     */
+    private function extractData(RegionInterface $region)
+    {
+        /** @var HydratorInterface $hydrator */
+        $hydrator = $this->_objectManager->get(HydratorInterface::class);
+        return $hydrator->extract($region);
     }
 }

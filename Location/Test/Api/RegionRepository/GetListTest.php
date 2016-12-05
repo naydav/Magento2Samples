@@ -90,12 +90,10 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         RegionInterface::REGION_ID => 300,
-                        RegionInterface::TITLE => 'region-2',
                         RegionInterface::IS_ENABLED => false,
                     ],
                     [
                         RegionInterface::REGION_ID => 400,
-                        RegionInterface::TITLE => 'region-1',
                         RegionInterface::IS_ENABLED => false,
                     ],
                 ],
@@ -147,22 +145,18 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         RegionInterface::REGION_ID => 400,
-                        RegionInterface::TITLE => 'region-1',
                         RegionInterface::POSITION => 300,
                     ],
                     [
                         RegionInterface::REGION_ID => 300,
-                        RegionInterface::TITLE => 'region-2',
                         RegionInterface::POSITION => 200,
                     ],
                     [
                         RegionInterface::REGION_ID => 200,
-                        RegionInterface::TITLE => 'region-2',
                         RegionInterface::POSITION => 200,
                     ],
                     [
                         RegionInterface::REGION_ID => 100,
-                        RegionInterface::TITLE => 'region-3',
                         RegionInterface::POSITION => 100,
                     ],
                 ],

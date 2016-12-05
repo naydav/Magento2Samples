@@ -3,9 +3,11 @@ namespace Engine\Location\Test\Integration\Controller\Adminhtml\City\Save;
 
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
+use Engine\Location\Test\AssertArrayContains;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Message\MessageInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
@@ -49,13 +51,11 @@ class CreateTest extends AbstractBackendController
         $this->dispatch($uri);
 
         $city = $this->getCityByTitle($data[CityInterface::TITLE]);
+        self::assertNotEmpty($city);
         $this->city = $city;
 
-        self::assertNotEmpty($city);
-        self::assertEquals($data[CityInterface::REGION_ID], $city->getRegionId());
-        self::assertEquals($data[CityInterface::TITLE], $city->getTitle());
-        self::assertEquals($data[CityInterface::IS_ENABLED], $city->getIsEnabled());
-        self::assertEquals($data[CityInterface::POSITION], $city->getPosition());
+        AssertArrayContains::assertArrayContains($data, $this->extractData($city));
+
         $this->assertRedirect(
             $this->stringContains('backend/location/city/edit/city_id/' . $city->getCityId())
         );
@@ -81,10 +81,11 @@ class CreateTest extends AbstractBackendController
         $this->dispatch($uri);
 
         $city = $this->getCityByTitle($data[CityInterface::TITLE]);
+        self::assertNotEmpty($city);
         $this->city = $city;
 
-        self::assertNotEmpty($city);
         self::assertNull($city->getRegionId());
+
         $this->assertRedirect(
             $this->stringContains('backend/location/city/edit/city_id/' . $city->getCityId())
         );
@@ -139,5 +140,16 @@ class CreateTest extends AbstractBackendController
         /** @var CityRepositoryInterface $cityRepository */
         $cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
         $cityRepository->deleteById($city->getCityId());
+    }
+
+    /**
+     * @param CityInterface $city
+     * @return array
+     */
+    private function extractData(CityInterface $city)
+    {
+        /** @var HydratorInterface $hydrator */
+        $hydrator = $this->_objectManager->get(HydratorInterface::class);
+        return $hydrator->extract($city);
     }
 }

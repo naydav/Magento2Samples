@@ -3,9 +3,11 @@ namespace Engine\Location\Test\Integration\Controller\Adminhtml\Region\Save;
 
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
+use Engine\Location\Test\AssertArrayContains;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Message\MessageInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
@@ -45,12 +47,11 @@ class CreateTest extends AbstractBackendController
         $this->dispatch($uri);
 
         $region = $this->getRegionByTitle($data[RegionInterface::TITLE]);
+        self::assertNotEmpty($region);
         $this->region = $region;
 
-        self::assertNotEmpty($region);
-        self::assertEquals($data[RegionInterface::TITLE], $region->getTitle());
-        self::assertEquals($data[RegionInterface::IS_ENABLED], $region->getIsEnabled());
-        self::assertEquals($data[RegionInterface::POSITION], $region->getPosition());
+        AssertArrayContains::assertArrayContains($data, $this->extractData($region));
+
         $this->assertRedirect(
             $this->stringContains('backend/location/region/edit/region_id/' . $region->getRegionId())
         );
@@ -105,5 +106,16 @@ class CreateTest extends AbstractBackendController
         /** @var RegionRepositoryInterface $regionRepository */
         $regionRepository = $this->_objectManager->get(RegionRepositoryInterface::class);
         $regionRepository->deleteById($region->getRegionId());
+    }
+
+    /**
+     * @param RegionInterface $region
+     * @return array
+     */
+    private function extractData(RegionInterface $region)
+    {
+        /** @var HydratorInterface $hydrator */
+        $hydrator = $this->_objectManager->get(HydratorInterface::class);
+        return $hydrator->extract($region);
     }
 }

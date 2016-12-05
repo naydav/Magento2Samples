@@ -121,12 +121,10 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         CityInterface::CITY_ID => 300,
-                        CityInterface::TITLE => 'city-2',
                         CityInterface::IS_ENABLED => false,
                     ],
                     [
                         CityInterface::CITY_ID => 400,
-                        CityInterface::TITLE => 'city-1',
                         CityInterface::IS_ENABLED => false,
                     ],
                 ],
@@ -178,22 +176,18 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         CityInterface::CITY_ID => 400,
-                        CityInterface::TITLE => 'city-1',
                         CityInterface::POSITION => 300,
                     ],
                     [
                         CityInterface::CITY_ID => 300,
-                        CityInterface::TITLE => 'city-2',
                         CityInterface::POSITION => 200,
                     ],
                     [
                         CityInterface::CITY_ID => 200,
-                        CityInterface::TITLE => 'city-2',
                         CityInterface::POSITION => 200,
                     ],
                     [
                         CityInterface::CITY_ID => 100,
-                        CityInterface::TITLE => 'city-3',
                         CityInterface::POSITION => 100,
                     ],
                 ],

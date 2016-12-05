@@ -3,7 +3,9 @@ namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
+use Engine\Location\Test\AssertArrayContains;
 use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
@@ -25,6 +27,12 @@ class InlineEditTest extends AbstractBackendController
     public function testInlineEdit()
     {
         $cityId = 100;
+        $itemData = [
+            CityInterface::CITY_ID => $cityId,
+            CityInterface::IS_ENABLED => false,
+            CityInterface::POSITION => 1000,
+            CityInterface::TITLE => 'inline-edit-title',
+        ];
 
         $request = $this->getRequest();
         $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
@@ -32,12 +40,7 @@ class InlineEditTest extends AbstractBackendController
         $request->setPostValue([
             'form_key' => $this->getFormKey(),
             'items' => [
-                [
-                    CityInterface::CITY_ID => $cityId,
-                    CityInterface::IS_ENABLED => false,
-                    CityInterface::POSITION => 1000,
-                    CityInterface::TITLE => 'inline-edit-title',
-                ],
+                $itemData,
             ],
         ]);
 
@@ -52,9 +55,7 @@ class InlineEditTest extends AbstractBackendController
         self::assertEmpty($jsonResponse->messages);
 
         $city = $this->getCityById($cityId);
-        self::assertEquals(false, $city->getIsEnabled());
-        self::assertEquals(1000, $city->getPosition());
-        self::assertEquals('inline-edit-title', $city->getTitle());
+        AssertArrayContains::assertArrayContains($itemData, $this->extractData($city));
     }
 
     /**
@@ -64,6 +65,12 @@ class InlineEditTest extends AbstractBackendController
     {
         $storeCode = 'test_store';
         $cityId = 100;
+        $itemDataPerScope = [
+            CityInterface::CITY_ID => $cityId,
+            CityInterface::IS_ENABLED => false,
+            CityInterface::POSITION => 1000,
+            CityInterface::TITLE => 'inline-edit-title-per-scope',
+        ];
 
         $request = $this->getRequest();
         $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
@@ -71,12 +78,7 @@ class InlineEditTest extends AbstractBackendController
         $request->setPostValue([
             'form_key' => $this->getFormKey(),
             'items' => [
-                [
-                    CityInterface::CITY_ID => $cityId,
-                    CityInterface::IS_ENABLED => false,
-                    CityInterface::POSITION => 1000,
-                    CityInterface::TITLE => 'inline-edit-title-per-scope',
-                ],
+                $itemDataPerScope,
             ],
         ]);
 
@@ -91,12 +93,13 @@ class InlineEditTest extends AbstractBackendController
         self::assertEmpty($jsonResponse->messages);
 
         $city = $this->getCityById($cityId, 'default');
-        self::assertEquals('title-0', $city->getTitle());
+        $itemDataForGlobalScope = array_merge($itemDataPerScope, [
+            CityInterface::TITLE => 'title-0',
+        ]);
+        AssertArrayContains::assertArrayContains($itemDataForGlobalScope, $this->extractData($city));
 
         $city = $this->getCityById($cityId, $storeCode);
-        self::assertEquals(false, $city->getIsEnabled());
-        self::assertEquals(1000, $city->getPosition());
-        self::assertEquals('inline-edit-title-per-scope', $city->getTitle());
+        AssertArrayContains::assertArrayContains($itemDataPerScope, $this->extractData($city));
     }
 
     public function testInlineEditWithNotExistEntityId()
@@ -207,5 +210,16 @@ class InlineEditTest extends AbstractBackendController
             $storeManager->setCurrentStore($currentStore);
         }
         return $city;
+    }
+
+    /**
+     * @param CityInterface $city
+     * @return array
+     */
+    private function extractData(CityInterface $city)
+    {
+        /** @var HydratorInterface $hydrator */
+        $hydrator = $this->_objectManager->get(HydratorInterface::class);
+        return $hydrator->extract($city);
     }
 }

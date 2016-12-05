@@ -68,6 +68,7 @@
                     <item name="label" xsi:type="string" translate="true">Title</item>
                     <item name="validation" xsi:type="array">
                         <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="max_text_length" xsi:type="number">255</item>
                     </item>
                     <item name="scopeLabel" xsi:type="string">[STORE VIEW]</item>
                 </item>

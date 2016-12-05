@@ -48,7 +48,7 @@ class InstallSchema implements InstallSchemaInterface
             Table::TYPE_SMALLINT,
             1,
             ['unsigned' => true, 'nullable' => false, 'default' => 0],
-            'Is enabled'
+            'Is Enabled'
         )->addColumn(
             RegionInterface::POSITION,
             Table::TYPE_SMALLINT,
@@ -155,7 +155,7 @@ class InstallSchema implements InstallSchemaInterface
             Table::TYPE_SMALLINT,
             1,
             ['unsigned' => true, 'nullable' => false, 'default' => 0],
-            'Is enabled'
+            'Is Enabled'
         )->addColumn(
             CityInterface::POSITION,
             Table::TYPE_SMALLINT,
