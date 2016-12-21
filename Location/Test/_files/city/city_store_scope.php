@@ -24,7 +24,7 @@ $city = $hydrator->hydrate($city, [
     CityInterface::REGION_ID => 100,
     CityInterface::TITLE => 'title-0',
     CityInterface::IS_ENABLED => true,
-    CityInterface::POSITION => 1000,
+    CityInterface::POSITION => 200,
 ]);
 $cityId = $cityRepository->save($city);
 

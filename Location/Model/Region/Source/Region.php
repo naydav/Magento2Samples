@@ -1,7 +1,6 @@
 <?php
 namespace Engine\Location\Model\Region\Source;
 
-use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Model\Region\ResourceModel\RegionCollection;
 use Engine\Location\Model\Region\ResourceModel\RegionCollectionFactory;
@@ -9,6 +8,7 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
+ * @api
  */
 class Region implements OptionSourceInterface
 {
@@ -40,7 +40,9 @@ class Region implements OptionSourceInterface
             /** @var RegionCollection $regionCollection */
             $regionCollection = $this->regionCollectionFactory->create();
             $regionCollection->addStoreData()
-                ->setOrder(CityInterface::POSITION, RegionCollection::SORT_ORDER_ASC);
+                ->setOrder(RegionInterface::POSITION, RegionCollection::SORT_ORDER_ASC)
+                ->addOrder(RegionInterface::REGION_ID, RegionCollection::SORT_ORDER_ASC);
+
             foreach ($regionCollection as $region) {
                 /** @var RegionInterface $region */
                 $this->data[] = [

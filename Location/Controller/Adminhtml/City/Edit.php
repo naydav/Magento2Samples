@@ -2,6 +2,7 @@
 namespace Engine\Location\Controller\Adminhtml\City;
 
 use Engine\Location\Api\CityRepositoryInterface;
+use Engine\Location\Api\Data\CityInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\Page;
@@ -41,7 +42,7 @@ class Edit extends Action
      */
     public function execute()
     {
-        $cityId = $this->getRequest()->getParam('city_id');
+        $cityId = $this->getRequest()->getParam(CityInterface::CITY_ID);
         try {
             $city = $this->cityRepository->get($cityId);
 

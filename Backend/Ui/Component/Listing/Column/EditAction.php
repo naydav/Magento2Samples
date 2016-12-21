@@ -8,6 +8,7 @@ use Magento\Ui\Component\Listing\Columns\Column;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
+ * @api
  */
 class EditAction extends Column
 {

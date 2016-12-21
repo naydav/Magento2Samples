@@ -82,7 +82,7 @@
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="formElement" xsi:type="string">select</item>
                     <item name="sortOrder" xsi:type="number">200</item>
-                    <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                    <item name="scopeLabel" xsi:type="string" translate="true">[GLOBAL]</item>
                     <item name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</item>
                     <item name="elementTmpl" xsi:type="string">ui/grid/filters/elements/ui-select</item>
                     <item name="disableLabel" xsi:type="boolean">true</item>
@@ -104,7 +104,7 @@
                         <item name="false" xsi:type="string">0</item>
                     </item>
                     <item name="default" xsi:type="string">1</item>
-                    <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                    <item name="scopeLabel" xsi:type="string" translate="true">[GLOBAL]</item>
                 </item>
             </argument>
         </field>
@@ -118,7 +118,7 @@
                     <item name="validation" xsi:type="array">
                         <item name="validate-digits" xsi:type="boolean">true</item>
                     </item>
-                    <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                    <item name="scopeLabel" xsi:type="string" translate="true">[GLOBAL]</item>
                 </item>
             </argument>
         </field>

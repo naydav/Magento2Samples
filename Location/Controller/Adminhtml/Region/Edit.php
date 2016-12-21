@@ -1,6 +1,7 @@
 <?php
 namespace Engine\Location\Controller\Adminhtml\Region;
 
+use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -41,7 +42,7 @@ class Edit extends Action
      */
     public function execute()
     {
-        $regionId = $this->getRequest()->getParam('region_id');
+        $regionId = $this->getRequest()->getParam(RegionInterface::REGION_ID);
         try {
             $region = $this->regionRepository->get($regionId);
 

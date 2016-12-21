@@ -23,7 +23,7 @@ class Index extends Action
         /** @var Page $resultPage */
         $resultPage = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
         $resultPage->setActiveMenu('Engine_Location::city')
-            ->addBreadcrumb(__('City'), __('List'));
+            ->addBreadcrumb(__('Cities'), __('List'));
         $resultPage->getConfig()->getTitle()->prepend(__('Manage Cities'));
         return $resultPage;
     }

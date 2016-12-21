@@ -2,7 +2,6 @@
 namespace Engine\PerStoreDataSupport\Model;
 
 use Engine\PerStoreDataSupport\Api\Data\StoreDataConfigurationInterface;
-use Engine\PerStoreDataSupport\Api\Data\StoreDataConfigurationInterfaceFactory;
 use Engine\PerStoreDataSupport\Api\StoreDataConfigurationProviderInterface;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -12,9 +11,9 @@ use Magento\Framework\Exception\LocalizedException;
 class StoreDataConfigurationProvider implements StoreDataConfigurationProviderInterface
 {
     /**
-     * @var StoreDataConfigurationInterfaceFactory
+     * @var StoreDataConfigurationBuilder
      */
-    private $configurationFactory;
+    private $storeDataConfigurationBuilder;
 
     /**
      * Key is entity interface, value is metadata
@@ -24,14 +23,14 @@ class StoreDataConfigurationProvider implements StoreDataConfigurationProviderIn
     private $configuration;
 
     /**
-     * @param StoreDataConfigurationInterfaceFactory $configurationFactory
+     * @param StoreDataConfigurationBuilder $storeDataConfigurationBuilder
      * @param array $configuration
      */
     public function __construct(
-        StoreDataConfigurationInterfaceFactory $configurationFactory,
+        StoreDataConfigurationBuilder $storeDataConfigurationBuilder,
         array $configuration
     ) {
-        $this->configurationFactory = $configurationFactory;
+        $this->storeDataConfigurationBuilder = $storeDataConfigurationBuilder;
         $this->configuration = $configuration;
     }
 
@@ -50,11 +49,11 @@ class StoreDataConfigurationProvider implements StoreDataConfigurationProviderIn
         }
         $configurationData = $this->configuration[$interfaceName];
 
-        /** @var StoreDataConfigurationInterface $configuration */
-        $configuration = $this->configurationFactory->create();
-        $configuration->setFields($configurationData[StoreDataConfigurationInterface::FIELDS]);
-        $configuration->setReferenceField($configurationData[StoreDataConfigurationInterface::REFERENCE_FIELD]);
-        $configuration->setStoreDataTable($configurationData[StoreDataConfigurationInterface::STORE_DATA_TABLE]);
+        $configuration = $this->storeDataConfigurationBuilder
+            ->setFields($configurationData[StoreDataConfigurationInterface::FIELDS])
+            ->setReferenceField($configurationData[StoreDataConfigurationInterface::REFERENCE_FIELD])
+            ->setStoreDataTable($configurationData[StoreDataConfigurationInterface::STORE_DATA_TABLE])
+            ->create();
         return $configuration;
     }
 }

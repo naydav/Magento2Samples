@@ -4,7 +4,6 @@ namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
 use Engine\Location\Test\AssertArrayContains;
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Message\MessageInterface;
@@ -24,6 +23,35 @@ class UpdateTest extends AbstractBackendController
     const REQUEST_URI = 'backend/location/city/save/store/%s/back/edit';
 
     /**
+     * @var FormKey
+     */
+    private $formKey;
+
+    /**
+     * @var HydratorInterface
+     */
+    private $hydrator;
+
+    /**
+     * @var CityRepositoryInterface
+     */
+    private $cityRepository;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->formKey = $this->_objectManager->get(FormKey::class);
+        $this->hydrator = $this->_objectManager->get(HydratorInterface::class);
+        $this->cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
+        $this->storeManager = $this->_objectManager->get(StoreManagerInterface::class);
+    }
+
+    /**
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_200.php
      * @magentoDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
@@ -34,25 +62,26 @@ class UpdateTest extends AbstractBackendController
         $data = [
             CityInterface::CITY_ID => $cityId,
             CityInterface::REGION_ID => 200,
-            CityInterface::TITLE => 'city-title-update',
             CityInterface::IS_ENABLED => false,
             CityInterface::POSITION => 100,
+            CityInterface::TITLE => 'city-title-update',
         ];
 
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
 
         $uri = sprintf(self::REQUEST_URI, 0);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $city = $this->getCityById($cityId, 'default');
-        AssertArrayContains::assertArrayContains($data, $this->extractData($city));
+        AssertArrayContains::assertArrayContains($data, $this->hydrator->extract($city));
         $city = $this->getCityById($cityId, 'test_store');
-        AssertArrayContains::assertArrayContains($data, $this->extractData($city));
+        AssertArrayContains::assertArrayContains($data, $this->hydrator->extract($city));
 
         $this->assertRedirect(
             $this->stringContains('backend/location/city/edit/city_id/' . $cityId)
@@ -62,52 +91,58 @@ class UpdateTest extends AbstractBackendController
 
     /**
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_200.php
      * @magentoDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      */
     public function testUpdateInStoreScope()
     {
         $cityId = 100;
         $storeCode = 'test_store';
-        $title = 'city-title-per-store';
-        $data = [
+        $dataPerScope = [
             CityInterface::CITY_ID => $cityId,
-            CityInterface::TITLE => $title,
+            CityInterface::REGION_ID => 200,
+            CityInterface::IS_ENABLED => false,
+            CityInterface::POSITION => 100,
+            CityInterface::TITLE => 'city-title-per-store',
         ];
 
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
-            'general' => $data,
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $dataPerScope,
         ]);
 
         $uri = sprintf(self::REQUEST_URI, $storeCode);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $city = $this->getCityById($cityId, 'default');
-        self::assertEquals('title-0', $city[CityInterface::TITLE]);
+        $dataForGlobalScope = array_merge($dataPerScope, [
+            CityInterface::TITLE => 'title-0',
+        ]);
+        AssertArrayContains::assertArrayContains($dataForGlobalScope, $this->hydrator->extract($city));
 
         $city = $this->getCityById($cityId, $storeCode);
-        self::assertEquals($title, $city[CityInterface::TITLE]);
+        AssertArrayContains::assertArrayContains($dataPerScope, $this->hydrator->extract($city));
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope_data.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope.php
      */
     public function testDeleteValueInStoreScope()
     {
         $cityId = 100;
         $storeCode = 'test_store';
-        $data = [
-            CityInterface::CITY_ID => $cityId,
-            CityInterface::TITLE => 'per-store-title-0',
-        ];
 
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
-            'general' => $data,
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => [
+                CityInterface::CITY_ID => $cityId,
+                CityInterface::TITLE => 'per-store-title-0',
+            ],
             'use_default' => [
                 CityInterface::TITLE => 1,
             ],
@@ -115,6 +150,7 @@ class UpdateTest extends AbstractBackendController
 
         $uri = sprintf(self::REQUEST_URI, $storeCode);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $city = $this->getCityById($cityId, $storeCode);
         self::assertEquals('title-0', $city[CityInterface::TITLE]);
@@ -128,7 +164,7 @@ class UpdateTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_GET);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => [
                 CityInterface::CITY_ID => 100,
                 CityInterface::TITLE => 'title-0',
@@ -150,7 +186,7 @@ class UpdateTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => [
                 CityInterface::CITY_ID => -1,
                 CityInterface::TITLE => 'title-0',
@@ -165,16 +201,6 @@ class UpdateTest extends AbstractBackendController
     }
 
     /**
-     * @return string
-     */
-    private function getFormKey()
-    {
-        /** @var FormKey $formKey */
-        $formKey = $this->_objectManager->get(FormKey::class);
-        return $formKey->getFormKey();
-    }
-
-    /**
      * @param int $cityId
      * @param string|null $storeCode
      * @return CityInterface
@@ -182,30 +208,15 @@ class UpdateTest extends AbstractBackendController
     private function getCityById($cityId, $storeCode = null)
     {
         if (null !== $storeCode) {
-            /** @var StoreManagerInterface $storeManager */
-            $storeManager = $this->_objectManager->get(StoreManagerInterface::class);
-            $currentStore = $storeManager->getStore()->getCode();
-            $storeManager->setCurrentStore($storeCode);
+            $currentStore = $this->storeManager->getStore()->getCode();
+            $this->storeManager->setCurrentStore($storeCode);
         }
 
-        /** @var CityRepositoryInterface $cityRepository */
-        $cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
-        $city = $cityRepository->get($cityId);
+        $city = $this->cityRepository->get($cityId);
 
         if (null !== $storeCode) {
-            $storeManager->setCurrentStore($currentStore);
+            $this->storeManager->setCurrentStore($currentStore);
         }
         return $city;
-    }
-
-    /**
-     * @param CityInterface $city
-     * @return array
-     */
-    private function extractData(CityInterface $city)
-    {
-        /** @var HydratorInterface $hydrator */
-        $hydrator = $this->_objectManager->get(HydratorInterface::class);
-        return $hydrator->extract($city);
     }
 }

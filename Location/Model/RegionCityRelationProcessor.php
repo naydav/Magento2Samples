@@ -97,7 +97,7 @@ class RegionCityRelationProcessor
                 $city = $this->cityRepository->get($cityId);
                 unset($currentAssignedCitiesMap[$cityId]);
             }
-            $this->hydrator->hydrate($city, $cityData);
+            $city = $this->hydrator->hydrate($city, $cityData);
             $position = ($key + 1) * 10;
             $city->setPosition($position);
             $city->setRegionId($region->getRegionId());

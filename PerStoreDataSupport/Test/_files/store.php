@@ -2,7 +2,12 @@
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Api\Data\StoreInterfaceFactory;
+use Magento\Store\App\Config\Type\Scopes;
 use Magento\TestFramework\Helper\Bootstrap;
+
+/** @var Scopes $config */
+$config = Bootstrap::getObjectManager()->get(Scopes::class);
+$config->clean();
 
 /** @var StoreInterfaceFactory $storeFactory */
 $storeFactory = Bootstrap::getObjectManager()->get(StoreInterfaceFactory::class);
@@ -24,3 +29,7 @@ $dataObjectHelper->populateWithArray(
     StoreInterface::class
 );
 $store->save();
+
+/** @var Scopes $config */
+$config = Bootstrap::getObjectManager()->get(Scopes::class);
+$config->clean();

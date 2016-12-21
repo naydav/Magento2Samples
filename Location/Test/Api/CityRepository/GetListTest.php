@@ -21,7 +21,7 @@ class GetListTest extends WebapiAbstract
 
     /**
      * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope_data.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      * @param array $searchCriteria
      * @param array $expectedItemsData
      * @dataProvider dataProviderGetListIfValueIsInGlobalScope
@@ -41,7 +41,7 @@ class GetListTest extends WebapiAbstract
         ];
         $response = $this->_webApiCall($serviceInfo, [], null, $storeCode);
 
-        self::assertEquals(count($response['items']), $response['total_count']);
+        self::assertEquals(count($expectedItemsData), $response['total_count']);
         AssertArrayContains::assertArrayContains($searchCriteria, $response['search_criteria']);
         AssertArrayContains::assertArrayContains($expectedItemsData, $response['items']);
     }
@@ -228,7 +228,7 @@ class GetListTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_store_scope_data.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_store_scope.php
      * @param array $searchCriteria
      * @param array $expectedItemsData
      * @dataProvider dataProviderGetListIfValueIsPerStore
@@ -248,7 +248,7 @@ class GetListTest extends WebapiAbstract
         ];
         $response = $this->_webApiCall($serviceInfo, [], null, $storeCode);
 
-        self::assertEquals(count($response['items']), $response['total_count']);
+        self::assertEquals(count($expectedItemsData), $response['total_count']);
         AssertArrayContains::assertArrayContains($searchCriteria, $response['search_criteria']);
         AssertArrayContains::assertArrayContains($expectedItemsData, $response['items']);
     }

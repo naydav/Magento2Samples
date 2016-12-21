@@ -21,14 +21,37 @@ class MassDeleteTest extends AbstractBackendController
     const REQUEST_URI = 'backend/location/city/massDelete';
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope_data.php
+     * @var FormKey
+     */
+    private $formKey;
+
+    /**
+     * @var CityRepositoryInterface
+     */
+    private $cityRepository;
+
+    /**
+     * @var SearchCriteriaBuilderFactory
+     */
+    private $searchCriteriaBuilderFactory;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->formKey = $this->_objectManager->get(FormKey::class);
+        $this->cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
+        $this->searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      */
     public function testMassDelete()
     {
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'selected' => [
                 100,
                 200,
@@ -45,14 +68,14 @@ class MassDeleteTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope_data.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      */
     public function testMassDeleteWithWrongRequestMethod()
     {
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_GET);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'selected' => [
                 100,
                 200,
@@ -69,14 +92,14 @@ class MassDeleteTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope_data.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      */
     public function testMassDeleteWithNotExistEntityId()
     {
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'selected' => [
                 100,
                 -1,
@@ -93,29 +116,15 @@ class MassDeleteTest extends AbstractBackendController
     }
 
     /**
-     * @return string
-     */
-    private function getFormKey()
-    {
-        /** @var FormKey $formKey */
-        $formKey = $this->_objectManager->get(FormKey::class);
-        return $formKey->getFormKey();
-    }
-
-    /**
      * @return int
      */
     private function getCitiesCount()
     {
-        /** @var SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory */
-        $searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder = $searchCriteriaBuilderFactory->create();
+        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
         $searchCriteria = $searchCriteriaBuilder->create();
 
-        /** @var CityRepositoryInterface $cityRepository */
-        $cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
-        $result = $cityRepository->getList($searchCriteria);
+        $result = $this->cityRepository->getList($searchCriteria);
         return $result->getTotalCount();
     }
 }

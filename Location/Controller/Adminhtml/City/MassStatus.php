@@ -75,7 +75,7 @@ class MassStatus extends Action
             foreach ($collection as $city) {
                 try {
                     /** @var CityInterface $city */
-                    $this->hydrator->hydrate($city, [CityInterface::IS_ENABLED => $isEnabled]);
+                    $city = $this->hydrator->hydrate($city, [CityInterface::IS_ENABLED => $isEnabled]);
                     $this->cityRepository->save($city);
                     $updatedItemsCount++;
                 } catch (CouldNotSaveException $e) {

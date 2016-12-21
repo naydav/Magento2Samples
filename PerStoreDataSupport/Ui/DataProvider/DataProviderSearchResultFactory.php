@@ -68,8 +68,9 @@ class DataProviderSearchResultFactory implements DataProviderSearchResultFactory
             foreach ($itemData as $key => $value) {
                 $attribute = $this->attributeValueFactory->create();
                 $attribute->setAttributeCode($key);
-                if (!is_array($value)) {
-                    $value = (string)$value;
+                if (is_bool($value)) {
+                    // for proper work form and grid
+                    $value = (string)(int)$value;
                 }
                 $attribute->setValue($value);
                 $attributes[] = $attribute;

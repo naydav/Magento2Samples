@@ -110,7 +110,7 @@ class CrudTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_store_scope_data.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_store_scope.php
      */
     public function testDeleteValueInStoreScope()
     {
@@ -173,14 +173,14 @@ class CrudTest extends WebapiAbstract
             RegionInterface::REGION_ID => $regionId,
             RegionInterface::TITLE => 'title-0',
             RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 1000,
+            RegionInterface::POSITION => 200,
         ];
         $region = $this->getRegionById($regionId);
         AssertArrayContains::assertArrayContains($data, $region);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_store_scope_data.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_store_scope.php
      */
     public function testGetIfValueIsPerStore()
     {
@@ -190,7 +190,7 @@ class CrudTest extends WebapiAbstract
             RegionInterface::REGION_ID => $regionId,
             RegionInterface::TITLE => 'per-store-title-0',
             RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 1000,
+            RegionInterface::POSITION => 200,
         ];
         $region = $this->getRegionById($regionId, $storeCode);
         AssertArrayContains::assertArrayContains($data, $region);

@@ -79,7 +79,8 @@ class Save extends Action
                         }
                     }
                 }
-                $regionId = !empty($regionRequestData['region_id']) ? $regionRequestData['region_id'] : null;
+                $regionId = !empty($regionRequestData[RegionInterface::REGION_ID])
+                    ? $regionRequestData[RegionInterface::REGION_ID] : null;
 
                 if ($regionId) {
                     $region = $this->regionRepository->get($regionId);
@@ -87,7 +88,7 @@ class Save extends Action
                     /** @var RegionInterface $region */
                     $region = $this->regionFactory->create();
                 }
-                $this->hydrator->hydrate($region, $regionRequestData);
+                $region = $this->hydrator->hydrate($region, $regionRequestData);
                 $this->regionRepository->save($region);
 
                 $citiesRequestData = $this->getRequest()->getParam('cities', []);
@@ -100,7 +101,10 @@ class Save extends Action
 
                 $this->messageManager->addSuccessMessage(__('The Region has been saved.'));
                 if ($this->getRequest()->getParam('back')) {
-                    $resultRedirect->setPath('*/*/edit', ['region_id' => $region->getRegionId(), '_current' => true]);
+                    $resultRedirect->setPath('*/*/edit', [
+                        RegionInterface::REGION_ID => $region->getRegionId(),
+                        '_current' => true,
+                    ]);
                 } else {
                     $resultRedirect->setPath('*/*/');
                 }
@@ -110,7 +114,7 @@ class Save extends Action
             } catch (CouldNotSaveException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
                 if ($regionId) {
-                    $resultRedirect->setPath('*/*/edit', ['region_id' => $regionId, '_current' => true]);
+                    $resultRedirect->setPath('*/*/edit', [RegionInterface::REGION_ID => $regionId, '_current' => true]);
                 } else {
                     $resultRedirect->setPath('*/*/');
                 }

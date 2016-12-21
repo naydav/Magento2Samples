@@ -87,7 +87,7 @@
                         <item name="false" xsi:type="string">0</item>
                     </item>
                     <item name="default" xsi:type="string">1</item>
-                    <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                    <item name="scopeLabel" xsi:type="string" translate="true">[GLOBAL]</item>
                 </item>
             </argument>
         </field>
@@ -101,7 +101,7 @@
                     <item name="validation" xsi:type="array">
                         <item name="validate-digits" xsi:type="boolean">true</item>
                     </item>
-                    <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                    <item name="scopeLabel" xsi:type="string" translate="true">[GLOBAL]</item>
                 </item>
             </argument>
         </field>
@@ -177,8 +177,8 @@
                     <item name="config" xsi:type="array">
                         <item name="isTemplate" xsi:type="boolean">true</item>
                         <item name="is_collection" xsi:type="boolean">true</item>
-                        <!--<item name="component" xsi:type="string">Magento_Ui/js/dynamic-rows/record</item>-->
-                        <item name="component" xsi:type="string">Magento_Ui/js/lib/core/collection</item>
+                        <item name="component" xsi:type="string">Magento_Ui/js/dynamic-rows/record</item>
+                        <!--<item name="component" xsi:type="string">Magento_Ui/js/lib/core/collection</item>-->
                         <item name="dataScope" xsi:type="string"/>
                     </item>
                 </argument>

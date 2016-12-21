@@ -16,6 +16,7 @@ use Zend\Http\Request;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
+ * @magentoDbIsolation enabled
  */
 class CityManagementTest extends AbstractBackendController
 {
@@ -25,14 +26,27 @@ class CityManagementTest extends AbstractBackendController
     const REQUEST_URI = 'backend/location/region/save/store/%s/back/edit';
 
     /**
-     * @var RegionInterface|null
+     * @var FormKey
      */
-    private $region;
+    private $formKey;
 
     /**
-     * @var CityInterface[]
+     * @var RegionRepositoryInterface
      */
-    private $cities;
+    private $regionRepository;
+
+    /**
+     * @var SearchCriteriaBuilderFactory
+     */
+    private $searchCriteriaBuilderFactory;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->formKey = $this->_objectManager->get(FormKey::class);
+        $this->regionRepository = $this->_objectManager->get(RegionRepositoryInterface::class);
+        $this->searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
+    }
 
     public function testCreateWithCitiesCreating()
     {
@@ -53,7 +67,7 @@ class CityManagementTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
             'cities' => [
                 'assigned_cities' => $assignedCities,
@@ -62,11 +76,10 @@ class CityManagementTest extends AbstractBackendController
 
         $uri = sprintf(self::REQUEST_URI, 0);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $region = $this->getRegionByTitle($data[RegionInterface::TITLE]);
-        $this->region = $region;
         $cities = $this->getAssignedCities($region->getRegionId());
-        $this->cities = $cities;
 
         self::assertNotEmpty($region);
         self::assertCount(2, $cities);
@@ -83,7 +96,7 @@ class CityManagementTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope_data.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      */
     public function testCreateWithCurrentCitiesSelecting()
     {
@@ -102,7 +115,7 @@ class CityManagementTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
             'cities' => [
                 'assigned_cities' => $assignedCities,
@@ -111,11 +124,10 @@ class CityManagementTest extends AbstractBackendController
 
         $uri = sprintf(self::REQUEST_URI, 0);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $region = $this->getRegionByTitle($data[RegionInterface::TITLE]);
-        $this->region = $region;
         $cities = $this->getAssignedCities($region->getRegionId());
-        $this->cities = $cities;
 
         self::assertNotEmpty($region);
         self::assertCount(2, $cities);
@@ -154,7 +166,7 @@ class CityManagementTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
             'cities' => [
                 'assigned_cities' => $assignedCities,
@@ -163,10 +175,10 @@ class CityManagementTest extends AbstractBackendController
 
         $uri = sprintf(self::REQUEST_URI, 0);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $region = $this->getRegionByTitle('title-0');
         $cities = $this->getAssignedCities($region->getRegionId());
-        $this->cities = $cities;
 
         self::assertNotEmpty($region);
         self::assertCount(2, $cities);
@@ -184,7 +196,7 @@ class CityManagementTest extends AbstractBackendController
 
     /**
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope_data.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      */
     public function testUpdateWithCurrentCitiesSelecting()
     {
@@ -204,7 +216,7 @@ class CityManagementTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
             'cities' => [
                 'assigned_cities' => $assignedCities,
@@ -213,6 +225,7 @@ class CityManagementTest extends AbstractBackendController
 
         $uri = sprintf(self::REQUEST_URI, 0);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $region = $this->getRegionByTitle('title-0');
         $cities = $this->getAssignedCities($region->getRegionId());
@@ -233,7 +246,7 @@ class CityManagementTest extends AbstractBackendController
 
     /**
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope_data.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      */
     public function testUpdateWithCitiesReplacing()
     {
@@ -253,7 +266,7 @@ class CityManagementTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
             'cities' => [
                 'assigned_cities' => $assignedCities,
@@ -262,6 +275,7 @@ class CityManagementTest extends AbstractBackendController
 
         $uri = sprintf(self::REQUEST_URI, 0);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $region = $this->getRegionByTitle('title-0');
         $cities = $this->getAssignedCities($region->getRegionId());
@@ -282,7 +296,7 @@ class CityManagementTest extends AbstractBackendController
 
     /**
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope_data.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      */
     public function testCitiesDataUpdating()
     {
@@ -306,7 +320,7 @@ class CityManagementTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
             'cities' => [
                 'assigned_cities' => $assignedCities,
@@ -315,6 +329,7 @@ class CityManagementTest extends AbstractBackendController
 
         $uri = sprintf(self::REQUEST_URI, 0);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $region = $this->getRegionByTitle('title-0');
         $cities = $this->getAssignedCities($region->getRegionId());
@@ -335,57 +350,21 @@ class CityManagementTest extends AbstractBackendController
         $this->assertSessionMessages($this->contains('The Region has been saved.'), MessageInterface::TYPE_SUCCESS);
     }
 
-    public function tearDown()
-    {
-        if (null !== $this->region) {
-            $this->deleteRegion($this->region);
-        }
-        if (count($this->cities) > 0) {
-            $this->deleteCities($this->cities);
-        }
-        parent::tearDown();
-    }
-
-    /**
-     * @return string
-     */
-    private function getFormKey()
-    {
-        /** @var FormKey $formKey */
-        $formKey = $this->_objectManager->get(FormKey::class);
-        return $formKey->getFormKey();
-    }
-
     /**
      * @param string $title
      * @return RegionInterface
      */
     private function getRegionByTitle($title)
     {
-        /** @var SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory */
-        $searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder = $searchCriteriaBuilderFactory->create();
+        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
         $searchCriteriaBuilder->addFilter(RegionInterface::TITLE, $title);
         $searchCriteria = $searchCriteriaBuilder->create();
 
-        /** @var RegionRepositoryInterface $regionRepository */
-        $regionRepository = $this->_objectManager->get(RegionRepositoryInterface::class);
-        $result = $regionRepository->getList($searchCriteria);
+        $result = $this->regionRepository->getList($searchCriteria);
         $items = $result->getItems();
         $region = reset($items);
         return $region;
-    }
-
-    /**
-     * @param RegionInterface $region
-     * @return void
-     */
-    private function deleteRegion(RegionInterface $region)
-    {
-        /** @var RegionRepositoryInterface $regionRepository */
-        $regionRepository = $this->_objectManager->get(RegionRepositoryInterface::class);
-        $regionRepository->deleteById($region->getRegionId());
     }
 
     /**
@@ -397,18 +376,5 @@ class CityManagementTest extends AbstractBackendController
         /** @var CitiesByRegionList $citiesByRegionList */
         $citiesByRegionList = $this->_objectManager->get(CitiesByRegionList::class);
         return $citiesByRegionList->getList($regionId)->getItems();
-    }
-
-    /**
-     * @param CityInterface[] $cities
-     * @return void
-     */
-    private function deleteCities(array $cities)
-    {
-        foreach ($cities as $city) {
-            /** @var CityRepositoryInterface $cityRepository */
-            $cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
-            $cityRepository->deleteById($city->getCityId());
-        }
     }
 }

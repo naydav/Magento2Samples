@@ -79,7 +79,7 @@ class ReadHandler implements ExtensionInterface
 
         $result = $connection->fetchRow($select);
         if (false !== $result) {
-            $this->hydrator->hydrate($entity, $result);
+            $entity = $this->hydrator->hydrate($entity, $result);
         }
         return $entity;
     }

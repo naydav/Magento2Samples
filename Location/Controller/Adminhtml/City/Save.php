@@ -70,7 +70,7 @@ class Save extends Action
                         }
                     }
                 }
-                $cityId = !empty($requestData['city_id']) ? $requestData['city_id'] : null;
+                $cityId = !empty($requestData[CityInterface::CITY_ID]) ? $requestData[CityInterface::CITY_ID] : null;
 
                 if ($cityId) {
                     $city = $this->cityRepository->get($cityId);
@@ -78,12 +78,15 @@ class Save extends Action
                     /** @var CityInterface $city */
                     $city = $this->cityFactory->create();
                 }
-                $this->hydrator->hydrate($city, $requestData);
+                $city = $this->hydrator->hydrate($city, $requestData);
                 $this->cityRepository->save($city);
 
                 $this->messageManager->addSuccessMessage(__('The City has been saved.'));
                 if ($this->getRequest()->getParam('back')) {
-                    $resultRedirect->setPath('*/*/edit', ['city_id' => $city->getCityId(), '_current' => true]);
+                    $resultRedirect->setPath('*/*/edit', [
+                        CityInterface::CITY_ID => $city->getCityId(),
+                        '_current' => true,
+                    ]);
                 } else {
                     $resultRedirect->setPath('*/*/');
                 }
@@ -93,7 +96,7 @@ class Save extends Action
             } catch (CouldNotSaveException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
                 if ($cityId) {
-                    $resultRedirect->setPath('*/*/edit', ['city_id' => $cityId, '_current' => true]);
+                    $resultRedirect->setPath('*/*/edit', [CityInterface::CITY_ID => $cityId, '_current' => true]);
                 } else {
                     $resultRedirect->setPath('*/*/');
                 }

@@ -15,6 +15,7 @@ use Zend\Http\Request;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
+ * @magentoDbIsolation enabled
  */
 class CreateTest extends AbstractBackendController
 {
@@ -24,9 +25,33 @@ class CreateTest extends AbstractBackendController
     const REQUEST_URI = 'backend/location/city/save/store/%s/back/edit';
 
     /**
-     * @var CityInterface|null
+     * @var FormKey
      */
-    private $city;
+    private $formKey;
+
+    /**
+     * @var HydratorInterface
+     */
+    private $hydrator;
+
+    /**
+     * @var CityRepositoryInterface
+     */
+    private $cityRepository;
+
+    /**
+     * @var SearchCriteriaBuilderFactory
+     */
+    private $searchCriteriaBuilderFactory;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->formKey = $this->_objectManager->get(FormKey::class);
+        $this->hydrator = $this->_objectManager->get(HydratorInterface::class);
+        $this->cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
+        $this->searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
+    }
 
     /**
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
@@ -43,18 +68,18 @@ class CreateTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
 
         $uri = sprintf(self::REQUEST_URI, 0);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $city = $this->getCityByTitle($data[CityInterface::TITLE]);
-        self::assertNotEmpty($city);
-        $this->city = $city;
 
-        AssertArrayContains::assertArrayContains($data, $this->extractData($city));
+        self::assertNotEmpty($city);
+        AssertArrayContains::assertArrayContains($data, $this->hydrator->extract($city));
 
         $this->assertRedirect(
             $this->stringContains('backend/location/city/edit/city_id/' . $city->getCityId())
@@ -73,17 +98,17 @@ class CreateTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
 
         $uri = sprintf(self::REQUEST_URI, 0);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $city = $this->getCityByTitle($data[CityInterface::TITLE]);
-        self::assertNotEmpty($city);
-        $this->city = $city;
 
+        self::assertNotEmpty($city);
         self::assertNull($city->getRegionId());
 
         $this->assertRedirect(
@@ -92,64 +117,20 @@ class CreateTest extends AbstractBackendController
         $this->assertSessionMessages($this->contains('The City has been saved.'), MessageInterface::TYPE_SUCCESS);
     }
 
-    public function tearDown()
-    {
-        if (null !== $this->city) {
-            $this->deleteCity($this->city);
-        }
-        parent::tearDown();
-    }
-
-    /**
-     * @return string
-     */
-    private function getFormKey()
-    {
-        /** @var FormKey $formKey */
-        $formKey = $this->_objectManager->get(FormKey::class);
-        return $formKey->getFormKey();
-    }
-
     /**
      * @param string $title
      * @return CityInterface
      */
     private function getCityByTitle($title)
     {
-        /** @var SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory */
-        $searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder = $searchCriteriaBuilderFactory->create();
+        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
         $searchCriteriaBuilder->addFilter(CityInterface::TITLE, $title);
         $searchCriteria = $searchCriteriaBuilder->create();
 
-        /** @var CityRepositoryInterface $cityRepository */
-        $cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
-        $result = $cityRepository->getList($searchCriteria);
+        $result = $this->cityRepository->getList($searchCriteria);
         $items = $result->getItems();
         $city = reset($items);
         return $city;
-    }
-
-    /**
-     * @param CityInterface $city
-     * @return void
-     */
-    private function deleteCity(CityInterface $city)
-    {
-        /** @var CityRepositoryInterface $cityRepository */
-        $cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
-        $cityRepository->deleteById($city->getCityId());
-    }
-
-    /**
-     * @param CityInterface $city
-     * @return array
-     */
-    private function extractData(CityInterface $city)
-    {
-        /** @var HydratorInterface $hydrator */
-        $hydrator = $this->_objectManager->get(HydratorInterface::class);
-        return $hydrator->extract($city);
     }
 }

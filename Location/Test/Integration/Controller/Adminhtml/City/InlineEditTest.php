@@ -22,7 +22,37 @@ class InlineEditTest extends AbstractBackendController
     const REQUEST_URI = 'backend/location/city/inlineEdit';
 
     /**
+     * @var FormKey
+     */
+    private $formKey;
+
+    /**
+     * @var HydratorInterface
+     */
+    private $hydrator;
+
+    /**
+     * @var CityRepositoryInterface
+     */
+    private $cityRepository;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->formKey = $this->_objectManager->get(FormKey::class);
+        $this->hydrator = $this->_objectManager->get(HydratorInterface::class);
+        $this->cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
+        $this->storeManager = $this->_objectManager->get(StoreManagerInterface::class);
+    }
+
+    /**
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      */
     public function testInlineEdit()
     {
@@ -38,7 +68,7 @@ class InlineEditTest extends AbstractBackendController
         $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'items' => [
                 $itemData,
             ],
@@ -54,12 +84,14 @@ class InlineEditTest extends AbstractBackendController
         self::assertEquals(0, $jsonResponse->error);
         self::assertEmpty($jsonResponse->messages);
 
-        $city = $this->getCityById($cityId);
-        AssertArrayContains::assertArrayContains($itemData, $this->extractData($city));
+        $city = $this->getCityById($cityId, 'default');
+        AssertArrayContains::assertArrayContains($itemData, $this->hydrator->extract($city));
+        $city = $this->getCityById($cityId, 'test_store');
+        AssertArrayContains::assertArrayContains($itemData, $this->hydrator->extract($city));
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope_data.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope.php
      */
     public function testInlineEditInStoreScope()
     {
@@ -76,7 +108,7 @@ class InlineEditTest extends AbstractBackendController
         $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'items' => [
                 $itemDataPerScope,
             ],
@@ -96,10 +128,10 @@ class InlineEditTest extends AbstractBackendController
         $itemDataForGlobalScope = array_merge($itemDataPerScope, [
             CityInterface::TITLE => 'title-0',
         ]);
-        AssertArrayContains::assertArrayContains($itemDataForGlobalScope, $this->extractData($city));
+        AssertArrayContains::assertArrayContains($itemDataForGlobalScope, $this->hydrator->extract($city));
 
         $city = $this->getCityById($cityId, $storeCode);
-        AssertArrayContains::assertArrayContains($itemDataPerScope, $this->extractData($city));
+        AssertArrayContains::assertArrayContains($itemDataPerScope, $this->hydrator->extract($city));
     }
 
     public function testInlineEditWithNotExistEntityId()
@@ -110,7 +142,7 @@ class InlineEditTest extends AbstractBackendController
         $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'items' => [
                 [
                     CityInterface::CITY_ID => $cityId,
@@ -135,7 +167,7 @@ class InlineEditTest extends AbstractBackendController
         $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'items' => [],
         ]);
 
@@ -158,7 +190,7 @@ class InlineEditTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'items' => [
                 [
                     CityInterface::CITY_ID => 100,
@@ -179,16 +211,6 @@ class InlineEditTest extends AbstractBackendController
     }
 
     /**
-     * @return string
-     */
-    private function getFormKey()
-    {
-        /** @var FormKey $formKey */
-        $formKey = $this->_objectManager->get(FormKey::class);
-        return $formKey->getFormKey();
-    }
-
-    /**
      * @param int $cityId
      * @param string|null $storeCode
      * @return CityInterface
@@ -196,30 +218,15 @@ class InlineEditTest extends AbstractBackendController
     private function getCityById($cityId, $storeCode = null)
     {
         if (null !== $storeCode) {
-            /** @var StoreManagerInterface $storeManager */
-            $storeManager = $this->_objectManager->get(StoreManagerInterface::class);
-            $currentStore = $storeManager->getStore()->getCode();
-            $storeManager->setCurrentStore($storeCode);
+            $currentStore = $this->storeManager->getStore()->getCode();
+            $this->storeManager->setCurrentStore($storeCode);
         }
 
-        /** @var CityRepositoryInterface $cityRepository */
-        $cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
-        $city = $cityRepository->get($cityId);
+        $city = $this->cityRepository->get($cityId);
 
         if (null !== $storeCode) {
-            $storeManager->setCurrentStore($currentStore);
+            $this->storeManager->setCurrentStore($currentStore);
         }
         return $city;
-    }
-
-    /**
-     * @param CityInterface $city
-     * @return array
-     */
-    private function extractData(CityInterface $city)
-    {
-        /** @var HydratorInterface $hydrator */
-        $hydrator = $this->_objectManager->get(HydratorInterface::class);
-        return $hydrator->extract($city);
     }
 }

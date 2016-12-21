@@ -1,6 +1,11 @@
 <?php
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
+use Engine\Backend\Test\AssertFormField;
+use Engine\Backend\Test\AssertPageHeader;
+use Engine\Backend\Test\AssertPageTitle;
+use Engine\Backend\Test\AssertStoreSwitcher;
+use Engine\Location\Api\Data\CityInterface;
 use Magento\Framework\Message\MessageInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 
@@ -16,61 +21,62 @@ class EditTest extends AbstractBackendController
     const REQUEST_URI = 'backend/location/city/edit';
 
     /**
+     * @var string
+     */
+    private $formName = 'city_form';
+
+    /**
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
      */
     public function testEdit()
     {
         $cityId = 100;
-        $cityTitle = 'title-0';
+        $title = 'title-0';
 
-        $this->dispatch(self::REQUEST_URI . '/city_id/' . $cityId . '/');
+        $this->dispatch(self::REQUEST_URI . '/' . CityInterface::CITY_ID . '/' . $cityId . '/');
         $body = $this->getResponse()->getBody();
 
         self::assertNotEmpty($body);
-        self::assertSelectRegExp(
-            'title',
-            "#^Edit City: {$cityTitle} / Location.*#",
-            1,
-            $body,
-            'Meta title is wrong'
-        );
-        self::assertSelectEquals('h1', "Edit City: {$cityTitle}", 1, $body, 'Page title is wrong');
-        self::assertSelectCount('#store-change-button', 1, $body, 'Store view change button is missed');
-        self::assertSelectCount('.form-inline', 1, $body, 'Form is missed');
-        self::assertSelectRegExp('script', "#.*\"title\":\"{$cityTitle}\".*#", 1, $body, 'Title data is missed');
+        AssertPageTitle::assert($body, "Edit City: {$title} / Location");
+        AssertPageHeader::assert($body, "Edit City: {$title}");
+        AssertStoreSwitcher::assert($body);
+
+        AssertFormField::assert($body, $this->formName, 'general', CityInterface::REGION_ID, 100);
+        AssertFormField::assert($body, $this->formName, 'general', CityInterface::IS_ENABLED, true);
+        AssertFormField::assert($body, $this->formName, 'general', CityInterface::POSITION, 200);
+        AssertFormField::assert($body, $this->formName, 'general', CityInterface::TITLE, $title);
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope_data.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope.php
      */
     public function testEditInStoreScope()
     {
         $storeCode = 'test_store';
         $cityId = 100;
-        $cityTitle = 'per-store-title-0';
+        $title = 'per-store-title-0';
 
-        $this->dispatch(self::REQUEST_URI . '/city_id/' . $cityId . '/store/' . $storeCode . '/');
+        $this->dispatch(
+            self::REQUEST_URI . '/' . CityInterface::CITY_ID . '/' . $cityId . '/store/' . $storeCode . '/'
+        );
         $body = $this->getResponse()->getBody();
 
         self::assertNotEmpty($body);
-        self::assertSelectRegExp(
-            'title',
-            "#^Edit City: {$cityTitle} / Location.*#",
-            1,
-            $body,
-            'Meta title is wrong'
-        );
-        self::assertSelectEquals('h1', "Edit City: {$cityTitle}", 1, $body, 'Page title is wrong');
-        self::assertSelectCount('#store-change-button', 1, $body, 'Store view change button is missed');
-        self::assertSelectCount('.form-inline', 1, $body, 'Form is missed');
-        self::assertSelectRegExp('script', "#.*\"title\":\"{$cityTitle}\".*#", 1, $body, 'Title data is missed');
+        AssertPageTitle::assert($body, "Edit City: {$title} / Location");
+        AssertPageHeader::assert($body, "Edit City: {$title}");
+        AssertStoreSwitcher::assert($body);
+
+        AssertFormField::assert($body, $this->formName, 'general', CityInterface::REGION_ID, 100);
+        AssertFormField::assert($body, $this->formName, 'general', CityInterface::IS_ENABLED, true);
+        AssertFormField::assert($body, $this->formName, 'general', CityInterface::POSITION, 200);
+        AssertFormField::assert($body, $this->formName, 'general', CityInterface::TITLE, $title);
     }
 
     public function testEditWithNotExistEntityId()
     {
         $cityId = -1;
 
-        $this->dispatch(self::REQUEST_URI . '/city_id/' . $cityId . '/');
+        $this->dispatch(self::REQUEST_URI . '/' . CityInterface::CITY_ID . '/' . $cityId . '/');
 
         $this->assertRedirect($this->stringContains('backend/location/city/index'));
         $this->assertSessionMessages(

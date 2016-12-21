@@ -21,7 +21,7 @@ $region = $hydrator->hydrate($region, [
     RegionInterface::REGION_ID => 100,
     RegionInterface::TITLE => 'title-0',
     RegionInterface::IS_ENABLED => true,
-    RegionInterface::POSITION => 1000,
+    RegionInterface::POSITION => 200,
 ]);
 $regionId = $regionRepository->save($region);
 

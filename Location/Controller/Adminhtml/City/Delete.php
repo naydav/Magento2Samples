@@ -2,6 +2,7 @@
 namespace Engine\Location\Controller\Adminhtml\City;
 
 use Engine\Location\Api\CityRepositoryInterface;
+use Engine\Location\Api\Data\CityInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Exception\CouldNotDeleteException;
@@ -41,7 +42,7 @@ class Delete extends Action
     {
         $resultRedirect = $this->resultRedirectFactory->create();
 
-        $cityId = $this->getRequest()->getPost('city_id');
+        $cityId = $this->getRequest()->getPost(CityInterface::CITY_ID);
         if ($this->getRequest()->isPost() && null !== $cityId) {
             try {
                 $this->cityRepository->deleteById($cityId);
@@ -52,7 +53,7 @@ class Delete extends Action
                 $resultRedirect->setPath('*/*/index');
             } catch (CouldNotDeleteException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
-                $resultRedirect->setPath('*/*/edit', ['city_id' => $cityId, '_current' => true]);
+                $resultRedirect->setPath('*/*/edit', [CityInterface::CITY_ID => $cityId, '_current' => true]);
             }
         } else {
             $this->messageManager->addErrorMessage(__('Wrong request.'));

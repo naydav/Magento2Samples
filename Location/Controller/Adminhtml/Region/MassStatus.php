@@ -75,7 +75,7 @@ class MassStatus extends Action
             foreach ($collection as $region) {
                 try {
                     /** @var RegionInterface $region */
-                    $this->hydrator->hydrate($region, [RegionInterface::IS_ENABLED => $isEnabled]);
+                    $region = $this->hydrator->hydrate($region, [RegionInterface::IS_ENABLED => $isEnabled]);
                     $this->regionRepository->save($region);
                     $updatedItemsCount++;
                 } catch (CouldNotSaveException $e) {

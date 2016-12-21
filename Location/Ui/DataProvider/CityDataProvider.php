@@ -128,7 +128,9 @@ class CityDataProvider extends DataProvider
         $meta = parent::getMeta();
         if ('city_form_data_source' === $this->name) {
             $cityId = $this->request->getParam('city_id');
-            $meta = $this->dataProviderMetaModifier->modify(CityInterface::class, $cityId, $meta);
+            if (null !== $cityId) {
+                $meta = $this->dataProviderMetaModifier->modify(CityInterface::class, $cityId, $meta);
+            }
         }
 
         if ('city_listing_data_source' === $this->name) {

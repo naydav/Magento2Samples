@@ -7,7 +7,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  */
-class CitiesByRegionListTest extends \PHPUnit_Framework_TestCase
+class RegionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Region
@@ -23,7 +23,7 @@ class CitiesByRegionListTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list_global_scope_data.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list_global_scope.php
      */
     public function testToOptionArray()
     {
@@ -31,8 +31,8 @@ class CitiesByRegionListTest extends \PHPUnit_Framework_TestCase
 
         $expectedData = [
             [
-                'value' => 100,
-                'label' => 'region-3',
+                'value' => 400,
+                'label' => 'region-1',
             ],
             [
                 'value' => 200,
@@ -43,8 +43,8 @@ class CitiesByRegionListTest extends \PHPUnit_Framework_TestCase
                 'label' => 'region-2',
             ],
             [
-                'value' => 400,
-                'label' => 'region-1',
+                'value' => 100,
+                'label' => 'region-3',
             ],
         ];
         self::assertEquals($expectedData, $options);
@@ -52,6 +52,6 @@ class CitiesByRegionListTest extends \PHPUnit_Framework_TestCase
 
     public function testToOptionArrayIfRegionsAreNotExist()
     {
-        self::assertEquals([], $this->sourceRegion->toOptionArray());
+        self::assertEmpty($this->sourceRegion->toOptionArray());
     }
 }

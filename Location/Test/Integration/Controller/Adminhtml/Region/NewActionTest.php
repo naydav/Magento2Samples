@@ -1,7 +1,12 @@
 <?php
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\Region;
 
-use Magento\Framework\Message\MessageInterface;
+use Engine\Backend\Test\AssertFormField;
+use Engine\Backend\Test\AssertFormFieldset;
+use Engine\Backend\Test\AssertPageHeader;
+use Engine\Backend\Test\AssertPageTitle;
+use Engine\Backend\Test\AssertStoreSwitcher;
+use Engine\Location\Api\Data\RegionInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 
 /**
@@ -15,17 +20,24 @@ class NewActionTest extends AbstractBackendController
      */
     const REQUEST_URI = 'backend/location/region/new';
 
+    /**
+     * @var string
+     */
+    private $formName = 'region_form';
+
     public function testEdit()
     {
         $this->dispatch(self::REQUEST_URI);
         $body = $this->getResponse()->getBody();
 
         self::assertNotEmpty($body);
-        self::assertSelectRegExp('title', "#^New Region / Location.*#", 1, $body, 'Meta title is wrong');
-        self::assertSelectEquals('h1', 'New Region', 1, $body, 'Page title is wrong');
-        self::assertSelectCount('#store-change-button', 0, $body, 'Store view change button is not be present');
-        self::assertSelectCount('.form-inline', 1, $body, 'Form is missed');
-        self::assertSelectRegExp('script', "#.*region_form.*#", 1, $body, 'Form is missed');
-        self::assertSelectRegExp('script', '#.*"cities":{"type":"fieldset".*#', 1, $body, 'Cities data is missed');
+        AssertPageTitle::assert($body, 'New Region / Location');
+        AssertPageHeader::assert($body, 'New Region');
+        AssertStoreSwitcher::assert($body, false);
+
+        AssertFormField::assert($body, $this->formName, 'general', RegionInterface::IS_ENABLED);
+        AssertFormField::assert($body, $this->formName, 'general', RegionInterface::POSITION);
+        AssertFormField::assert($body, $this->formName, 'general', RegionInterface::TITLE);
+        AssertFormFieldset::assert($body, $this->formName, 'cities');
     }
 }

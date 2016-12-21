@@ -138,7 +138,9 @@ class RegionDataProvider extends DataProvider
         $meta = parent::getMeta();
         if ('region_form_data_source' === $this->name) {
             $regionId = $this->request->getParam('region_id');
-            $meta = $this->dataProviderMetaModifier->modify(RegionInterface::class, $regionId, $meta);
+            if (null !== $regionId) {
+                $meta = $this->dataProviderMetaModifier->modify(RegionInterface::class, $regionId, $meta);
+            }
         }
 
         if ('region_listing_data_source' === $this->name) {

@@ -144,7 +144,7 @@ class CrudTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope_data.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope.php
      */
     public function testDeleteValueInStoreScope()
     {
@@ -208,14 +208,14 @@ class CrudTest extends WebapiAbstract
             CityInterface::REGION_ID => 100,
             CityInterface::TITLE => 'title-0',
             CityInterface::IS_ENABLED => true,
-            CityInterface::POSITION => 1000,
+            CityInterface::POSITION => 200,
         ];
         $city = $this->getCityById($cityId);
         AssertArrayContains::assertArrayContains($data, $city);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope_data.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope.php
      */
     public function testGetIfValueIsPerStore()
     {
@@ -226,7 +226,7 @@ class CrudTest extends WebapiAbstract
             CityInterface::REGION_ID => 100,
             CityInterface::TITLE => 'per-store-title-0',
             CityInterface::IS_ENABLED => true,
-            CityInterface::POSITION => 1000,
+            CityInterface::POSITION => 200,
         ];
         $city = $this->getCityById($cityId, $storeCode);
         AssertArrayContains::assertArrayContains($data, $city);

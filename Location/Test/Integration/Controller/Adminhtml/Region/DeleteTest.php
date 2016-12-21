@@ -18,6 +18,17 @@ class DeleteTest extends AbstractBackendController
     const REQUEST_URI = 'backend/location/region/delete';
 
     /**
+     * @var FormKey
+     */
+    private $formKey;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->formKey = $this->_objectManager->get(FormKey::class);
+    }
+
+    /**
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
      */
     public function testDelete()
@@ -25,7 +36,7 @@ class DeleteTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'region_id' => 100,
         ]);
 
@@ -43,7 +54,7 @@ class DeleteTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_GET);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'region_id' => 100,
         ]);
 
@@ -58,7 +69,7 @@ class DeleteTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
         ]);
 
         $this->dispatch(self::REQUEST_URI);
@@ -72,7 +83,7 @@ class DeleteTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'region_id' => -1,
         ]);
 
@@ -83,15 +94,5 @@ class DeleteTest extends AbstractBackendController
             $this->contains('Region with id &quot;-1&quot; does not exist.'),
             MessageInterface::TYPE_ERROR
         );
-    }
-
-    /**
-     * @return string
-     */
-    private function getFormKey()
-    {
-        /** @var FormKey $formKey */
-        $formKey = $this->_objectManager->get(FormKey::class);
-        return $formKey->getFormKey();
     }
 }

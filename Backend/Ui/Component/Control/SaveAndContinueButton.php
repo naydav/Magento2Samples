@@ -5,6 +5,7 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
+ * @api
  */
 class SaveAndContinueButton implements ButtonProviderInterface
 {

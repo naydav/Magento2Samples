@@ -1,6 +1,7 @@
 <?php
 namespace Engine\Location\Controller\Adminhtml\Region;
 
+use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -41,7 +42,7 @@ class Delete extends Action
     {
         $resultRedirect = $this->resultRedirectFactory->create();
 
-        $regionId = $this->getRequest()->getPost('region_id');
+        $regionId = $this->getRequest()->getPost(RegionInterface::REGION_ID);
         if ($this->getRequest()->isPost() && null !== $regionId) {
             try {
                 $this->regionRepository->deleteById($regionId);
@@ -52,7 +53,7 @@ class Delete extends Action
                 $resultRedirect->setPath('*/*/index');
             } catch (CouldNotDeleteException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
-                $resultRedirect->setPath('*/*/edit', ['region_id' => $regionId, '_current' => true]);
+                $resultRedirect->setPath('*/*/edit', [RegionInterface::REGION_ID => $regionId, '_current' => true]);
             }
         } else {
             $this->messageManager->addErrorMessage(__('Wrong request.'));

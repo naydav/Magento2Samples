@@ -3,6 +3,7 @@ namespace Engine\PerStoreDataSupport\Api\Data;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
+ * @api
  */
 interface StoreDataConfigurationInterface
 {
@@ -20,30 +21,12 @@ interface StoreDataConfigurationInterface
     public function getFields();
 
     /**
-     * @param array $fields
-     * @return void
-     */
-    public function setFields(array $fields);
-
-    /**
      * @return string
      */
     public function getStoreDataTable();
 
     /**
-     * @param string $storeDataTable
-     * @return void
-     */
-    public function setStoreDataTable($storeDataTable);
-
-    /**
      * @return string
      */
     public function getReferenceField();
-
-    /**
-     * @param string $referenceField
-     * @return void
-     */
-    public function setReferenceField($referenceField);
 }

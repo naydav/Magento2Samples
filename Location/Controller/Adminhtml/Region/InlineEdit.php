@@ -1,6 +1,7 @@
 <?php
 namespace Engine\Location\Controller\Adminhtml\Region;
 
+use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -57,13 +58,13 @@ class InlineEdit extends Action
         if ($request->isXmlHttpRequest() && $requestData) {
             foreach ($requestData as $itemData) {
                 try {
-                    $region = $this->regionRepository->get($itemData['region_id']);
-                    $this->hydrator->hydrate($region, $itemData);
+                    $region = $this->regionRepository->get($itemData[RegionInterface::REGION_ID]);
+                    $region = $this->hydrator->hydrate($region, $itemData);
                     $this->regionRepository->save($region);
                 } catch (NoSuchEntityException $e) {
-                    $errorMessages[] = __('[ID: %1] The Region does not exist.', $itemData['region_id']);
+                    $errorMessages[] = __('[ID: %1] The Region does not exist.', $itemData[RegionInterface::REGION_ID]);
                 } catch (CouldNotSaveException $e) {
-                    $errorMessages[] = __('[ID: %1] ', $itemData['region_id']) . $e->getMessage();
+                    $errorMessages[] = __('[ID: %1] ', $itemData[RegionInterface::REGION_ID]) . $e->getMessage();
                 }
             }
         } else {

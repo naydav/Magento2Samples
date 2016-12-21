@@ -15,6 +15,7 @@ use Zend\Http\Request;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
+ * @magentoDbIsolation enabled
  */
 class CreateTest extends AbstractBackendController
 {
@@ -24,9 +25,33 @@ class CreateTest extends AbstractBackendController
     const REQUEST_URI = 'backend/location/region/save/store/%s/back/edit';
 
     /**
-     * @var RegionInterface|null
+     * @var FormKey
      */
-    private $region;
+    private $formKey;
+
+    /**
+     * @var HydratorInterface
+     */
+    private $hydrator;
+
+    /**
+     * @var RegionRepositoryInterface
+     */
+    private $regionRepository;
+
+    /**
+     * @var SearchCriteriaBuilderFactory
+     */
+    private $searchCriteriaBuilderFactory;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->formKey = $this->_objectManager->get(FormKey::class);
+        $this->hydrator = $this->_objectManager->get(HydratorInterface::class);
+        $this->regionRepository = $this->_objectManager->get(RegionRepositoryInterface::class);
+        $this->searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
+    }
 
     public function testCreate()
     {
@@ -39,41 +64,23 @@ class CreateTest extends AbstractBackendController
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
-            'form_key' => $this->getFormKey(),
+            'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
 
         $uri = sprintf(self::REQUEST_URI, 0);
         $this->dispatch($uri);
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
 
         $region = $this->getRegionByTitle($data[RegionInterface::TITLE]);
-        self::assertNotEmpty($region);
-        $this->region = $region;
 
-        AssertArrayContains::assertArrayContains($data, $this->extractData($region));
+        self::assertNotEmpty($region);
+        AssertArrayContains::assertArrayContains($data, $this->hydrator->extract($region));
 
         $this->assertRedirect(
             $this->stringContains('backend/location/region/edit/region_id/' . $region->getRegionId())
         );
         $this->assertSessionMessages($this->contains('The Region has been saved.'), MessageInterface::TYPE_SUCCESS);
-    }
-
-    public function tearDown()
-    {
-        if (null !== $this->region) {
-            $this->deleteRegion($this->region);
-        }
-        parent::tearDown();
-    }
-
-    /**
-     * @return string
-     */
-    private function getFormKey()
-    {
-        /** @var FormKey $formKey */
-        $formKey = $this->_objectManager->get(FormKey::class);
-        return $formKey->getFormKey();
     }
 
     /**
@@ -82,40 +89,14 @@ class CreateTest extends AbstractBackendController
      */
     private function getRegionByTitle($title)
     {
-        /** @var SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory */
-        $searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder = $searchCriteriaBuilderFactory->create();
+        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
         $searchCriteriaBuilder->addFilter(RegionInterface::TITLE, $title);
         $searchCriteria = $searchCriteriaBuilder->create();
 
-        /** @var RegionRepositoryInterface $regionRepository */
-        $regionRepository = $this->_objectManager->get(RegionRepositoryInterface::class);
-        $result = $regionRepository->getList($searchCriteria);
+        $result = $this->regionRepository->getList($searchCriteria);
         $items = $result->getItems();
         $region = reset($items);
         return $region;
-    }
-
-    /**
-     * @param RegionInterface $region
-     * @return void
-     */
-    private function deleteRegion(RegionInterface $region)
-    {
-        /** @var RegionRepositoryInterface $regionRepository */
-        $regionRepository = $this->_objectManager->get(RegionRepositoryInterface::class);
-        $regionRepository->deleteById($region->getRegionId());
-    }
-
-    /**
-     * @param RegionInterface $region
-     * @return array
-     */
-    private function extractData(RegionInterface $region)
-    {
-        /** @var HydratorInterface $hydrator */
-        $hydrator = $this->_objectManager->get(HydratorInterface::class);
-        return $hydrator->extract($region);
     }
 }
