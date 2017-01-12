@@ -32,19 +32,19 @@ class RegionTest extends \PHPUnit_Framework_TestCase
         $expectedData = [
             [
                 'value' => 400,
-                'label' => 'region-1',
+                'label' => 'Region-title-1',
             ],
             [
                 'value' => 200,
-                'label' => 'region-2',
+                'label' => 'Region-title-2',
             ],
             [
                 'value' => 300,
-                'label' => 'region-2',
+                'label' => 'Region-title-2',
             ],
             [
                 'value' => 100,
-                'label' => 'region-3',
+                'label' => 'Region-title-3',
             ],
         ];
         self::assertEquals($expectedData, $options);

@@ -18,7 +18,7 @@ class MassDelete extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::region';
+    const ADMIN_RESOURCE = 'Engine_Location::location_region';
 
     /**
      * @var RegionRepositoryInterface
@@ -67,11 +67,12 @@ class MassDelete extends Action
                     $this->regionRepository->deleteById($region->getRegionId());
                     $deletedItemsCount++;
                 } catch (CouldNotDeleteException $e) {
-                    $errorMessage = __('[ID: %1] ', $region->getRegionId()) . $e->getMessage();
+                    $errorMessage = __('[ID: %1] ', $region->getRegionId())
+                        . $e->getMessage();
                     $this->messageManager->addErrorMessage($errorMessage);
                 }
             }
-            $this->messageManager->addSuccessMessage(__('You deleted %1 region(s).', $deletedItemsCount));
+            $this->messageManager->addSuccessMessage(__('You deleted %1 Region(s).', $deletedItemsCount));
         } else {
             $this->messageManager->addErrorMessage(__('Wrong request.'));
         }

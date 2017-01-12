@@ -3,6 +3,7 @@ namespace Engine\Location\Controller\Adminhtml\City;
 
 use Engine\Location\Api\CityRepositoryInterface;
 use Engine\Location\Api\Data\CityInterface;
+use Engine\Framework\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
@@ -19,7 +20,7 @@ class InlineEdit extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::city';
+    const ADMIN_RESOURCE = 'Engine_Location::location_city';
 
     /**
      * @var HydratorInterface
@@ -58,13 +59,22 @@ class InlineEdit extends Action
         if ($request->isXmlHttpRequest() && $this->getRequest()->isPost() && $requestData) {
             foreach ($requestData as $itemData) {
                 try {
-                    $city = $this->cityRepository->get($itemData[CityInterface::CITY_ID]);
+                    $city = $this->cityRepository->get(
+                        $itemData[CityInterface::CITY_ID]
+                    );
                     $city = $this->hydrator->hydrate($city, $itemData);
                     $this->cityRepository->save($city);
                 } catch (NoSuchEntityException $e) {
-                    $errorMessages[] = __('[ID: %1] The City does not exist.', $itemData[CityInterface::CITY_ID]);
+                    $errorMessages[] = __(
+                        '[ID: %1] The City does not exist.',
+                        $itemData[CityInterface::CITY_ID]
+                    );
+                } catch (ValidatorException $e) {
+                    $errorMessages = $e->getErrors();
                 } catch (CouldNotSaveException $e) {
-                    $errorMessages[] = __('[ID: %1] ', $itemData[CityInterface::CITY_ID]) . $e->getMessage();
+                    $errorMessages[] =
+                        __('[ID: %1] ', $itemData[CityInterface::CITY_ID])
+                        . $e->getMessage();
                 }
             }
         } else {

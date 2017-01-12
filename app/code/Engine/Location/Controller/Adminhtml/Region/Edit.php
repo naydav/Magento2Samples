@@ -1,8 +1,8 @@
 <?php
 namespace Engine\Location\Controller\Adminhtml\Region;
 
-use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
+use Engine\Location\Api\Data\RegionInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\Page;
@@ -18,7 +18,7 @@ class Edit extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::region';
+    const ADMIN_RESOURCE = 'Engine_Location::location_region';
 
     /**
      * @var RegionRepositoryInterface
@@ -48,12 +48,17 @@ class Edit extends Action
 
             /** @var Page $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
-            $result->setActiveMenu('Engine_Location::region')->addBreadcrumb(__('Edit Region'), __('Edit Region'));
-            $result->getConfig()->getTitle()->prepend(__('Edit Region: %1', $region->getTitle()));
+            $result->setActiveMenu('Engine_Location::location_region')
+                ->addBreadcrumb(__('Edit Region'), __('Edit Region'));
+            $result->getConfig()
+                ->getTitle()
+                ->prepend(__('Edit Region: %1', $region->getTitle()));
         } catch (NoSuchEntityException $e) {
             /** @var Redirect $result */
             $result = $this->resultRedirectFactory->create();
-            $this->messageManager->addErrorMessage(__('Region with id "%1" does not exist.', $regionId));
+            $this->messageManager->addErrorMessage(
+                __('Region with id "%1" does not exist.', $regionId)
+            );
             $result->setPath('*/*');
         }
         return $result;

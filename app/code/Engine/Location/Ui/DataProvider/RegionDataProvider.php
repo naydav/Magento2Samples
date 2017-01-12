@@ -3,14 +3,14 @@ namespace Engine\Location\Ui\DataProvider;
 
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Model\City\CitiesByRegionList;
-use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
-use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Model\Region\ResourceModel\RegionCollection;
 use Engine\Location\Model\Region\ResourceModel\RegionCollectionFactory;
+use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
+use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder as SearchSearchCriteriaBuilder;
+use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\UrlInterface;
@@ -19,6 +19,7 @@ use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
+ * @api
  */
 class RegionDataProvider extends DataProvider
 {
@@ -62,7 +63,7 @@ class RegionDataProvider extends DataProvider
      * @param string $primaryFieldName
      * @param string $requestFieldName
      * @param ReportingInterface $reporting
-     * @param SearchSearchCriteriaBuilder $searchSearchCriteriaBuilder
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param RequestInterface $request
      * @param FilterBuilder $filterBuilder
      * @param UrlInterface $urlBuilder
@@ -80,7 +81,7 @@ class RegionDataProvider extends DataProvider
         $primaryFieldName,
         $requestFieldName,
         ReportingInterface $reporting,
-        SearchSearchCriteriaBuilder $searchSearchCriteriaBuilder,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         RequestInterface $request,
         FilterBuilder $filterBuilder,
         UrlInterface $urlBuilder,
@@ -98,7 +99,7 @@ class RegionDataProvider extends DataProvider
             $primaryFieldName,
             $requestFieldName,
             $reporting,
-            $searchSearchCriteriaBuilder,
+            $searchCriteriaBuilder,
             $request,
             $filterBuilder,
             $meta,
@@ -121,7 +122,7 @@ class RegionDataProvider extends DataProvider
         $configData = parent::getConfigData();
         $storeId = $this->storeManager->getStore()->getId();
 
-        $configData['submit_url'] = $this->urlBuilder->getUrl('*/*/save', [
+        $configData['submit_url'] = $this->urlBuilder->getUrl('engine_location/region/save', [
             'store' => $storeId,
         ]);
         $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
@@ -136,20 +137,24 @@ class RegionDataProvider extends DataProvider
     public function getMeta()
     {
         $meta = parent::getMeta();
-        if ('engine_region_form_data_source' === $this->name) {
-            $regionId = $this->request->getParam('region_id');
+        if ('engine_location_region_form_data_source' === $this->name) {
+            $regionId = $this->request->getParam(RegionInterface::REGION_ID);
             if (null !== $regionId) {
-                $meta = $this->dataProviderMetaModifier->modify(RegionInterface::class, $regionId, $meta);
+                $meta = $this->dataProviderMetaModifier->modify(
+                    RegionInterface::class,
+                    $regionId,
+                    $meta
+                );
             }
         }
 
-        if ('engine_region_listing_data_source' === $this->name) {
+        if ('engine_location_region_listing_data_source' === $this->name) {
             $storeId = $this->storeManager->getStore()->getId();
-            $inlineEditUrl = $this->urlBuilder->getUrl('*/*/inlineEdit', [
+            $inlineEditUrl = $this->urlBuilder->getUrl('engine_location/region/inlineEdit', [
                 'store' => $storeId,
             ]);
-            $meta['region_columns']['arguments']['data']['config']['editorConfig']['clientConfig']['saveUrl']
-                = $inlineEditUrl;
+            $meta['region_columns']['arguments']['data']['config']['editorConfig']['clientConfig']
+            ['saveUrl'] = $inlineEditUrl;
         }
         return $meta;
     }
@@ -160,8 +165,9 @@ class RegionDataProvider extends DataProvider
     public function getData()
     {
         $data = parent::getData();
-        if ('engine_region_form_data_source' === $this->name && $data['items']) {
+        if ('engine_location_region_form_data_source' === $this->name && $data['totalRecords'] > 0) {
             $regionId = $data['items'][0][RegionInterface::REGION_ID];
+            // It is need for support several fieldsets. For details see \Magento\Ui\Component\Form::getDataSourceData
             $dataForSingle[$regionId] = [
                 'general' => $data['items'][0],
                 'cities' => [
@@ -205,7 +211,7 @@ class RegionDataProvider extends DataProvider
         $assignedCities = [];
         foreach ($cities as $city) {
             $assignedCities[] = [
-                'id' => (string)$city->getCityId(),
+                CityInterface::CITY_ID => (string)$city->getCityId(),
                 CityInterface::TITLE => $city->getTitle(),
                 CityInterface::IS_ENABLED => (int)$city->getIsEnabled(),
             ];

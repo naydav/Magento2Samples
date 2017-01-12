@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Engine_Category::category_category_tree"
+             title="Category Tree"
+             translate="title"
+             module="Engine_CategoryTree"
+             sortOrder="50"
+             parent="Engine_Category::category"
+             action="engine_category/category/tree"
+             resource="Engine_Category::category_category"/>
+    </menu>
+</config>

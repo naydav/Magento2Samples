@@ -19,7 +19,7 @@ class MassStatus extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::region';
+    const ADMIN_RESOURCE = 'Engine_Location::location_region';
 
     /**
      * @var RegionRepositoryInterface
@@ -74,16 +74,21 @@ class MassStatus extends Action
             $collection = $this->massActionFilter->getCollection($this->regionCollectionFactory->create());
             foreach ($collection as $region) {
                 try {
-                    /** @var RegionInterface $region */
-                    $region = $this->hydrator->hydrate($region, [RegionInterface::IS_ENABLED => $isEnabled]);
+                    $region = $this->regionRepository->get(
+                        $region->getRegionId()
+                    );
+                    $region = $this->hydrator->hydrate($region, [
+                        RegionInterface::IS_ENABLED => $isEnabled,
+                    ]);
                     $this->regionRepository->save($region);
                     $updatedItemsCount++;
                 } catch (CouldNotSaveException $e) {
-                    $errorMessage = __('[ID: %1] ', $region->getRegionId()) . $e->getMessage();
+                    $errorMessage = __('[ID: %1] ', $region->getRegionId())
+                        . $e->getMessage();
                     $this->messageManager->addErrorMessage($errorMessage);
                 }
             }
-            $this->messageManager->addSuccessMessage(__('You updated %1 region(s).', $updatedItemsCount));
+            $this->messageManager->addSuccessMessage(__('You updated %1 Region(s).', $updatedItemsCount));
         } else {
             $this->messageManager->addErrorMessage(__('Wrong request.'));
         }

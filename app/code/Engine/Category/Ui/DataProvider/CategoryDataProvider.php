@@ -1,0 +1,236 @@
+<?php
+namespace Engine\Category\Ui\DataProvider;
+
+use Engine\Category\Api\RootCategoryIdProviderInterface;
+use Engine\Category\Model\Category\Source\GroupedCategory as GroupedCategorySource;
+use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
+use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
+use Engine\Category\Api\Data\CategoryInterface;
+use Engine\Category\Model\Category\ResourceModel\CategoryCollection;
+use Engine\Category\Model\Category\ResourceModel\CategoryCollectionFactory;
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\ReportingInterface;
+use Magento\Framework\Api\Search\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\UrlInterface;
+use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Ui\Component\Form\Element\DataType\Number;
+use Magento\Ui\Component\Form\Element\Select;
+use Magento\Ui\Component\Form\Field;
+
+/**
+ * @author  naydav <valeriy.nayda@gmail.com>
+ * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class CategoryDataProvider extends DataProvider
+{
+    /**
+     * @var UrlInterface
+     */
+    private $urlBuilder;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var DataProviderMetaModifierInterface
+     */
+    private $dataProviderMetaModifier;
+
+    /**
+     * @var CategoryCollectionFactory
+     */
+    private $categoryCollectionFactory;
+
+    /**
+     * @var CollectionProcessorInterface
+     */
+    private $collectionProcessor;
+
+    /**
+     * @var DataProviderSearchResultFactoryInterface
+     */
+    private $dataProviderSearchResultFactory;
+
+    /**
+     * @var GroupedCategorySource
+     */
+    private $groupedCategorySource;
+
+    /**
+     * @var RootCategoryIdProviderInterface
+     */
+    private $rootCategoryIdProvider;
+
+    /**
+     * @param string $name
+     * @param string $primaryFieldName
+     * @param string $requestFieldName
+     * @param ReportingInterface $reporting
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param RequestInterface $request
+     * @param FilterBuilder $filterBuilder
+     * @param UrlInterface $urlBuilder
+     * @param StoreManagerInterface $storeManager
+     * @param DataProviderMetaModifierInterface $dataProviderMetaModifier
+     * @param CategoryCollectionFactory $categoryCollectionFactory
+     * @param CollectionProcessorInterface $collectionProcessor
+     * @param DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory
+     * @param GroupedCategorySource $groupedCategorySource
+     * @param RootCategoryIdProviderInterface $rootCategoryIdProvider
+     * @param array $meta
+     * @param array $data
+     */
+    public function __construct(
+        $name,
+        $primaryFieldName,
+        $requestFieldName,
+        ReportingInterface $reporting,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        RequestInterface $request,
+        FilterBuilder $filterBuilder,
+        UrlInterface $urlBuilder,
+        StoreManagerInterface $storeManager,
+        DataProviderMetaModifierInterface $dataProviderMetaModifier,
+        CategoryCollectionFactory $categoryCollectionFactory,
+        CollectionProcessorInterface $collectionProcessor,
+        DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory,
+        GroupedCategorySource $groupedCategorySource,
+        RootCategoryIdProviderInterface $rootCategoryIdProvider,
+        array $meta = [],
+        array $data = []
+    ) {
+        parent::__construct(
+            $name,
+            $primaryFieldName,
+            $requestFieldName,
+            $reporting,
+            $searchCriteriaBuilder,
+            $request,
+            $filterBuilder,
+            $meta,
+            $data
+        );
+        $this->urlBuilder = $urlBuilder;
+        $this->storeManager = $storeManager;
+        $this->dataProviderMetaModifier = $dataProviderMetaModifier;
+        $this->categoryCollectionFactory = $categoryCollectionFactory;
+        $this->collectionProcessor = $collectionProcessor;
+        $this->dataProviderSearchResultFactory = $dataProviderSearchResultFactory;
+        $this->groupedCategorySource = $groupedCategorySource;
+        $this->rootCategoryIdProvider = $rootCategoryIdProvider;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfigData()
+    {
+        $configData = parent::getConfigData();
+        $storeId = $this->storeManager->getStore()->getId();
+
+        $configData['submit_url'] = $this->urlBuilder->getUrl('engine_category/category/save', [
+            'store' => $storeId,
+        ]);
+        $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
+            'store' => $storeId,
+        ]);
+        return $configData;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMeta()
+    {
+        $meta = parent::getMeta();
+        if ('engine_category_form_data_source' === $this->name) {
+            $categoryId = $this->request->getParam(CategoryInterface::CATEGORY_ID);
+            if ($this->rootCategoryIdProvider->provide() != $categoryId) {
+                $parentId = $this->request->getParam(
+                    CategoryInterface::PARENT_ID,
+                    $this->rootCategoryIdProvider->provide()
+                );
+                $meta['general']['children'][CategoryInterface::PARENT_ID]['arguments']['data'] = [
+                    'options' => $this->groupedCategorySource->toOptionArray(),
+                    'config' => [
+                        'label' => __('Parent Id'),
+                        'componentType' => Field::NAME,
+                        'dataType' => Number::NAME,
+                        'formElement' => Select::NAME,
+                        'sortOrder' => 50,
+                        'scopeLabel' => __('[GLOBAL]'),
+                        'component' => 'Magento_Ui/js/form/element/ui-select',
+                        'elementTmpl' => 'ui/grid/filters/elements/ui-select',
+                        'disableLabel' => true,
+                        'filterOptions' => true,
+                        'multiple' => false,
+                        'validation' => [
+                            'required-entry' => true,
+                        ],
+                        'value' => $parentId,
+                    ],
+                ];
+            }
+            if (null !== $categoryId) {
+                $meta = $this->dataProviderMetaModifier->modify(
+                    CategoryInterface::class,
+                    $categoryId,
+                    $meta
+                );
+            }
+        }
+
+        if ('engine_category_listing_data_source' === $this->name) {
+            $storeId = $this->storeManager->getStore()->getId();
+            $inlineEditUrl = $this->urlBuilder->getUrl('engine_category/category/inlineEdit', [
+                'store' => $storeId,
+            ]);
+            $meta['category_columns']['arguments']['data']['config']['editorConfig']['clientConfig']['saveUrl'] =
+                $inlineEditUrl;
+        }
+        return $meta;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
+    {
+        $data = parent::getData();
+        if ('engine_category_form_data_source' === $this->name && $data['totalRecords'] > 0) {
+            $categoryId = $data['items'][0][CategoryInterface::CATEGORY_ID];
+            // It is need for support several fieldsets. For details see \Magento\Ui\Component\Form::getDataSourceData
+            $dataForSingle[$categoryId] = [
+                'general' => $data['items'][0],
+            ];
+            $data = $dataForSingle;
+        }
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSearchResult()
+    {
+        $searchCriteria = $this->getSearchCriteria();
+        /** @var CategoryCollection $collection */
+        $collection = $this->categoryCollectionFactory->create();
+        $collection->addStoreData();
+        $this->collectionProcessor->process($searchCriteria, $collection);
+
+        $searchResult = $this->dataProviderSearchResultFactory->create(
+            $collection->getItems(),
+            $collection->getSize(),
+            $searchCriteria,
+            CategoryInterface::CATEGORY_ID
+        );
+        return $searchResult;
+    }
+}

@@ -60,21 +60,7 @@ class DataProviderSearchResultFactory implements DataProviderSearchResultFactory
         foreach ($items as $item) {
             $itemData = $this->hydrator->extract($item);
             $itemId = $itemData[$idFieldName];
-
-            $attribute = $this->attributeValueFactory->create();
-            $attribute->setAttributeCode('id_field_name');
-            $attribute->setValue($idFieldName);
-            $attributes[] = $attribute;
-            foreach ($itemData as $key => $value) {
-                $attribute = $this->attributeValueFactory->create();
-                $attribute->setAttributeCode($key);
-                if (is_bool($value)) {
-                    // for proper work form and grid
-                    $value = (string)(int)$value;
-                }
-                $attribute->setValue($value);
-                $attributes[] = $attribute;
-            }
+            $attributes = $this->createAttributes($idFieldName, $itemData);
 
             $document = $this->documentFactory->create();
             $document->setId($itemId);
@@ -87,5 +73,32 @@ class DataProviderSearchResultFactory implements DataProviderSearchResultFactory
         $searchResult->setTotalCount($size);
         $searchResult->setSearchCriteria($searchCriteria);
         return $searchResult;
+    }
+
+    /**
+     * @param string $idFieldName
+     * @param array $itemData
+     * @return array
+     */
+    private function createAttributes($idFieldName, $itemData)
+    {
+        $attributes = [];
+
+        $idFieldNameAttribute = $this->attributeValueFactory->create();
+        $idFieldNameAttribute->setAttributeCode('id_field_name');
+        $idFieldNameAttribute->setValue($idFieldName);
+        $attributes[] = $idFieldNameAttribute;
+
+        foreach ($itemData as $key => $value) {
+            $attribute = $this->attributeValueFactory->create();
+            $attribute->setAttributeCode($key);
+            if (is_bool($value)) {
+                // for proper work form and grid (for example for Yes/No properties)
+                $value = (string)(int)$value;
+            }
+            $attribute->setValue($value);
+            $attributes[] = $attribute;
+        }
+        return $attributes;
     }
 }

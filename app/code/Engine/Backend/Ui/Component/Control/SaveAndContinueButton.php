@@ -15,14 +15,14 @@ class SaveAndContinueButton implements ButtonProviderInterface
     public function getButtonData()
     {
         return [
-            'label' => __('Save and Continue Edit'),
+            'label' => __('Save &amp; Continue Edit'),
             'class' => 'primary',
             'data_attribute' => [
                 'mage-init' => [
                     'button' => ['event' => 'saveAndContinueEdit'],
                 ],
             ],
-            'sort_order' => 80,
+            'sort_order' => 60,
         ];
     }
 }

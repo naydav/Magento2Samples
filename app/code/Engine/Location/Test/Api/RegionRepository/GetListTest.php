@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Location\Test\Api\RegionRepository;
 
-use Engine\Backend\Test\AssertArrayContains;
+use Engine\Framework\Test\AssertArrayContains;
 use Engine\Location\Api\Data\RegionInterface;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Webapi\Rest\Request;
@@ -15,7 +15,7 @@ class GetListTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/location/regions';
+    const RESOURCE_PATH = '/V1/engine-location/regions';
     const SERVICE_NAME = 'locationRegionRepositoryV1';
     /**#@-*/
 
@@ -68,8 +68,9 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
+                        // check one global and one per store field
                         RegionInterface::REGION_ID => 100,
-                        RegionInterface::TITLE => 'region-3',
+                        RegionInterface::TITLE => 'Region-title-3',
                     ],
                 ],
             ],
@@ -97,10 +98,12 @@ class GetListTest extends WebapiAbstract
                     [
                         RegionInterface::REGION_ID => 400,
                         RegionInterface::IS_ENABLED => false,
+                        RegionInterface::TITLE => 'Region-title-1',
                     ],
                     [
                         RegionInterface::REGION_ID => 300,
                         RegionInterface::IS_ENABLED => false,
+                        RegionInterface::TITLE => 'Region-title-2',
                     ],
                 ],
             ],
@@ -111,7 +114,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => RegionInterface::TITLE,
-                                    'value' => 'region-2',
+                                    'value' => 'Region-title-2',
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -127,11 +130,11 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         RegionInterface::REGION_ID => 300,
-                        RegionInterface::TITLE => 'region-2',
+                        RegionInterface::TITLE => 'Region-title-2',
                     ],
                     [
                         RegionInterface::REGION_ID => 200,
-                        RegionInterface::TITLE => 'region-2',
+                        RegionInterface::TITLE => 'Region-title-2',
                     ],
                 ],
             ],
@@ -183,19 +186,19 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         RegionInterface::REGION_ID => 100,
-                        RegionInterface::TITLE => 'region-3',
+                        RegionInterface::TITLE => 'Region-title-3',
                     ],
                     [
                         RegionInterface::REGION_ID => 300,
-                        RegionInterface::TITLE => 'region-2',
+                        RegionInterface::TITLE => 'Region-title-2',
                     ],
                     [
                         RegionInterface::REGION_ID => 200,
-                        RegionInterface::TITLE => 'region-2',
+                        RegionInterface::TITLE => 'Region-title-2',
                     ],
                     [
                         RegionInterface::REGION_ID => 400,
-                        RegionInterface::TITLE => 'region-1',
+                        RegionInterface::TITLE => 'Region-title-1',
                     ],
                 ],
             ],
@@ -250,7 +253,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => RegionInterface::TITLE,
-                                    'value' => 'z-per-store-region-3',
+                                    'value' => 'z-sort-Region-title-3-per-store',
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -260,7 +263,7 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         RegionInterface::REGION_ID => 100,
-                        RegionInterface::TITLE => 'z-per-store-region-3',
+                        RegionInterface::TITLE => 'z-sort-Region-title-3-per-store',
                     ],
                 ],
             ],
@@ -271,7 +274,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => RegionInterface::TITLE,
-                                    'value' => 'z-per-store-region-2',
+                                    'value' => 'z-sort-Region-title-2-per-store',
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -281,7 +284,7 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         RegionInterface::REGION_ID => 300,
-                        RegionInterface::TITLE => 'z-per-store-region-2',
+                        RegionInterface::TITLE => 'z-sort-Region-title-2-per-store',
                     ],
                 ],
             ],
@@ -297,19 +300,19 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         RegionInterface::REGION_ID => 100,
-                        RegionInterface::TITLE => 'z-per-store-region-3',
+                        RegionInterface::TITLE => 'z-sort-Region-title-3-per-store',
                     ],
                     [
                         RegionInterface::REGION_ID => 300,
-                        RegionInterface::TITLE => 'z-per-store-region-2',
+                        RegionInterface::TITLE => 'z-sort-Region-title-2-per-store',
                     ],
                     [
                         RegionInterface::REGION_ID => 400,
-                        RegionInterface::TITLE => 'z-per-store-region-1',
+                        RegionInterface::TITLE => 'z-sort-Region-title-1-per-store',
                     ],
                     [
                         RegionInterface::REGION_ID => 200,
-                        RegionInterface::TITLE => 'region-2',
+                        RegionInterface::TITLE => 'Region-title-2',
                     ],
                 ],
             ],

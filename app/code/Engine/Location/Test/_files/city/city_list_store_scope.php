@@ -15,34 +15,34 @@ $cityRepository = Bootstrap::getObjectManager()->get(CityRepositoryInterface::cl
 /** @var StoreManagerInterface $storeManager */
 $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
 
-require '../../../app/code/Engine/Location/Test/_files/region/region.php';
+require '../../../app/code/Engine/Location/Test/_files/region/region_id_100.php';
 
 $citiesData = [
     [
         CityInterface::CITY_ID => 100,
         CityInterface::REGION_ID => 100,
-        CityInterface::TITLE => 'city-3',
         CityInterface::IS_ENABLED => true,
         CityInterface::POSITION => 300,
+        CityInterface::TITLE => 'City-title-3',
     ],
     [
         CityInterface::CITY_ID => 200,
         CityInterface::REGION_ID => 100,
-        CityInterface::TITLE => 'city-2',
         CityInterface::IS_ENABLED => true,
         CityInterface::POSITION => 200,
+        CityInterface::TITLE => 'City-title-2',
     ],
     [
         CityInterface::CITY_ID => 300,
-        CityInterface::TITLE => 'city-2',
         CityInterface::IS_ENABLED => false,
         CityInterface::POSITION => 200,
+        CityInterface::TITLE => 'City-title-2',
     ],
     [
         CityInterface::CITY_ID => 400,
-        CityInterface::TITLE => 'city-1',
         CityInterface::IS_ENABLED => false,
         CityInterface::POSITION => 100,
+        CityInterface::TITLE => 'City-title-1',
     ],
 ];
 $cityIds = [];
@@ -65,7 +65,8 @@ foreach ($cityIds as $key => $cityId) {
         continue;
     }
     $city = $cityRepository->get($cityId);
-    $city->setTitle('z-per-store-' . $city->getTitle());
+    // 'z-sort' prefix is need for sorting change in store scope
+    $city->setTitle('z-sort-' . $city->getTitle() . '-per-store');
     $cityRepository->save($city);
 }
 $storeManager->setCurrentStore($currentStore);

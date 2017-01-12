@@ -68,7 +68,7 @@ class RegionCityRelationProcessor
         try {
             $this->doProcess($regionId, $citiesData);
         } catch (\Exception $e) {
-            throw new LocalizedException(__('Cannot assign cities to region'), $e);
+            throw new LocalizedException(__('Cannot assign Cities to Region'), $e);
         }
         return true;
     }
@@ -76,6 +76,7 @@ class RegionCityRelationProcessor
     /**
      * @param int $regionId
      * @param array $citiesData
+     * @return void
      */
     private function doProcess($regionId, array $citiesData)
     {
@@ -88,18 +89,16 @@ class RegionCityRelationProcessor
             $currentAssignedCitiesMap[$currentAssignedCity->getCityId()] = $currentAssignedCity;
         }
 
-        foreach ($citiesData as $key => $cityData) {
-            if (empty($cityData['id'])) {
+        foreach ($citiesData as $cityData) {
+            if (empty($cityData[CityInterface::CITY_ID])) {
                 /** @var CityInterface $city */
                 $city = $this->cityFactory->create();
             } else {
-                $cityId = $cityData['id'];
+                $cityId = $cityData[CityInterface::CITY_ID];
                 $city = $this->cityRepository->get($cityId);
                 unset($currentAssignedCitiesMap[$cityId]);
             }
             $city = $this->hydrator->hydrate($city, $cityData);
-            $position = ($key + 1) * 10;
-            $city->setPosition($position);
             $city->setRegionId($region->getRegionId());
             $this->cityRepository->save($city);
         }

@@ -18,7 +18,7 @@ class MassDelete extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::city';
+    const ADMIN_RESOURCE = 'Engine_Location::location_city';
 
     /**
      * @var CityRepositoryInterface
@@ -67,11 +67,12 @@ class MassDelete extends Action
                     $this->cityRepository->deleteById($city->getCityId());
                     $deletedItemsCount++;
                 } catch (CouldNotDeleteException $e) {
-                    $errorMessage = __('[ID: %1] ', $city->getCityId()) . $e->getMessage();
+                    $errorMessage = __('[ID: %1] ', $city->getCityId())
+                        . $e->getMessage();
                     $this->messageManager->addErrorMessage($errorMessage);
                 }
             }
-            $this->messageManager->addSuccessMessage(__('You deleted %1 city(s).', $deletedItemsCount));
+            $this->messageManager->addSuccessMessage(__('You deleted %1 City(s).', $deletedItemsCount));
         } else {
             $this->messageManager->addErrorMessage(__('Wrong request.'));
         }

@@ -23,7 +23,7 @@ class CityManagementTest extends AbstractBackendController
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/location/region/save/store/%s/back/edit';
+    const REQUEST_URI = 'backend/engine-location/region/save/store/%s/back/edit';
 
     /**
      * @var FormKey
@@ -40,12 +40,18 @@ class CityManagementTest extends AbstractBackendController
      */
     private $searchCriteriaBuilderFactory;
 
+    /**
+     * @var CitiesByRegionList
+     */
+    private $citiesByRegionList;
+
     public function setUp()
     {
         parent::setUp();
         $this->formKey = $this->_objectManager->get(FormKey::class);
         $this->regionRepository = $this->_objectManager->get(RegionRepositoryInterface::class);
         $this->searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
+        $this->citiesByRegionList = $this->_objectManager->get(CitiesByRegionList::class);
     }
 
     public function testCreateWithCitiesCreating()
@@ -55,12 +61,14 @@ class CityManagementTest extends AbstractBackendController
         ];
         $assignedCities = [
             [
-                CityInterface::TITLE => 'city-1',
+                CityInterface::TITLE => 'City-title-1',
                 CityInterface::IS_ENABLED => 1,
+                CityInterface::POSITION => 2,
             ],
             [
-                CityInterface::TITLE => 'city-2',
+                CityInterface::TITLE => 'City-title-2',
                 CityInterface::IS_ENABLED => 0,
+                CityInterface::POSITION => 1,
             ],
         ];
 
@@ -73,29 +81,26 @@ class CityManagementTest extends AbstractBackendController
                 'assigned_cities' => $assignedCities,
             ],
         ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
 
-        $uri = sprintf(self::REQUEST_URI, 0);
-        $this->dispatch($uri);
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
         $this->assertSessionMessages($this->contains('The Region has been saved.'), MessageInterface::TYPE_SUCCESS);
 
         $region = $this->getRegionByTitle($data[RegionInterface::TITLE]);
-        $cities = $this->getAssignedCities($region->getRegionId());
-
         self::assertNotEmpty($region);
+
+        $cities = $this->getAssignedCities($region->getRegionId());
         self::assertCount(2, $cities);
 
-        self::assertEquals($assignedCities[0][CityInterface::TITLE], $cities[0]->getTitle());
-        self::assertEquals($assignedCities[0][CityInterface::IS_ENABLED], $cities[0]->getIsEnabled());
-        self::assertEquals(10, $cities[0]->getPosition());
+        self::assertEquals($assignedCities[1][CityInterface::TITLE], $cities[0]->getTitle());
+        self::assertEquals($assignedCities[1][CityInterface::IS_ENABLED], $cities[0]->getIsEnabled());
 
-        self::assertEquals($assignedCities[1][CityInterface::TITLE], $cities[1]->getTitle());
-        self::assertEquals($assignedCities[1][CityInterface::IS_ENABLED], $cities[1]->getIsEnabled());
-        self::assertEquals(20, $cities[1]->getPosition());
+        self::assertEquals($assignedCities[0][CityInterface::TITLE], $cities[1]->getTitle());
+        self::assertEquals($assignedCities[0][CityInterface::IS_ENABLED], $cities[1]->getIsEnabled());
 
         $this->assertRedirect(
-            $this->stringContains('backend/location/region/edit/region_id/' . $region->getRegionId())
+            $this->stringContains('backend/engine-location/region/edit/region_id/' . $region->getRegionId())
         );
     }
 
@@ -109,10 +114,12 @@ class CityManagementTest extends AbstractBackendController
         ];
         $assignedCities = [
             [
-                'id' => 100,
+                CityInterface::CITY_ID => 100,
+                CityInterface::POSITION => 2,
             ],
             [
-                'id' => 200,
+                CityInterface::CITY_ID => 200,
+                CityInterface::POSITION => 1,
             ],
         ];
 
@@ -125,34 +132,31 @@ class CityManagementTest extends AbstractBackendController
                 'assigned_cities' => $assignedCities,
             ],
         ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
 
-        $uri = sprintf(self::REQUEST_URI, 0);
-        $this->dispatch($uri);
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
         $this->assertSessionMessages($this->contains('The Region has been saved.'), MessageInterface::TYPE_SUCCESS);
 
         $region = $this->getRegionByTitle($data[RegionInterface::TITLE]);
-        $cities = $this->getAssignedCities($region->getRegionId());
-
         self::assertNotEmpty($region);
+
+        $cities = $this->getAssignedCities($region->getRegionId());
         self::assertCount(2, $cities);
 
-        self::assertEquals(100, $cities[0]->getCityId());
-        self::assertEquals('city-3', $cities[0]->getTitle());
-        self::assertEquals(10, $cities[0]->getPosition());
+        self::assertEquals(200, $cities[0]->getCityId());
+        self::assertEquals('City-title-2', $cities[0]->getTitle());
 
-        self::assertEquals(200, $cities[1]->getCityId());
-        self::assertEquals('city-2', $cities[1]->getTitle());
-        self::assertEquals(20, $cities[1]->getPosition());
+        self::assertEquals(100, $cities[1]->getCityId());
+        self::assertEquals('City-title-3', $cities[1]->getTitle());
 
         $this->assertRedirect(
-            $this->stringContains('backend/location/region/edit/region_id/' . $region->getRegionId())
+            $this->stringContains('backend/engine-location/region/edit/region_id/' . $region->getRegionId())
         );
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
      */
     public function testUpdateWithCitiesCreating()
     {
@@ -162,12 +166,14 @@ class CityManagementTest extends AbstractBackendController
         ];
         $assignedCities = [
             [
-                CityInterface::TITLE => 'city-1',
+                CityInterface::TITLE => 'City-title-1',
                 CityInterface::IS_ENABLED => 1,
+                CityInterface::POSITION => 2,
             ],
             [
-                CityInterface::TITLE => 'city-2',
+                CityInterface::TITLE => 'City-title-2',
                 CityInterface::IS_ENABLED => 0,
+                CityInterface::POSITION => 1,
             ],
         ];
 
@@ -180,34 +186,30 @@ class CityManagementTest extends AbstractBackendController
                 'assigned_cities' => $assignedCities,
             ],
         ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
 
-        $uri = sprintf(self::REQUEST_URI, 0);
-        $this->dispatch($uri);
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
         $this->assertSessionMessages($this->contains('The Region has been saved.'), MessageInterface::TYPE_SUCCESS);
 
-        $region = $this->getRegionByTitle('title-0');
-        $cities = $this->getAssignedCities($region->getRegionId());
-
+        $region = $this->getRegionByTitle('Region-title-100');
         self::assertNotEmpty($region);
+
+        $cities = $this->getAssignedCities($region->getRegionId());
         self::assertCount(2, $cities);
 
-        self::assertEquals($assignedCities[0][CityInterface::TITLE], $cities[0]->getTitle());
-        self::assertEquals($assignedCities[0][CityInterface::IS_ENABLED], $cities[0]->getIsEnabled());
-        self::assertEquals(10, $cities[0]->getPosition());
+        self::assertEquals($assignedCities[1][CityInterface::TITLE], $cities[0]->getTitle());
+        self::assertEquals($assignedCities[1][CityInterface::IS_ENABLED], $cities[0]->getIsEnabled());
 
-        self::assertEquals($assignedCities[1][CityInterface::TITLE], $cities[1]->getTitle());
-        self::assertEquals($assignedCities[1][CityInterface::IS_ENABLED], $cities[1]->getIsEnabled());
-        self::assertEquals(20, $cities[1]->getPosition());
+        self::assertEquals($assignedCities[0][CityInterface::TITLE], $cities[1]->getTitle());
+        self::assertEquals($assignedCities[0][CityInterface::IS_ENABLED], $cities[1]->getIsEnabled());
 
         $this->assertRedirect(
-            $this->stringContains('backend/location/region/edit/region_id/' . $region->getRegionId())
+            $this->stringContains('backend/engine-location/region/edit/region_id/' . $region->getRegionId())
         );
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      */
     public function testUpdateWithCurrentCitiesSelecting()
@@ -218,10 +220,12 @@ class CityManagementTest extends AbstractBackendController
         ];
         $assignedCities = [
             [
-                'id' => 100,
+                CityInterface::CITY_ID => 100,
+                CityInterface::POSITION => 2,
             ],
             [
-                'id' => 200,
+                CityInterface::CITY_ID => 200,
+                CityInterface::POSITION => 1,
             ],
         ];
 
@@ -234,34 +238,30 @@ class CityManagementTest extends AbstractBackendController
                 'assigned_cities' => $assignedCities,
             ],
         ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
 
-        $uri = sprintf(self::REQUEST_URI, 0);
-        $this->dispatch($uri);
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
         $this->assertSessionMessages($this->contains('The Region has been saved.'), MessageInterface::TYPE_SUCCESS);
 
-        $region = $this->getRegionByTitle('title-0');
-        $cities = $this->getAssignedCities($region->getRegionId());
-
+        $region = $this->getRegionByTitle('Region-title-100');
         self::assertNotEmpty($region);
+
+        $cities = $this->getAssignedCities($region->getRegionId());
         self::assertCount(2, $cities);
 
-        self::assertEquals(100, $cities[0]->getCityId());
-        self::assertEquals('city-3', $cities[0]->getTitle());
-        self::assertEquals(10, $cities[0]->getPosition());
+        self::assertEquals(100, $cities[1]->getCityId());
+        self::assertEquals('City-title-3', $cities[1]->getTitle());
 
-        self::assertEquals(200, $cities[1]->getCityId());
-        self::assertEquals('city-2', $cities[1]->getTitle());
-        self::assertEquals(20, $cities[1]->getPosition());
+        self::assertEquals(200, $cities[0]->getCityId());
+        self::assertEquals('City-title-2', $cities[0]->getTitle());
 
         $this->assertRedirect(
-            $this->stringContains('backend/location/region/edit/region_id/' . $region->getRegionId())
+            $this->stringContains('backend/engine-location/region/edit/region_id/' . $region->getRegionId())
         );
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      */
     public function testUpdateWithCitiesReplacing()
@@ -272,10 +272,12 @@ class CityManagementTest extends AbstractBackendController
         ];
         $assignedCities = [
             [
-                'id' => 300,
+                CityInterface::CITY_ID => 300,
+                CityInterface::POSITION => 2,
             ],
             [
-                'id' => 400,
+                CityInterface::CITY_ID => 400,
+                CityInterface::POSITION => 1,
             ],
         ];
 
@@ -288,34 +290,30 @@ class CityManagementTest extends AbstractBackendController
                 'assigned_cities' => $assignedCities,
             ],
         ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
 
-        $uri = sprintf(self::REQUEST_URI, 0);
-        $this->dispatch($uri);
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
         $this->assertSessionMessages($this->contains('The Region has been saved.'), MessageInterface::TYPE_SUCCESS);
 
-        $region = $this->getRegionByTitle('title-0');
-        $cities = $this->getAssignedCities($region->getRegionId());
-
+        $region = $this->getRegionByTitle('Region-title-100');
         self::assertNotEmpty($region);
+
+        $cities = $this->getAssignedCities($region->getRegionId());
         self::assertCount(2, $cities);
 
-        self::assertEquals(300, $cities[0]->getCityId());
-        self::assertEquals('city-2', $cities[0]->getTitle());
-        self::assertEquals(10, $cities[0]->getPosition());
+        self::assertEquals(400, $cities[0]->getCityId());
+        self::assertEquals('City-title-1', $cities[0]->getTitle());
 
-        self::assertEquals(400, $cities[1]->getCityId());
-        self::assertEquals('city-1', $cities[1]->getTitle());
-        self::assertEquals(20, $cities[1]->getPosition());
+        self::assertEquals(300, $cities[1]->getCityId());
+        self::assertEquals('City-title-2', $cities[1]->getTitle());
 
         $this->assertRedirect(
-            $this->stringContains('backend/location/region/edit/region_id/' . $region->getRegionId())
+            $this->stringContains('backend/engine-location/region/edit/region_id/' . $region->getRegionId())
         );
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
      */
     public function testCitiesDataUpdating()
@@ -326,14 +324,16 @@ class CityManagementTest extends AbstractBackendController
         ];
         $assignedCities = [
             [
-                'id' => 100,
-                CityInterface::TITLE => 'city-1001',
+                CityInterface::CITY_ID => 100,
+                CityInterface::TITLE => 'City-title-1001',
                 CityInterface::IS_ENABLED => 0,
+                CityInterface::POSITION => 2,
             ],
             [
-                'id' => 200,
-                CityInterface::TITLE => 'city-1002',
+                CityInterface::CITY_ID => 200,
+                CityInterface::TITLE => 'City-title-1002',
                 CityInterface::IS_ENABLED => 0,
+                CityInterface::POSITION => 1,
             ],
         ];
 
@@ -346,32 +346,72 @@ class CityManagementTest extends AbstractBackendController
                 'assigned_cities' => $assignedCities,
             ],
         ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
 
-        $uri = sprintf(self::REQUEST_URI, 0);
-        $this->dispatch($uri);
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
         $this->assertSessionMessages($this->contains('The Region has been saved.'), MessageInterface::TYPE_SUCCESS);
 
-        $region = $this->getRegionByTitle('title-0');
-        $cities = $this->getAssignedCities($region->getRegionId());
-
+        $region = $this->getRegionByTitle('Region-title-100');
         self::assertNotEmpty($region);
+
+        $cities = $this->getAssignedCities($region->getRegionId());
         self::assertCount(2, $cities);
 
-        self::assertEquals(100, $cities[0]->getCityId());
-        self::assertEquals('city-1001', $cities[0]->getTitle());
+        self::assertEquals(200, $cities[0]->getCityId());
+        self::assertEquals('City-title-1002', $cities[0]->getTitle());
         self::assertFalse($cities[0]->getIsEnabled());
-        self::assertEquals(10, $cities[0]->getPosition());
 
-        self::assertEquals(200, $cities[1]->getCityId());
-        self::assertEquals('city-1002', $cities[1]->getTitle());
+        self::assertEquals(100, $cities[1]->getCityId());
+        self::assertEquals('City-title-1001', $cities[1]->getTitle());
         self::assertFalse($cities[1]->getIsEnabled());
-        self::assertEquals(20, $cities[1]->getPosition());
 
         $this->assertRedirect(
-            $this->stringContains('backend/location/region/edit/region_id/' . $region->getRegionId())
+            $this->stringContains('backend/engine-location/region/edit/region_id/' . $region->getRegionId())
         );
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     */
+    public function testUpdateWithWrongRequestMethod()
+    {
+        $regionId = 100;
+        $data = [
+            RegionInterface::REGION_ID => $regionId,
+        ];
+        $assignedCities = [
+            [
+                CityInterface::CITY_ID => 300,
+                CityInterface::POSITION => 2,
+            ],
+        ];
+
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_GET);
+        $request->setQueryValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $data,
+            'cities' => [
+                'assigned_cities' => $assignedCities,
+            ],
+        ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertRedirect($this->stringContains('backend/engine-location/region'));
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_SUCCESS);
+        $this->assertSessionMessages($this->contains('Wrong request.'), MessageInterface::TYPE_ERROR);
+
+        $region = $this->getRegionByTitle('Region-title-100');
+        $cities = $this->getAssignedCities($region->getRegionId());
+        self::assertCount(2, $cities);
+
+        self::assertEquals(200, $cities[0]->getCityId());
+        self::assertEquals('City-title-2', $cities[0]->getTitle());
+
+        self::assertEquals(100, $cities[1]->getCityId());
+        self::assertEquals('City-title-3', $cities[1]->getTitle());
     }
 
     /**
@@ -397,8 +437,6 @@ class CityManagementTest extends AbstractBackendController
      */
     private function getAssignedCities($regionId)
     {
-        /** @var CitiesByRegionList $citiesByRegionList */
-        $citiesByRegionList = $this->_objectManager->get(CitiesByRegionList::class);
-        return $citiesByRegionList->getList($regionId)->getItems();
+        return $this->citiesByRegionList->getList($regionId)->getItems();
     }
 }

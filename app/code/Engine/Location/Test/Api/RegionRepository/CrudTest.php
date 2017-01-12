@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Location\Test\Api\RegionRepository;
 
-use Engine\Backend\Test\AssertArrayContains;
+use Engine\Framework\Test\AssertArrayContains;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Magento\Framework\Webapi\Exception;
@@ -17,16 +17,16 @@ class CrudTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/location/regions';
+    const RESOURCE_PATH = '/V1/engine-location/regions';
     const SERVICE_NAME = 'locationRegionRepositoryV1';
     /**#@-*/
 
     public function testCreate()
     {
         $data = [
-            RegionInterface::TITLE => 'region-title',
             RegionInterface::IS_ENABLED => true,
             RegionInterface::POSITION => 10,
+            RegionInterface::TITLE => 'Region-title',
         ];
         $serviceInfo = [
             'rest' => [
@@ -45,12 +45,14 @@ class CrudTest extends WebapiAbstract
         AssertArrayContains::assert($data, $region);
 
         /** @var RegionRepositoryInterface $regionRepository */
-        $regionRepository = Bootstrap::getObjectManager()->get(RegionRepositoryInterface::class);
+        $regionRepository = Bootstrap::getObjectManager()->get(
+            RegionRepositoryInterface::class
+        );
         $regionRepository->deleteById($regionId);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
      * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      */
     public function testUpdateInGlobalScope()
@@ -59,7 +61,7 @@ class CrudTest extends WebapiAbstract
         $data = [
             RegionInterface::IS_ENABLED => false,
             RegionInterface::POSITION => 20,
-            RegionInterface::TITLE => 'region-title-updated',
+            RegionInterface::TITLE => 'Region-title-updated',
         ];
         $serviceInfo = [
             'rest' => [
@@ -74,22 +76,27 @@ class CrudTest extends WebapiAbstract
         $this->_webApiCall($serviceInfo, ['region' => $data], null, 'all');
 
         $data[RegionInterface::REGION_ID] = $regionId;
-        AssertArrayContains::assert($data, $this->getRegionById($regionId, 'default'));
-        AssertArrayContains::assert($data, $this->getRegionById($regionId, 'test_store'));
+        AssertArrayContains::assert(
+            $data,
+            $this->getRegionById($regionId, 'default')
+        );
+        AssertArrayContains::assert(
+            $data,
+            $this->getRegionById($regionId, 'test_store')
+        );
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
      * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      */
     public function testUpdateInStoreScope()
     {
         $regionId = 100;
         $storeCode = 'test_store';
-        $dataPerScope = [
+        $dataForTestStore = [
             RegionInterface::IS_ENABLED => false,
-            RegionInterface::POSITION => 20,
-            RegionInterface::TITLE => 'region-title-per-store',
+            RegionInterface::TITLE => 'Region-title-per-store',
         ];
         $serviceInfo = [
             'rest' => [
@@ -101,26 +108,28 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Save',
             ],
         ];
-        $this->_webApiCall($serviceInfo, ['region' => $dataPerScope], null, $storeCode);
+        $this->_webApiCall($serviceInfo, ['region' => $dataForTestStore], null, $storeCode);
 
         $region = $this->getRegionById($regionId, 'default');
-        $dataForGlobalScope = array_merge($dataPerScope, [
-            RegionInterface::TITLE => 'title-0',
+        $dataForDefaultStore = array_merge($dataForTestStore, [
+            RegionInterface::TITLE => 'Region-title-100',
         ]);
-        AssertArrayContains::assert($dataForGlobalScope, $region);
+        AssertArrayContains::assert($dataForDefaultStore, $region);
 
         $region = $this->getRegionById($regionId, $storeCode);
-        AssertArrayContains::assert($dataPerScope, $region);
+        AssertArrayContains::assert($dataForTestStore, $region);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_store_scope.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100_store_scope.php
      */
     public function testDeleteValueInStoreScope()
     {
         $regionId = 100;
         $storeCode = 'test_store';
         $data = [
+            RegionInterface::IS_ENABLED => true,
+            RegionInterface::POSITION => 10,
             RegionInterface::TITLE => null,
         ];
         $serviceInfo = [
@@ -136,11 +145,14 @@ class CrudTest extends WebapiAbstract
         $this->_webApiCall($serviceInfo, ['region' => $data], null, $storeCode);
 
         $region = $this->getRegionById($regionId, $storeCode);
-        self::assertEquals('title-0', $region[RegionInterface::TITLE]);
+        $expectedData = [
+            RegionInterface::TITLE => 'Region-title-100',
+        ];
+        AssertArrayContains::assert($expectedData, $region);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
      */
     public function testDeleteById()
     {
@@ -168,36 +180,36 @@ class CrudTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
      */
     public function testGet()
     {
         $regionId = 100;
-        $data = [
+        $expectedData = [
             RegionInterface::REGION_ID => $regionId,
-            RegionInterface::TITLE => 'title-0',
             RegionInterface::IS_ENABLED => true,
             RegionInterface::POSITION => 200,
+            RegionInterface::TITLE => 'Region-title-100',
         ];
         $region = $this->getRegionById($regionId);
-        AssertArrayContains::assert($data, $region);
+        AssertArrayContains::assert($expectedData, $region);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_store_scope.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100_store_scope.php
      */
     public function testGetIfValueIsPerStore()
     {
         $regionId = 100;
         $storeCode = 'test_store';
-        $data = [
+        $expectedData = [
             RegionInterface::REGION_ID => $regionId,
-            RegionInterface::TITLE => 'per-store-title-0',
             RegionInterface::IS_ENABLED => true,
             RegionInterface::POSITION => 200,
+            RegionInterface::TITLE => 'Region-title-100-per-store',
         ];
         $region = $this->getRegionById($regionId, $storeCode);
-        AssertArrayContains::assert($data, $region);
+        AssertArrayContains::assert($expectedData, $region);
     }
 
     public function testGetNoSuchEntityException()
@@ -214,7 +226,7 @@ class CrudTest extends WebapiAbstract
             ],
         ];
 
-        $expectedMessage = 'Region with id \"%1\" does not exist.';
+        $expectedMessage = 'Region with id "%1" does not exist.';
         try {
             $this->_webApiCall($serviceInfo);
             $this->fail('Expected throwing exception');

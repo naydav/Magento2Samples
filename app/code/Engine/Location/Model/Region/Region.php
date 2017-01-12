@@ -38,22 +38,6 @@ class Region extends AbstractExtensibleModel implements RegionInterface
     /**
      * {@inheritdoc}
      */
-    public function getTitle()
-    {
-        return $this->getData(self::TITLE);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setTitle($title)
-    {
-        $this->setData(self::TITLE, $title);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getIsEnabled()
     {
         return $this->getData(self::IS_ENABLED);
@@ -81,6 +65,22 @@ class Region extends AbstractExtensibleModel implements RegionInterface
     public function setPosition($position)
     {
         $this->setData(self::POSITION, $position);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTitle()
+    {
+        return $this->getData(self::TITLE);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTitle($title)
+    {
+        $this->setData(self::TITLE, $title);
     }
 
     /**

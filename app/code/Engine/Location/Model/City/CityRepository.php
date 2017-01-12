@@ -26,6 +26,11 @@ class CityRepository implements CityRepositoryInterface
     private $cityFactory;
 
     /**
+     * @var CityBaseValidator
+     */
+    private $cityBaseValidator;
+
+    /**
      * @var CityCollectionFactory
      */
     private $cityCollectionFactory;
@@ -47,6 +52,7 @@ class CityRepository implements CityRepositoryInterface
 
     /**
      * @param CityInterfaceFactory $cityFactory
+     * @param CityBaseValidator $cityBaseValidator
      * @param CityCollectionFactory $cityCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param CitySearchResultInterfaceFactory $citySearchResultFactory
@@ -54,12 +60,14 @@ class CityRepository implements CityRepositoryInterface
      */
     public function __construct(
         CityInterfaceFactory $cityFactory,
+        CityBaseValidator $cityBaseValidator,
         CityCollectionFactory $cityCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
         CitySearchResultInterfaceFactory $citySearchResultFactory,
         EntityManager $entityManager
     ) {
         $this->cityFactory = $cityFactory;
+        $this->cityBaseValidator = $cityBaseValidator;
         $this->cityCollectionFactory = $cityCollectionFactory;
         $this->collectionProcessor = $collectionProcessor;
         $this->citySearchResultFactory = $citySearchResultFactory;
@@ -71,12 +79,14 @@ class CityRepository implements CityRepositoryInterface
      */
     public function get($cityId)
     {
-        /** @var City $city */
+        /** @var CityInterface $city */
         $city = $this->cityFactory->create();
 
         $this->entityManager->load($city, $cityId);
         if (!$city->getCityId()) {
-            throw new NoSuchEntityException(__('City with id "%1" does not exist.', $cityId));
+            throw new NoSuchEntityException(
+                __('City with id "%1" does not exist.', $cityId)
+            );
         }
         return $city;
     }
@@ -100,6 +110,7 @@ class CityRepository implements CityRepositoryInterface
      */
     public function save(CityInterface $city)
     {
+        $this->cityBaseValidator->validate($city);
         try {
             $this->entityManager->save($city);
             return $city->getCityId();

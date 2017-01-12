@@ -1,0 +1,20 @@
+{
+    "name": "engine/framework",
+    "description": "N/A",
+    "type": "magento2-library",
+    "version": "2.0.0",
+    "license": "MIT",
+    "require": {
+        "php": "~5.5.22|~5.6.0|~7.0.0",
+        "magento/framework": "2.2.*",
+        "zendframework/zend-http": "~2.4.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Engine\\Framework\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}

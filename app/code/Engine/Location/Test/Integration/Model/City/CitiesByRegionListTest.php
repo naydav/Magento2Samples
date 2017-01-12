@@ -39,12 +39,12 @@ class CitiesByRegionListTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(SearchCriteriaInterface::class, $searchCriteria);
 
         self::assertEquals(200, $cities[0]->getCityId());
-        self::assertEquals('city-2', $cities[0]->getTitle());
+        self::assertEquals('City-title-2', $cities[0]->getTitle());
         self::assertTrue($cities[0]->getIsEnabled());
         self::assertEquals(200, $cities[0]->getPosition());
 
         self::assertEquals(100, $cities[1]->getCityId());
-        self::assertEquals('city-3', $cities[1]->getTitle());
+        self::assertEquals('City-title-3', $cities[1]->getTitle());
         self::assertTrue($cities[1]->getIsEnabled());
         self::assertEquals(300, $cities[1]->getPosition());
     }

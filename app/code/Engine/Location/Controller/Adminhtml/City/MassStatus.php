@@ -19,7 +19,7 @@ class MassStatus extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::city';
+    const ADMIN_RESOURCE = 'Engine_Location::location_city';
 
     /**
      * @var CityRepositoryInterface
@@ -74,16 +74,21 @@ class MassStatus extends Action
             $collection = $this->massActionFilter->getCollection($this->cityCollectionFactory->create());
             foreach ($collection as $city) {
                 try {
-                    /** @var CityInterface $city */
-                    $city = $this->hydrator->hydrate($city, [CityInterface::IS_ENABLED => $isEnabled]);
+                    $city = $this->cityRepository->get(
+                        $city->getCityId()
+                    );
+                    $city = $this->hydrator->hydrate($city, [
+                        CityInterface::IS_ENABLED => $isEnabled,
+                    ]);
                     $this->cityRepository->save($city);
                     $updatedItemsCount++;
                 } catch (CouldNotSaveException $e) {
-                    $errorMessage = __('[ID: %1] ', $city->getCityId()) . $e->getMessage();
+                    $errorMessage = __('[ID: %1] ', $city->getCityId())
+                        . $e->getMessage();
                     $this->messageManager->addErrorMessage($errorMessage);
                 }
             }
-            $this->messageManager->addSuccessMessage(__('You updated %1 city(s).', $updatedItemsCount));
+            $this->messageManager->addSuccessMessage(__('You updated %1 City(s).', $updatedItemsCount));
         } else {
             $this->messageManager->addErrorMessage(__('Wrong request.'));
         }

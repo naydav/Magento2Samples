@@ -16,8 +16,8 @@ $regionRepository = Bootstrap::getObjectManager()->get(RegionRepositoryInterface
 $region = $regionFactory->create();
 $region = $hydrator->hydrate($region, [
     RegionInterface::REGION_ID => 200,
-    RegionInterface::TITLE => 'title-0',
     RegionInterface::IS_ENABLED => true,
-    RegionInterface::POSITION => 200,
+    RegionInterface::POSITION => 100,
+    RegionInterface::TITLE => 'Region-title-200',
 ]);
 $regionRepository->save($region);

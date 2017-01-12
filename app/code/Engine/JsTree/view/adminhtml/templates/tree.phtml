@@ -1,0 +1,14 @@
+<?php
+/**
+ * @author  naydav <valeriy.nayda@gmail.com>
+ */
+/** @var \Engine\JsTree\Block\Adminhtml\Tree $this */
+?>
+
+<?php if ($this->isNotEmpty()):?>
+    <div id="<?=$this->getTreeId()?>" data-mage-init="<?=$this->getJsComponentConfig()?>" data-ui-id="<?=$this->getTreeId()?>">
+        <div class="entity-tree"></div>
+    </div>
+<?php else: ?>
+    <h2 data-ui-id="tree-empty-header"><?=__('We couldn\'t find any records.')?></h2>
+<?php endif; ?>

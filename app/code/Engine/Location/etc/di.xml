@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Engine\Location\Api\Data\RegionInterface" type="Engine\Location\Model\Region\Region"/>
     <preference for="Engine\Location\Api\RegionRepositoryInterface" type="Engine\Location\Model\Region\RegionRepository"/>
     <preference for="Engine\Location\Api\Data\RegionSearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
@@ -22,32 +21,39 @@
             </argument>
         </arguments>
     </type>
-    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\ReadHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\ReadHandler">
+    <!-- Per store data configuration -->
+    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\ReadHandler"
+                 type="Engine\PerStoreDataSupport\Model\EntityManager\ReadHandler">
         <arguments>
             <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\RegionInterface</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\CreateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\CreateHandler">
+    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\CreateHandler"
+                 type="Engine\PerStoreDataSupport\Model\EntityManager\CreateHandler">
         <arguments>
             <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\RegionInterface</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\UpdateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\UpdateHandler">
+    <virtualType name="Engine\Location\Model\Region\EntityManager\StoreData\UpdateHandler"
+                 type="Engine\PerStoreDataSupport\Model\EntityManager\UpdateHandler">
         <arguments>
             <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\RegionInterface</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Engine\Location\Model\City\EntityManager\StoreData\ReadHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\ReadHandler">
+    <virtualType name="Engine\Location\Model\City\EntityManager\StoreData\ReadHandler"
+                 type="Engine\PerStoreDataSupport\Model\EntityManager\ReadHandler">
         <arguments>
             <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\CityInterface</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Engine\Location\Model\City\EntityManager\StoreData\CreateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\CreateHandler">
+    <virtualType name="Engine\Location\Model\City\EntityManager\StoreData\CreateHandler"
+                 type="Engine\PerStoreDataSupport\Model\EntityManager\CreateHandler">
         <arguments>
             <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\CityInterface</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Engine\Location\Model\City\EntityManager\StoreData\UpdateHandler" type="Engine\PerStoreDataSupport\Model\EntityManager\UpdateHandler">
+    <virtualType name="Engine\Location\Model\City\EntityManager\StoreData\UpdateHandler"
+                 type="Engine\PerStoreDataSupport\Model\EntityManager\UpdateHandler">
         <arguments>
             <argument name="interfaceName" xsi:type="string">Engine\Location\Api\Data\CityInterface</argument>
         </arguments>
@@ -100,14 +106,56 @@
             </argument>
         </arguments>
     </type>
-    <virtualType name="Engine\Location\Ui\Component\Control\Region\DeleteButton" type="Engine\PerStoreDataSupport\Ui\Component\Control\DeleteButton">
+    <!-- Buttons configurations -->
+    <virtualType name="Engine\Location\Ui\Component\Control\Region\DeleteButton" type="Engine\Backend\Ui\Component\Control\DeleteButton">
         <arguments>
             <argument name="idFieldName" xsi:type="string">region_id</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Engine\Location\Ui\Component\Control\City\DeleteButton" type="Engine\PerStoreDataSupport\Ui\Component\Control\DeleteButton">
+    <virtualType name="Engine\Location\Ui\Component\Control\Region\SaveSplitButton" type="Engine\Backend\Ui\Component\Control\SaveSplitButton">
+        <arguments>
+            <argument name="saveTarget" xsi:type="string">engine_location_region_form.engine_location_region_form</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\Location\Ui\Component\Control\City\DeleteButton" type="Engine\Backend\Ui\Component\Control\DeleteButton">
         <arguments>
             <argument name="idFieldName" xsi:type="string">city_id</argument>
         </arguments>
     </virtualType>
+    <virtualType name="Engine\Location\Ui\Component\Control\City\SaveSplitButton" type="Engine\Backend\Ui\Component\Control\SaveSplitButton">
+        <arguments>
+            <argument name="saveTarget" xsi:type="string">engine_location_city_form.engine_location_city_form</argument>
+        </arguments>
+    </virtualType>
+    <!-- Collection processor: extension point for possibility to add custom collection filter processing  -->
+    <virtualType name="Engine\Location\Model\Region\Api\SearchCriteria\CollectionProcessor\RegionFilterProcessor"
+                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor"/>
+    <virtualType name="Engine\Location\Model\Region\Api\SearchCriteria\RegionCollectionProcessor"
+                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Engine\Location\Model\Region\Api\SearchCriteria\CollectionProcessor\RegionFilterProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Engine\Location\Model\Region\RegionRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Engine\Location\Model\Region\Api\SearchCriteria\RegionCollectionProcessor</argument>
+        </arguments>
+    </type>
+    <virtualType name="Engine\Location\Model\City\Api\SearchCriteria\CollectionProcessor\CityFilterProcessor"
+                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor"/>
+    <virtualType name="Engine\Location\Model\City\Api\SearchCriteria\CityCollectionProcessor"
+                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Engine\Location\Model\City\Api\SearchCriteria\CollectionProcessor\CityFilterProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Engine\Location\Model\City\CityRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Engine\Location\Model\City\Api\SearchCriteria\CityCollectionProcessor</argument>
+        </arguments>
+    </type>
 </config>

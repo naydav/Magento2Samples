@@ -1,23 +1,24 @@
 <?xml version="1.0"?>
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
         <add id="Engine_Location::location"
              title="Location"
              translate="title"
              module="Engine_Location"
-             sortOrder="300"
+             sortOrder="400"
              parent="Engine_Backend::backend"
              resource="Engine_Location::location"/>
-        <add id="Engine_Location::region"
-             title="Regions"
+
+        <add id="Engine_Location::region_index"
+             title="Region List"
              translate="title"
              module="Engine_Location"
              sortOrder="100"
              parent="Engine_Location::location"
              action="engine_location/region/index"
-             resource="Engine_Location::region"/>
+             resource="Engine_Location::location_region"/>
+
         <add id="Engine_Location::region_new"
              title="Add Region"
              translate="title"
@@ -25,22 +26,24 @@
              sortOrder="200"
              parent="Engine_Location::location"
              action="engine_location/region/new"
-             resource="Engine_Location::region"/>
-        <add id="Engine_Location::city"
-             title="Cities"
+             resource="Engine_Location::location_region"/>
+
+        <add id="Engine_Location::city_index"
+             title="City List"
              translate="title"
              module="Engine_Location"
              sortOrder="300"
              parent="Engine_Location::location"
              action="engine_location/city/index"
-             resource="Engine_Location::city"/>
+             resource="Engine_Location::location_city"/>
+
         <add id="Engine_Location::city_new"
              title="Add City"
              translate="title"
              module="Engine_Location"
-             sortOrder="200"
+             sortOrder="400"
              parent="Engine_Location::location"
              action="engine_location/city/new"
-             resource="Engine_Location::city"/>
+             resource="Engine_Location::location_city"/>
     </menu>
 </config>

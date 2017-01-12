@@ -1,11 +1,11 @@
 <?php
 namespace Engine\Location\Ui\DataProvider;
 
-use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
-use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Model\City\ResourceModel\CityCollection;
 use Engine\Location\Model\City\ResourceModel\CityCollectionFactory;
+use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
+use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
@@ -17,6 +17,7 @@ use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
+ * @api
  */
 class CityDataProvider extends DataProvider
 {
@@ -111,7 +112,7 @@ class CityDataProvider extends DataProvider
         $configData = parent::getConfigData();
         $storeId = $this->storeManager->getStore()->getId();
 
-        $configData['submit_url'] = $this->urlBuilder->getUrl('*/*/save', [
+        $configData['submit_url'] = $this->urlBuilder->getUrl('engine_location/city/save', [
             'store' => $storeId,
         ]);
         $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
@@ -126,22 +127,43 @@ class CityDataProvider extends DataProvider
     public function getMeta()
     {
         $meta = parent::getMeta();
-        if ('engine_city_form_data_source' === $this->name) {
-            $cityId = $this->request->getParam('city_id');
+        if ('engine_location_city_form_data_source' === $this->name) {
+            $cityId = $this->request->getParam(CityInterface::CITY_ID);
             if (null !== $cityId) {
-                $meta = $this->dataProviderMetaModifier->modify(CityInterface::class, $cityId, $meta);
+                $meta = $this->dataProviderMetaModifier->modify(
+                    CityInterface::class,
+                    $cityId,
+                    $meta
+                );
             }
         }
 
-        if ('engine_city_listing_data_source' === $this->name) {
+        if ('engine_location_city_listing_data_source' === $this->name) {
             $storeId = $this->storeManager->getStore()->getId();
-            $inlineEditUrl = $this->urlBuilder->getUrl('*/*/inlineEdit', [
+            $inlineEditUrl = $this->urlBuilder->getUrl('engine_location/city/inlineEdit', [
                 'store' => $storeId,
             ]);
-            $meta['city_columns']['arguments']['data']['config']['editorConfig']['clientConfig']['saveUrl']
-                = $inlineEditUrl;
+            $meta['city_columns']['arguments']['data']['config']['editorConfig']['clientConfig']
+            ['saveUrl'] = $inlineEditUrl;
         }
         return $meta;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
+    {
+        $data = parent::getData();
+        if ('engine_location_city_form_data_source' === $this->name && $data['totalRecords'] > 0) {
+            $cityId = $data['items'][0][CityInterface::CITY_ID];
+            // It is need for support several fieldsets. For details see \Magento\Ui\Component\Form::getDataSourceData
+            $dataForSingle[$cityId] = [
+                'general' => $data['items'][0],
+            ];
+            $data = $dataForSingle;
+        }
+        return $data;
     }
 
     /**

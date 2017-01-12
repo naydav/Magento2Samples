@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Location\Test\Api\CityRepository;
 
-use Engine\Backend\Test\AssertArrayContains;
+use Engine\Framework\Test\AssertArrayContains;
 use Engine\Location\Api\Data\CityInterface;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Webapi\Rest\Request;
@@ -15,7 +15,7 @@ class GetListTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/location/cities';
+    const RESOURCE_PATH = '/V1/engine-location/cities';
     const SERVICE_NAME = 'locationCityRepositoryV1';
     /**#@-*/
 
@@ -68,8 +68,9 @@ class GetListTest extends WebapiAbstract
                 ],
                 [
                     [
+                        // check one global and one per store field
                         CityInterface::CITY_ID => 100,
-                        CityInterface::TITLE => 'city-3',
+                        CityInterface::TITLE => 'City-title-3',
                     ],
                 ],
             ],
@@ -128,10 +129,12 @@ class GetListTest extends WebapiAbstract
                     [
                         CityInterface::CITY_ID => 400,
                         CityInterface::IS_ENABLED => false,
+                        CityInterface::TITLE => 'City-title-1',
                     ],
                     [
                         CityInterface::CITY_ID => 300,
                         CityInterface::IS_ENABLED => false,
+                        CityInterface::TITLE => 'City-title-2',
                     ],
                 ],
             ],
@@ -142,7 +145,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => CityInterface::TITLE,
-                                    'value' => 'city-2',
+                                    'value' => 'City-title-2',
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -158,11 +161,11 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         CityInterface::CITY_ID => 300,
-                        CityInterface::TITLE => 'city-2',
+                        CityInterface::TITLE => 'City-title-2',
                     ],
                     [
                         CityInterface::CITY_ID => 200,
-                        CityInterface::TITLE => 'city-2',
+                        CityInterface::TITLE => 'City-title-2',
                     ],
                 ],
             ],
@@ -214,19 +217,19 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         CityInterface::CITY_ID => 100,
-                        CityInterface::TITLE => 'city-3',
+                        CityInterface::TITLE => 'City-title-3',
                     ],
                     [
                         CityInterface::CITY_ID => 300,
-                        CityInterface::TITLE => 'city-2',
+                        CityInterface::TITLE => 'City-title-2',
                     ],
                     [
                         CityInterface::CITY_ID => 200,
-                        CityInterface::TITLE => 'city-2',
+                        CityInterface::TITLE => 'City-title-2',
                     ],
                     [
                         CityInterface::CITY_ID => 400,
-                        CityInterface::TITLE => 'city-1',
+                        CityInterface::TITLE => 'City-title-1',
                     ],
                 ],
             ],
@@ -281,7 +284,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => CityInterface::TITLE,
-                                    'value' => 'z-per-store-city-3',
+                                    'value' => 'z-sort-City-title-3-per-store',
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -291,7 +294,7 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         CityInterface::CITY_ID => 100,
-                        CityInterface::TITLE => 'z-per-store-city-3',
+                        CityInterface::TITLE => 'z-sort-City-title-3-per-store',
                     ],
                 ],
             ],
@@ -302,7 +305,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => CityInterface::TITLE,
-                                    'value' => 'z-per-store-city-2',
+                                    'value' => 'z-sort-City-title-2-per-store',
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -312,7 +315,7 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         CityInterface::CITY_ID => 300,
-                        CityInterface::TITLE => 'z-per-store-city-2',
+                        CityInterface::TITLE => 'z-sort-City-title-2-per-store',
                     ],
                 ],
             ],
@@ -328,19 +331,19 @@ class GetListTest extends WebapiAbstract
                 [
                     [
                         CityInterface::CITY_ID => 100,
-                        CityInterface::TITLE => 'z-per-store-city-3',
+                        CityInterface::TITLE => 'z-sort-City-title-3-per-store',
                     ],
                     [
                         CityInterface::CITY_ID => 300,
-                        CityInterface::TITLE => 'z-per-store-city-2',
+                        CityInterface::TITLE => 'z-sort-City-title-2-per-store',
                     ],
                     [
                         CityInterface::CITY_ID => 400,
-                        CityInterface::TITLE => 'z-per-store-city-1',
+                        CityInterface::TITLE => 'z-sort-City-title-1-per-store',
                     ],
                     [
                         CityInterface::CITY_ID => 200,
-                        CityInterface::TITLE => 'city-2',
+                        CityInterface::TITLE => 'City-title-2',
                     ],
                 ],
             ],

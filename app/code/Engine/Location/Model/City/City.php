@@ -54,22 +54,6 @@ class City extends AbstractExtensibleModel implements CityInterface
     /**
      * {@inheritdoc}
      */
-    public function getTitle()
-    {
-        return $this->getData(self::TITLE);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setTitle($title)
-    {
-        $this->setData(self::TITLE, $title);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getIsEnabled()
     {
         return $this->getData(self::IS_ENABLED);
@@ -97,6 +81,22 @@ class City extends AbstractExtensibleModel implements CityInterface
     public function setPosition($position)
     {
         $this->setData(self::POSITION, $position);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTitle()
+    {
+        return $this->getData(self::TITLE);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTitle($title)
+    {
+        $this->setData(self::TITLE, $title);
     }
 
     /**

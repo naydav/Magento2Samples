@@ -16,7 +16,7 @@ class Delete extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::city';
+    const ADMIN_RESOURCE = 'Engine_Location::location_city';
 
     /**
      * @var CityRepositoryInterface
@@ -46,14 +46,19 @@ class Delete extends Action
         if ($this->getRequest()->isPost() && null !== $cityId) {
             try {
                 $this->cityRepository->deleteById($cityId);
-                $this->messageManager->addSuccessMessage(__('The city has been deleted.'));
+                $this->messageManager->addSuccessMessage(__('The City has been deleted.'));
                 $resultRedirect->setPath('*/*');
             } catch (NoSuchEntityException $e) {
-                $this->messageManager->addErrorMessage(__('City with id "%1" does not exist.', $cityId));
+                $this->messageManager->addErrorMessage(
+                    __('City with id "%1" does not exist.', $cityId)
+                );
                 $resultRedirect->setPath('*/*');
             } catch (CouldNotDeleteException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
-                $resultRedirect->setPath('*/*/edit', [CityInterface::CITY_ID => $cityId, '_current' => true]);
+                $resultRedirect->setPath('*/*/edit', [
+                    CityInterface::CITY_ID => $cityId,
+                    '_current' => true,
+                ]);
             }
         } else {
             $this->messageManager->addErrorMessage(__('Wrong request.'));

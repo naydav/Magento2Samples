@@ -20,7 +20,7 @@ class MassStatusTest extends AbstractBackendController
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/location/region/massStatus';
+    const REQUEST_URI = 'backend/engine-location/region/massStatus';
 
     /**
      * @var FormKey
@@ -41,7 +41,9 @@ class MassStatusTest extends AbstractBackendController
     {
         parent::setUp();
         $this->formKey = $this->_objectManager->get(FormKey::class);
-        $this->regionRepository = $this->_objectManager->get(RegionRepositoryInterface::class);
+        $this->regionRepository = $this->_objectManager->get(
+            RegionRepositoryInterface::class
+        );
         $this->searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
     }
 
@@ -57,15 +59,18 @@ class MassStatusTest extends AbstractBackendController
             'selected' => [
                 100,
             ],
-            'namespace' => 'engine_region_listing',
+            'namespace' => 'engine_location_region_listing',
         ]);
 
         $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
-        $this->assertRedirect($this->stringContains('backend/location/region'));
+        $this->assertRedirect($this->stringContains('backend/engine-location/region'));
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
-        $this->assertSessionMessages($this->contains('You updated 1 region(s).'), MessageInterface::TYPE_SUCCESS);
+        $this->assertSessionMessages(
+            $this->contains('You updated 1 Region(s).'),
+            MessageInterface::TYPE_SUCCESS
+        );
         self::assertEquals(1, $this->getEnabledRegionsCount());
     }
 
@@ -76,18 +81,18 @@ class MassStatusTest extends AbstractBackendController
     {
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_GET);
-        $request->setPostValue([
+        $request->setQueryValue([
             'form_key' => $this->formKey->getFormKey(),
             'selected' => [
                 100,
             ],
-            'namespace' => 'engine_region_listing',
+            'namespace' => 'engine_location_region_listing',
         ]);
 
         $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
-        $this->assertRedirect($this->stringContains('backend/location/region'));
+        $this->assertRedirect($this->stringContains('backend/engine-location/region'));
         $this->assertSessionMessages($this->contains('Wrong request.'), MessageInterface::TYPE_ERROR);
         self::assertEquals(2, $this->getEnabledRegionsCount());
     }
@@ -105,15 +110,18 @@ class MassStatusTest extends AbstractBackendController
                 100,
                 -1,
             ],
-            'namespace' => 'engine_region_listing',
+            'namespace' => 'engine_location_region_listing',
         ]);
 
         $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
-        $this->assertRedirect($this->stringContains('backend/location/region'));
+        $this->assertRedirect($this->stringContains('backend/engine-location/region'));
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
-        $this->assertSessionMessages($this->contains('You updated 1 region(s).'), MessageInterface::TYPE_SUCCESS);
+        $this->assertSessionMessages(
+            $this->contains('You updated 1 Region(s).'),
+            MessageInterface::TYPE_SUCCESS
+        );
         self::assertEquals(1, $this->getEnabledRegionsCount());
     }
 
@@ -124,8 +132,9 @@ class MassStatusTest extends AbstractBackendController
     {
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-        $searchCriteriaBuilder->addFilter(RegionInterface::IS_ENABLED, true);
-        $searchCriteria = $searchCriteriaBuilder->create();
+        $searchCriteria = $searchCriteriaBuilder
+            ->addFilter(RegionInterface::IS_ENABLED, true)
+            ->create();
 
         $result = $this->regionRepository->getList($searchCriteria);
         return $result->getTotalCount();

@@ -1,8 +1,8 @@
 <?php
 namespace Engine\Location\Setup;
 
-use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\Data\RegionInterface;
+use Engine\Location\Api\Data\CityInterface;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
@@ -78,18 +78,18 @@ class InstallSchema implements InstallSchemaInterface
             Table::TYPE_INTEGER,
             null,
             ['unsigned' => true, 'nullable' => false],
-            'Region id'
+            'Region Id'
         )->addColumn(
             'store_id',
             Table::TYPE_SMALLINT,
             null,
             ['unsigned' => true, 'nullable' => false],
-            'Store id'
+            'Store Id'
         )->addColumn(
             RegionInterface::TITLE,
             Table::TYPE_TEXT,
             255,
-            [],
+            ['nullable' => true],
             'Title'
         )->addIndex(
             'idx_primary',
@@ -199,18 +199,18 @@ class InstallSchema implements InstallSchemaInterface
             Table::TYPE_INTEGER,
             null,
             ['unsigned' => true, 'nullable' => false],
-            'City id'
+            'City Id'
         )->addColumn(
             'store_id',
             Table::TYPE_SMALLINT,
             null,
             ['unsigned' => true, 'nullable' => false],
-            'Store id'
+            'Store Id'
         )->addColumn(
             CityInterface::TITLE,
             Table::TYPE_TEXT,
             255,
-            [],
+            ['nullable' => true],
             'Title'
         )->addIndex(
             'idx_primary',

@@ -1,8 +1,8 @@
 <?php
 namespace Engine\Location\Controller\Adminhtml\Region;
 
-use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
+use Engine\Location\Api\Data\RegionInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Exception\CouldNotDeleteException;
@@ -16,7 +16,7 @@ class Delete extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::region';
+    const ADMIN_RESOURCE = 'Engine_Location::location_region';
 
     /**
      * @var RegionRepositoryInterface
@@ -46,14 +46,19 @@ class Delete extends Action
         if ($this->getRequest()->isPost() && null !== $regionId) {
             try {
                 $this->regionRepository->deleteById($regionId);
-                $this->messageManager->addSuccessMessage(__('The region has been deleted.'));
+                $this->messageManager->addSuccessMessage(__('The Region has been deleted.'));
                 $resultRedirect->setPath('*/*');
             } catch (NoSuchEntityException $e) {
-                $this->messageManager->addErrorMessage(__('Region with id "%1" does not exist.', $regionId));
+                $this->messageManager->addErrorMessage(
+                    __('Region with id "%1" does not exist.', $regionId)
+                );
                 $resultRedirect->setPath('*/*');
             } catch (CouldNotDeleteException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
-                $resultRedirect->setPath('*/*/edit', [RegionInterface::REGION_ID => $regionId, '_current' => true]);
+                $resultRedirect->setPath('*/*/edit', [
+                    RegionInterface::REGION_ID => $regionId,
+                    '_current' => true,
+                ]);
             }
         } else {
             $this->messageManager->addErrorMessage(__('Wrong request.'));

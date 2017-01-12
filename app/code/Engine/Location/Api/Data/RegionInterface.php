@@ -30,17 +30,6 @@ interface RegionInterface extends ExtensibleDataInterface
     public function setRegionId($regionId);
 
     /**
-     * @return string
-     */
-    public function getTitle();
-
-    /**
-     * @param string $title
-     * @return void
-     */
-    public function setTitle($title);
-
-    /**
      * @return bool
      */
     public function getIsEnabled();
@@ -61,6 +50,17 @@ interface RegionInterface extends ExtensibleDataInterface
      * @return void
      */
     public function setPosition($position);
+
+    /**
+     * @return string
+     */
+    public function getTitle();
+
+    /**
+     * @param string $title
+     * @return void
+     */
+    public function setTitle($title);
 
     /**
      * @return \Engine\Location\Api\Data\RegionExtensionInterface

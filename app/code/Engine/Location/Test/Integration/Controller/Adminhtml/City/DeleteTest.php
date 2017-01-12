@@ -16,7 +16,7 @@ class DeleteTest extends AbstractBackendController
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/location/city/delete';
+    const REQUEST_URI = 'backend/engine-location/city/delete';
 
     /**
      * @var FormKey
@@ -30,7 +30,7 @@ class DeleteTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      */
     public function testDelete()
     {
@@ -44,19 +44,22 @@ class DeleteTest extends AbstractBackendController
         $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
-        $this->assertRedirect($this->stringContains('backend/location/city'));
+        $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
-        $this->assertSessionMessages($this->contains('The city has been deleted.'), MessageInterface::TYPE_SUCCESS);
+        $this->assertSessionMessages(
+            $this->contains('The City has been deleted.'),
+            MessageInterface::TYPE_SUCCESS
+        );
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      */
     public function testDeleteWithWrongRequestMethod()
     {
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_GET);
-        $request->setPostValue([
+        $request->setQueryValue([
             'form_key' => $this->formKey->getFormKey(),
             'city_id' => 100,
         ]);
@@ -64,7 +67,7 @@ class DeleteTest extends AbstractBackendController
         $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
-        $this->assertRedirect($this->stringContains('backend/location/city'));
+        $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages($this->contains('Wrong request.'), MessageInterface::TYPE_ERROR);
     }
 
@@ -79,7 +82,7 @@ class DeleteTest extends AbstractBackendController
         $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
-        $this->assertRedirect($this->stringContains('backend/location/city'));
+        $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages($this->contains('Wrong request.'), MessageInterface::TYPE_ERROR);
     }
 
@@ -95,7 +98,7 @@ class DeleteTest extends AbstractBackendController
         $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
-        $this->assertRedirect($this->stringContains('backend/location/city'));
+        $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages(
             $this->contains('City with id &quot;-1&quot; does not exist.'),
             MessageInterface::TYPE_ERROR

@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Location\Test\Api\CityRepository;
 
-use Engine\Backend\Test\AssertArrayContains;
+use Engine\Framework\Test\AssertArrayContains;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
 use Magento\Framework\Webapi\Exception;
@@ -17,20 +17,20 @@ class CrudTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/location/cities';
+    const RESOURCE_PATH = '/V1/engine-location/cities';
     const SERVICE_NAME = 'locationCityRepositoryV1';
     /**#@-*/
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
      */
     public function testCreate()
     {
         $data = [
             CityInterface::REGION_ID => 100,
-            CityInterface::TITLE => 'city-title',
             CityInterface::IS_ENABLED => true,
             CityInterface::POSITION => 10,
+            CityInterface::TITLE => 'City-title',
         ];
         $serviceInfo = [
             'rest' => [
@@ -49,16 +49,18 @@ class CrudTest extends WebapiAbstract
         AssertArrayContains::assert($data, $city);
 
         /** @var CityRepositoryInterface $cityRepository */
-        $cityRepository = Bootstrap::getObjectManager()->get(CityRepositoryInterface::class);
+        $cityRepository = Bootstrap::getObjectManager()->get(
+            CityRepositoryInterface::class
+        );
         $cityRepository->deleteById($cityId);
     }
 
     public function testCreateWithoutRegion()
     {
         $data = [
-            CityInterface::TITLE => 'city-title',
             CityInterface::IS_ENABLED => true,
             CityInterface::POSITION => 10,
+            CityInterface::TITLE => 'City-title',
         ];
         $serviceInfo = [
             'rest' => [
@@ -82,7 +84,7 @@ class CrudTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_200.php
      * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      */
@@ -93,7 +95,7 @@ class CrudTest extends WebapiAbstract
             CityInterface::REGION_ID => 200,
             CityInterface::IS_ENABLED => false,
             CityInterface::POSITION => 20,
-            CityInterface::TITLE => 'city-title-updated',
+            CityInterface::TITLE => 'City-title-updated',
         ];
         $serviceInfo = [
             'rest' => [
@@ -108,12 +110,18 @@ class CrudTest extends WebapiAbstract
         $this->_webApiCall($serviceInfo, ['city' => $data], null, 'all');
 
         $data[CityInterface::CITY_ID] = $cityId;
-        AssertArrayContains::assert($data, $this->getCityById($cityId, 'default'));
-        AssertArrayContains::assert($data, $this->getCityById($cityId, 'test_store'));
+        AssertArrayContains::assert(
+            $data,
+            $this->getCityById($cityId, 'default')
+        );
+        AssertArrayContains::assert(
+            $data,
+            $this->getCityById($cityId, 'test_store')
+        );
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_200.php
      * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      */
@@ -121,11 +129,11 @@ class CrudTest extends WebapiAbstract
     {
         $cityId = 100;
         $storeCode = 'test_store';
-        $dataPerScope = [
+        $dataForTestStore = [
             CityInterface::REGION_ID => 200,
             CityInterface::IS_ENABLED => false,
             CityInterface::POSITION => 20,
-            CityInterface::TITLE => 'city-title-per-store',
+            CityInterface::TITLE => 'City-title-per-store',
         ];
         $serviceInfo = [
             'rest' => [
@@ -137,26 +145,29 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Save',
             ],
         ];
-        $this->_webApiCall($serviceInfo, ['city' => $dataPerScope], null, $storeCode);
+        $this->_webApiCall($serviceInfo, ['city' => $dataForTestStore], null, $storeCode);
 
         $city = $this->getCityById($cityId, 'default');
-        $dataForGlobalScope = array_merge($dataPerScope, [
-            CityInterface::TITLE => 'title-0',
+        $dataForDefaultStore = array_merge($dataForTestStore, [
+            CityInterface::TITLE => 'City-title-100',
         ]);
-        AssertArrayContains::assert($dataForGlobalScope, $city);
+        AssertArrayContains::assert($dataForDefaultStore, $city);
 
         $city = $this->getCityById($cityId, $storeCode);
-        AssertArrayContains::assert($dataPerScope, $city);
+        AssertArrayContains::assert($dataForTestStore, $city);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100_store_scope.php
      */
     public function testDeleteValueInStoreScope()
     {
         $cityId = 100;
         $storeCode = 'test_store';
         $data = [
+            CityInterface::REGION_ID => 100,
+            CityInterface::IS_ENABLED => true,
+            CityInterface::POSITION => 10,
             CityInterface::TITLE => null,
         ];
         $serviceInfo = [
@@ -172,11 +183,14 @@ class CrudTest extends WebapiAbstract
         $this->_webApiCall($serviceInfo, ['city' => $data], null, $storeCode);
 
         $city = $this->getCityById($cityId, $storeCode);
-        self::assertEquals('title-0', $city[CityInterface::TITLE]);
+        $expectedData = [
+            CityInterface::TITLE => 'City-title-100',
+        ];
+        AssertArrayContains::assert($expectedData, $city);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      */
     public function testDeleteById()
     {
@@ -204,38 +218,38 @@ class CrudTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      */
     public function testGet()
     {
         $cityId = 100;
-        $data = [
+        $expectedData = [
             CityInterface::CITY_ID => $cityId,
             CityInterface::REGION_ID => 100,
-            CityInterface::TITLE => 'title-0',
             CityInterface::IS_ENABLED => true,
             CityInterface::POSITION => 200,
+            CityInterface::TITLE => 'City-title-100',
         ];
         $city = $this->getCityById($cityId);
-        AssertArrayContains::assert($data, $city);
+        AssertArrayContains::assert($expectedData, $city);
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100_store_scope.php
      */
     public function testGetIfValueIsPerStore()
     {
         $cityId = 100;
         $storeCode = 'test_store';
-        $data = [
+        $expectedData = [
             CityInterface::CITY_ID => $cityId,
             CityInterface::REGION_ID => 100,
-            CityInterface::TITLE => 'per-store-title-0',
             CityInterface::IS_ENABLED => true,
             CityInterface::POSITION => 200,
+            CityInterface::TITLE => 'City-title-100-per-store',
         ];
         $city = $this->getCityById($cityId, $storeCode);
-        AssertArrayContains::assert($data, $city);
+        AssertArrayContains::assert($expectedData, $city);
     }
 
     public function testGetNoSuchEntityException()

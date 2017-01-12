@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Engine\CategoryTree\Api\Data\CategoryTreeInterface" type="Engine\CategoryTree\Model\CategoryTree"/>
+    <preference for="Engine\CategoryTree\Api\CategoryTreeLoaderInterface" type="Engine\CategoryTree\Model\CategoryTreeLoader"/>
+    <preference for="Engine\CategoryTree\Api\CategoryTreeMovementInterface" type="Engine\CategoryTree\Model\CategoryTreeMovement"/>
+    <virtualType name="Engine\CategoryTree\Block\Adminhtml\Category\Tree" type="Engine\JsTree\Block\Adminhtml\Tree">
+        <arguments>
+            <argument name="jsTreeDataProvider" xsi:type="object">Engine\CategoryTree\Ui\DataProvider\JsTreeDataProvider</argument>
+        </arguments>
+    </virtualType>
+</config>

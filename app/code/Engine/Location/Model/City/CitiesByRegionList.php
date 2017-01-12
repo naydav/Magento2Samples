@@ -5,7 +5,9 @@ use Engine\Location\Api\CityRepositoryInterface;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\Data\CitySearchResultInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Api\SortOrderBuilder;
+use Magento\Framework\Api\SortOrderBuilderFactory;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -18,28 +20,28 @@ class CitiesByRegionList
     private $cityRepository;
 
     /**
-     * @var SearchCriteriaBuilder
+     * @var SearchCriteriaBuilderFactory
      */
-    private $searchCriteriaBuilder;
+    private $searchCriteriaBuilderFactory;
 
     /**
-     * @var SortOrderBuilder
+     * @var SortOrderBuilderFactory
      */
-    private $sortOrderBuilder;
+    private $sortOrderBuilderFactory;
 
     /**
      * @param CityRepositoryInterface $cityRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param SortOrderBuilder $sortOrderBuilder
+     * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
+     * @param SortOrderBuilderFactory $sortOrderBuilderFactory
      */
     public function __construct(
         CityRepositoryInterface $cityRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        SortOrderBuilder $sortOrderBuilder
+        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
+        SortOrderBuilderFactory $sortOrderBuilderFactory
     ) {
         $this->cityRepository = $cityRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->sortOrderBuilder = $sortOrderBuilder;
+        $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
+        $this->sortOrderBuilderFactory = $sortOrderBuilderFactory;
     }
 
     /**
@@ -48,12 +50,20 @@ class CitiesByRegionList
      */
     public function getList($regionId)
     {
-        $this->searchCriteriaBuilder->addFilter(CityInterface::REGION_ID, (int)$regionId);
-        $this->sortOrderBuilder->setField(CityInterface::POSITION)
-            ->setAscendingDirection();
-        $sortOrder = $this->sortOrderBuilder->create();
-        $this->searchCriteriaBuilder->addSortOrder($sortOrder);
-        $searchCriteria = $this->searchCriteriaBuilder->create();
+        /** @var SortOrderBuilder $sortOrderBuilder */
+        $sortOrderBuilder = $this->sortOrderBuilderFactory->create();
+        $sortOrder = $sortOrderBuilder
+            ->setField(CityInterface::POSITION)
+            ->setAscendingDirection()
+            ->create();
+
+        /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
+        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
+        $searchCriteria = $searchCriteriaBuilder
+            ->addFilter(CityInterface::REGION_ID, (int)$regionId)
+            ->addSortOrder($sortOrder)
+            ->create();
+
         $result = $this->cityRepository->getList($searchCriteria);
         return $result;
     }

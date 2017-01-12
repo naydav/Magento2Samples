@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
-use Engine\Backend\Test\AssertArrayContains;
+use Engine\Framework\Test\AssertArrayContains;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
 use Magento\Framework\Data\Form\FormKey;
@@ -20,7 +20,7 @@ class InlineEditTest extends AbstractBackendController
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/location/city/inlineEdit';
+    const REQUEST_URI = 'backend/engine-location/city/inlineEdit';
 
     /**
      * @var FormKey
@@ -47,22 +47,24 @@ class InlineEditTest extends AbstractBackendController
         parent::setUp();
         $this->formKey = $this->_objectManager->get(FormKey::class);
         $this->hydrator = $this->_objectManager->get(HydratorInterface::class);
-        $this->cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
+        $this->cityRepository = $this->_objectManager->get(
+            CityRepositoryInterface::class
+        );
         $this->storeManager = $this->_objectManager->get(StoreManagerInterface::class);
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      * @magentoDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      */
-    public function testInlineEdit()
+    public function testInlineEditInGlobalScope()
     {
         $cityId = 100;
         $itemData = [
             CityInterface::CITY_ID => $cityId,
             CityInterface::IS_ENABLED => false,
             CityInterface::POSITION => 1000,
-            CityInterface::TITLE => 'inline-edit-title',
+            CityInterface::TITLE => 'City-title-inline-edit',
         ];
 
         $request = $this->getRequest();
@@ -93,17 +95,17 @@ class InlineEditTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_store_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100_store_scope.php
      */
     public function testInlineEditInStoreScope()
     {
         $storeCode = 'test_store';
         $cityId = 100;
-        $itemDataPerScope = [
+        $itemDataForTestStore = [
             CityInterface::CITY_ID => $cityId,
             CityInterface::IS_ENABLED => false,
             CityInterface::POSITION => 1000,
-            CityInterface::TITLE => 'inline-edit-title-per-scope',
+            CityInterface::TITLE => 'City-title-inline-edit-per-store',
         ];
 
         $request = $this->getRequest();
@@ -112,7 +114,7 @@ class InlineEditTest extends AbstractBackendController
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
             'items' => [
-                $itemDataPerScope,
+                $itemDataForTestStore,
             ],
         ]);
 
@@ -128,13 +130,13 @@ class InlineEditTest extends AbstractBackendController
         self::assertEmpty($jsonResponse->messages);
 
         $city = $this->getCityById($cityId, 'default');
-        $itemDataForGlobalScope = array_merge($itemDataPerScope, [
-            CityInterface::TITLE => 'title-0',
+        $itemDataForDefaultStore = array_merge($itemDataForTestStore, [
+            CityInterface::TITLE => 'City-title-100',
         ]);
-        AssertArrayContains::assert($itemDataForGlobalScope, $this->hydrator->extract($city));
+        AssertArrayContains::assert($itemDataForDefaultStore, $this->hydrator->extract($city));
 
         $city = $this->getCityById($cityId, $storeCode);
-        AssertArrayContains::assert($itemDataPerScope, $this->hydrator->extract($city));
+        AssertArrayContains::assert($itemDataForTestStore, $this->hydrator->extract($city));
     }
 
     public function testInlineEditWithNotExistEntityId()
@@ -162,7 +164,10 @@ class InlineEditTest extends AbstractBackendController
         $jsonResponse = json_decode($body);
         self::assertNotEmpty($jsonResponse);
         self::assertEquals(1, $jsonResponse->error);
-        self::assertContains("[ID: {$cityId}] The City does not exist.", $jsonResponse->messages);
+        self::assertContains(
+            "[ID: {$cityId}] The City does not exist.",
+            $jsonResponse->messages
+        );
     }
 
     public function testInlineEditWithEmptyItems()
@@ -188,7 +193,7 @@ class InlineEditTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      */
     public function testInlineEditNoAjaxRequest()
     {
@@ -217,14 +222,14 @@ class InlineEditTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      */
-    public function testMoveWithWrongRequestMethod()
+    public function testInlineEditWithWrongRequestMethod()
     {
         $request = $this->getRequest();
         $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
         $request->setMethod(Request::METHOD_GET);
-        $request->setPostValue([
+        $request->setQueryValue([
             'form_key' => $this->formKey->getFormKey(),
             'items' => [
                 [
@@ -244,6 +249,59 @@ class InlineEditTest extends AbstractBackendController
         self::assertNotEmpty($jsonResponse);
         self::assertEquals(1, $jsonResponse->error);
         self::assertContains('Please correct the data sent.', $jsonResponse->messages);
+    }
+
+    /**
+     * @param string $field
+     * @param mixed $value
+     * @param string $errorMessage
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @dataProvider validationDataProvider
+     */
+    public function testValidation($field, $value, $errorMessage)
+    {
+        $cityId = 100;
+        $itemData = [
+            CityInterface::CITY_ID => $cityId,
+            CityInterface::IS_ENABLED => false,
+            CityInterface::POSITION => 1000,
+            CityInterface::TITLE => 'City-title-inline-edit',
+        ];
+        $itemData[$field] = $value;
+
+        $request = $this->getRequest();
+        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'items' => [
+                $itemData,
+            ],
+        ]);
+        $this->dispatch(self::REQUEST_URI);
+        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
+
+        $body = $this->getResponse()->getBody();
+        self::assertNotEmpty($body);
+
+        $jsonResponse = json_decode($body);
+        self::assertNotEmpty($jsonResponse);
+        self::assertEquals(1, $jsonResponse->error);
+        self::assertContains($errorMessage, $jsonResponse->messages);
+    }
+
+    /**
+     * @return array
+     */
+    public function validationDataProvider()
+    {
+        return [
+            [
+                CityInterface::TITLE,
+                '',
+                '"' . CityInterface::TITLE . '" can not be empty.',
+            ],
+        ];
     }
 
     /**

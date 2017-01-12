@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- Category -->
+    <route url="/V1/engine-category/categories" method="GET">
+        <service class="Engine\Category\Api\CategoryRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Engine_Category::category_category"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-category/categories/:categoryId" method="GET">
+        <service class="Engine\Category\Api\CategoryRepositoryInterface" method="get"/>
+        <resources>
+            <resource ref="Engine_Category::category_category"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-category/categories" method="POST">
+        <service class="Engine\Category\Api\CategoryRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Engine_Category::category_category"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-category/categories/:categoryId" method="PUT">
+        <service class="Engine\Category\Api\CategoryRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Engine_Category::category_category"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-category/categories/:categoryId" method="DELETE">
+        <service class="Engine\Category\Api\CategoryRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="Engine_Category::category_category"/>
+        </resources>
+    </route>
+</routes>

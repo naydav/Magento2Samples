@@ -18,7 +18,7 @@ class Edit extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Engine_Location::city';
+    const ADMIN_RESOURCE = 'Engine_Location::location_city';
 
     /**
      * @var CityRepositoryInterface
@@ -48,12 +48,17 @@ class Edit extends Action
 
             /** @var Page $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
-            $result->setActiveMenu('Engine_Location::city')->addBreadcrumb(__('Edit City'), __('Edit City'));
-            $result->getConfig()->getTitle()->prepend(__('Edit City: %1', $city->getTitle()));
+            $result->setActiveMenu('Engine_Location::location_city')
+                ->addBreadcrumb(__('Edit City'), __('Edit City'));
+            $result->getConfig()
+                ->getTitle()
+                ->prepend(__('Edit City: %1', $city->getTitle()));
         } catch (NoSuchEntityException $e) {
             /** @var Redirect $result */
             $result = $this->resultRedirectFactory->create();
-            $this->messageManager->addErrorMessage(__('City with id "%1" does not exist.', $cityId));
+            $this->messageManager->addErrorMessage(
+                __('City with id "%1" does not exist.', $cityId)
+            );
             $result->setPath('*/*');
         }
         return $result;

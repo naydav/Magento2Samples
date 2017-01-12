@@ -19,7 +19,7 @@ class MassDeleteTest extends AbstractBackendController
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/location/city/massDelete';
+    const REQUEST_URI = 'backend/engine-location/city/massDelete';
 
     /**
      * @var FormKey
@@ -40,7 +40,9 @@ class MassDeleteTest extends AbstractBackendController
     {
         parent::setUp();
         $this->formKey = $this->_objectManager->get(FormKey::class);
-        $this->cityRepository = $this->_objectManager->get(CityRepositoryInterface::class);
+        $this->cityRepository = $this->_objectManager->get(
+            CityRepositoryInterface::class
+        );
         $this->searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
     }
 
@@ -58,15 +60,18 @@ class MassDeleteTest extends AbstractBackendController
                 200,
                 400,
             ],
-            'namespace' => 'engine_city_listing',
+            'namespace' => 'engine_location_city_listing',
         ]);
 
         $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
-        $this->assertRedirect($this->stringContains('backend/location/city'));
+        $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
-        $this->assertSessionMessages($this->contains('You deleted 3 city(s).'), MessageInterface::TYPE_SUCCESS);
+        $this->assertSessionMessages(
+            $this->contains('You deleted 3 City(s).'),
+            MessageInterface::TYPE_SUCCESS
+        );
         self::assertEquals(1, $this->getCitiesCount());
     }
 
@@ -77,20 +82,20 @@ class MassDeleteTest extends AbstractBackendController
     {
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_GET);
-        $request->setPostValue([
+        $request->setQueryValue([
             'form_key' => $this->formKey->getFormKey(),
             'selected' => [
                 100,
                 200,
                 400,
             ],
-            'namespace' => 'engine_city_listing',
+            'namespace' => 'engine_location_city_listing',
         ]);
 
         $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
-        $this->assertRedirect($this->stringContains('backend/location/city'));
+        $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages($this->contains('Wrong request.'), MessageInterface::TYPE_ERROR);
         self::assertEquals(4, $this->getCitiesCount());
     }
@@ -109,15 +114,18 @@ class MassDeleteTest extends AbstractBackendController
                 -1,
                 400,
             ],
-            'namespace' => 'engine_city_listing',
+            'namespace' => 'engine_location_city_listing',
         ]);
 
         $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
-        $this->assertRedirect($this->stringContains('backend/location/city'));
+        $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
-        $this->assertSessionMessages($this->contains('You deleted 2 city(s).'), MessageInterface::TYPE_SUCCESS);
+        $this->assertSessionMessages(
+            $this->contains('You deleted 2 City(s).'),
+            MessageInterface::TYPE_SUCCESS
+        );
         self::assertEquals(2, $this->getCitiesCount());
     }
 

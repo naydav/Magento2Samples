@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Engine_Category::category"
+             title="Categories"
+             translate="title"
+             module="Engine_Category"
+             sortOrder="100"
+             parent="Engine_Backend::backend"
+             resource="Engine_Category::category"/>
+
+        <add id="Engine_Category::category_index"
+             title="Category List"
+             translate="title"
+             module="Engine_Category"
+             sortOrder="100"
+             parent="Engine_Category::category"
+             action="engine_category/category/index"
+             resource="Engine_Category::category_category"/>
+
+        <add id="Engine_Category::category_new"
+             title="Add Category"
+             translate="title"
+             module="Engine_Category"
+             sortOrder="200"
+             parent="Engine_Category::category"
+             action="engine_category/category/new"
+             resource="Engine_Category::category_category"/>
+    </menu>
+</config>

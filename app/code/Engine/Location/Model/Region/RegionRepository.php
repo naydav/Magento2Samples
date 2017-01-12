@@ -26,6 +26,11 @@ class RegionRepository implements RegionRepositoryInterface
     private $regionFactory;
 
     /**
+     * @var RegionBaseValidator
+     */
+    private $regionBaseValidator;
+
+    /**
      * @var RegionCollectionFactory
      */
     private $regionCollectionFactory;
@@ -47,6 +52,7 @@ class RegionRepository implements RegionRepositoryInterface
 
     /**
      * @param RegionInterfaceFactory $regionFactory
+     * @param RegionBaseValidator $regionBaseValidator
      * @param RegionCollectionFactory $regionCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param RegionSearchResultInterfaceFactory $regionSearchResultFactory
@@ -54,12 +60,14 @@ class RegionRepository implements RegionRepositoryInterface
      */
     public function __construct(
         RegionInterfaceFactory $regionFactory,
+        RegionBaseValidator $regionBaseValidator,
         RegionCollectionFactory $regionCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
         RegionSearchResultInterfaceFactory $regionSearchResultFactory,
         EntityManager $entityManager
     ) {
         $this->regionFactory = $regionFactory;
+        $this->regionBaseValidator = $regionBaseValidator;
         $this->regionCollectionFactory = $regionCollectionFactory;
         $this->collectionProcessor = $collectionProcessor;
         $this->regionSearchResultFactory = $regionSearchResultFactory;
@@ -71,12 +79,14 @@ class RegionRepository implements RegionRepositoryInterface
      */
     public function get($regionId)
     {
-        /** @var Region $region */
+        /** @var RegionInterface $region */
         $region = $this->regionFactory->create();
 
         $this->entityManager->load($region, $regionId);
         if (!$region->getRegionId()) {
-            throw new NoSuchEntityException(__('Region with id "%1" does not exist.', $regionId));
+            throw new NoSuchEntityException(
+                __('Region with id "%1" does not exist.', $regionId)
+            );
         }
         return $region;
     }
@@ -100,6 +110,7 @@ class RegionRepository implements RegionRepositoryInterface
      */
     public function save(RegionInterface $region)
     {
+        $this->regionBaseValidator->validate($region);
         try {
             $this->entityManager->save($region);
             return $region->getRegionId();
