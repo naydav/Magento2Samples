@@ -11,13 +11,13 @@
 <h3>Category module</h3>
 * Custom Category module (grid, form, CRUD)
 * Need for extending by other modules
+
 Pay attention: Category module don't know about CategoryTree module
 
 <h3>CategoryTree module</h3>
-* Example of add functionality to another module (in this case extend Category module)
+* Example of adding functionality to another module (in this case extends Category module)
 * Add Ui Tree interface for Categories management
-* Add possibility to move categories
-* Add Category Tree structure (loading and manipulation)
+* Add Category Tree Structure (loading and manipulation)
 
 <h3>JsTree module</h3>
 * Base jstree support
