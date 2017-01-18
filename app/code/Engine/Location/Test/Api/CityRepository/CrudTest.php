@@ -211,8 +211,8 @@ class CrudTest extends WebapiAbstract
             $this->getCityById($cityId);
             $this->fail('Expected throwing exception');
         } catch (\Exception $e) {
-            $errorObj = $this->processRestExceptionResult($e);
-            self::assertEquals('City with id "%1" does not exist.', $errorObj['message']);
+            $errorData = $this->processRestExceptionResult($e);
+            self::assertEquals('City with id "%1" does not exist.', $errorData['message']);
             self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
         }
     }
@@ -227,7 +227,7 @@ class CrudTest extends WebapiAbstract
             CityInterface::CITY_ID => $cityId,
             CityInterface::REGION_ID => 100,
             CityInterface::IS_ENABLED => true,
-            CityInterface::POSITION => 200,
+            CityInterface::POSITION => 100,
             CityInterface::TITLE => 'City-title-100',
         ];
         $city = $this->getCityById($cityId);
@@ -245,7 +245,7 @@ class CrudTest extends WebapiAbstract
             CityInterface::CITY_ID => $cityId,
             CityInterface::REGION_ID => 100,
             CityInterface::IS_ENABLED => true,
-            CityInterface::POSITION => 200,
+            CityInterface::POSITION => 100,
             CityInterface::TITLE => 'City-title-100-per-store',
         ];
         $city = $this->getCityById($cityId, $storeCode);
@@ -273,9 +273,9 @@ class CrudTest extends WebapiAbstract
         } catch (\SoapFault $e) {
             self::assertContains($expectedMessage, $e->getMessage(), 'SoapFault does not contain expected message.');
         } catch (\Exception $e) {
-            $errorObj = $this->processRestExceptionResult($e);
-            self::assertEquals($expectedMessage, $errorObj['message']);
-            self::assertEquals($notExistingId, $errorObj['parameters'][0]);
+            $errorData = $this->processRestExceptionResult($e);
+            self::assertEquals($expectedMessage, $errorData['message']);
+            self::assertEquals($notExistingId, $errorData['parameters'][0]);
             self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
         }
     }

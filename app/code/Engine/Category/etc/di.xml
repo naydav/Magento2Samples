@@ -4,6 +4,7 @@
     <preference for="Engine\Category\Api\Data\CategoryInterface" type="Engine\Category\Model\Category\Category"/>
     <preference for="Engine\Category\Api\CategoryRepositoryInterface" type="Engine\Category\Model\Category\CategoryRepository"/>
     <preference for="Engine\Category\Api\Data\CategorySearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Engine\Category\Model\Category\CategoryBaseValidatorInterface" type="Engine\Category\Model\Category\CategoryBaseValidator"/>
     <preference for="Engine\Category\Api\RootCategoryIdProviderInterface" type="Engine\Category\Model\Category\RootCategoryIdProvider"/>
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>

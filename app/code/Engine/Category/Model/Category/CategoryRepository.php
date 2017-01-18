@@ -27,7 +27,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     private $categoryFactory;
 
     /**
-     * @var CategoryBaseValidator
+     * @var CategoryBaseValidatorInterface
      */
     private $categoryBaseValidator;
 
@@ -58,7 +58,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     /**
      * @param CategoryInterfaceFactory $categoryFactory
-     * @param CategoryBaseValidator $categoryBaseValidator
+     * @param CategoryBaseValidatorInterface $categoryBaseValidator
      * @param CategoryCollectionFactory $categoryCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param CategorySearchResultInterfaceFactory $categorySearchResultFactory
@@ -67,7 +67,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function __construct(
         CategoryInterfaceFactory $categoryFactory,
-        CategoryBaseValidator $categoryBaseValidator,
+        CategoryBaseValidatorInterface $categoryBaseValidator,
         CategoryCollectionFactory $categoryCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
         CategorySearchResultInterfaceFactory $categorySearchResultFactory,

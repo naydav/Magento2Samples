@@ -122,9 +122,18 @@ class RegionDataProvider extends DataProvider
         $configData = parent::getConfigData();
         $storeId = $this->storeManager->getStore()->getId();
 
-        $configData['submit_url'] = $this->urlBuilder->getUrl('engine_location/region/save', [
-            'store' => $storeId,
-        ]);
+        $configData['submit_url'] = $this->urlBuilder->getUrl(
+            'engine_location/region/save',
+            [
+                'store' => $storeId,
+            ]
+        );
+        $configData['validate_url'] = $this->urlBuilder->getUrl(
+            'engine_location/region/validate',
+            [
+                'store' => $storeId,
+            ]
+        );
         $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
             'store' => $storeId,
         ]);
@@ -165,16 +174,20 @@ class RegionDataProvider extends DataProvider
     public function getData()
     {
         $data = parent::getData();
-        if ('engine_location_region_form_data_source' === $this->name && $data['totalRecords'] > 0) {
-            $regionId = $data['items'][0][RegionInterface::REGION_ID];
+        if ('engine_location_region_form_data_source' === $this->name) {
             // It is need for support several fieldsets. For details see \Magento\Ui\Component\Form::getDataSourceData
-            $dataForSingle[$regionId] = [
-                'general' => $data['items'][0],
-                'cities' => [
-                    'assigned_cities' => $this->getAssignedCitiesData($regionId),
-                ],
-            ];
-            $data = $dataForSingle;
+            if ($data['totalRecords'] > 0) {
+                $regionId = $data['items'][0][RegionInterface::REGION_ID];
+                $dataForSingle[$regionId] = [
+                    'general' => $data['items'][0],
+                    'cities' => [
+                        'assigned_cities' => $this->getAssignedCitiesData($regionId),
+                    ],
+                ];
+                $data = $dataForSingle;
+            } else {
+                $data = [];
+            }
         }
         return $data;
     }

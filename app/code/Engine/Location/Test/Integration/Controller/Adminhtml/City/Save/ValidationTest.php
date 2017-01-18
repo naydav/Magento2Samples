@@ -73,8 +73,8 @@ class ValidationTest extends AbstractBackendController
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      * @dataProvider validationDataProvider
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      */
     public function testValidationOnUpdate($field, $value, $errorMessage)
     {

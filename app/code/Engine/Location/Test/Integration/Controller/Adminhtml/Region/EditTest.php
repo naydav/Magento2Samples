@@ -1,10 +1,12 @@
 <?php
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\Region;
 
+use Engine\Backend\Test\AssertFormDynamicRows;
 use Engine\Backend\Test\AssertFormField;
 use Engine\Framework\Test\AssertPageHeader;
 use Engine\Framework\Test\AssertPageTitle;
 use Engine\Backend\Test\AssertStoreSwitcher;
+use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\Data\RegionInterface;
 use Magento\Framework\Message\MessageInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
@@ -27,7 +29,8 @@ class EditTest extends AbstractBackendController
     private $formName = 'engine_location_region_form';
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_200.php
      */
     public function testEdit()
     {
@@ -57,10 +60,30 @@ class EditTest extends AbstractBackendController
             RegionInterface::TITLE,
             $title
         );
+        AssertFormDynamicRows::assert(
+            $body,
+            $this->formName,
+            'cities',
+            'assigned_cities',
+            [
+                [
+                    CityInterface::CITY_ID => 100,
+                    CityInterface::TITLE => 'City-title-100',
+                    CityInterface::IS_ENABLED => 1,
+                ],
+                [
+                    CityInterface::CITY_ID => 200,
+                    CityInterface::TITLE => 'City-title-200',
+                    CityInterface::IS_ENABLED => 1,
+                ],
+            ]
+        );
      }
 
     /**
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100_store_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_200.php
      */
     public function testEditInStoreScope()
     {
@@ -90,6 +113,24 @@ class EditTest extends AbstractBackendController
             'general',
             RegionInterface::TITLE,
             $title
+        );
+        AssertFormDynamicRows::assert(
+            $body,
+            $this->formName,
+            'cities',
+            'assigned_cities',
+            [
+                [
+                    CityInterface::CITY_ID => 100,
+                    CityInterface::TITLE => 'City-title-100',
+                    CityInterface::IS_ENABLED => 1,
+                ],
+                [
+                    CityInterface::CITY_ID => 200,
+                    CityInterface::TITLE => 'City-title-200',
+                    CityInterface::IS_ENABLED => 1,
+                ],
+            ]
         );
     }
 

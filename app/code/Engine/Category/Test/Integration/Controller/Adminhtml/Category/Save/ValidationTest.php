@@ -4,10 +4,11 @@ namespace Engine\Category\Test\Integration\Controller\Adminhtml\Category\Save;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Engine\Category\Controller\Adminhtml\Category\Save;
 use Engine\Category\Api\Data\CategoryInterface;
-use Engine\Category\Model\Category\CategoryBaseValidator;
+use Engine\Category\Model\Category\CategoryUrlKeyValidator;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Message\MessageInterface;
 use Magento\Framework\Registry;
+use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -52,6 +53,7 @@ class ValidationTest extends AbstractBackendController
      * @param mixed $value
      * @param string $errorMessage
      * @dataProvider validationDataProvider
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
      */
     public function testValidationOnCreate($field, $value, $errorMessage)
     {
@@ -84,8 +86,9 @@ class ValidationTest extends AbstractBackendController
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
      * @dataProvider validationDataProvider
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
      */
     public function testValidationOnUpdate($field, $value, $errorMessage)
     {
@@ -121,6 +124,9 @@ class ValidationTest extends AbstractBackendController
      */
     public function validationDataProvider()
     {
+        /** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
+        $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
+        $invalidMaxLengthUrlKey = str_repeat(1, CategoryUrlKeyValidator::MAX_URL_KEY_LENGTH + 1);
         return [
             [
                 CategoryInterface::PARENT_ID,
@@ -134,9 +140,15 @@ class ValidationTest extends AbstractBackendController
             ],
             [
                 CategoryInterface::URL_KEY,
-                str_repeat(1, 51),
-                '&quot;' . CategoryInterface::URL_KEY . '&quot; is more than '
-                . CategoryBaseValidator::MAX_URL_KEY_LENGTH . ' characters long.',
+                $invalidMaxLengthUrlKey,
+                'Value &quot;' . $invalidMaxLengthUrlKey . '&quot; for &quot;' . CategoryInterface::URL_KEY
+                . '&quot; is more than ' . CategoryUrlKeyValidator::MAX_URL_KEY_LENGTH . ' characters long.',
+            ],
+            [
+                CategoryInterface::URL_KEY,
+                'Category-urlKey-200',
+                'Category with such url &quot;Category-urlKey-200&quot; already exist (Category title: '
+                    . 'Category-title-200, Category id: 200, Parent id: ' . $rootCategoryIdProvider->provide().  ').',
             ],
             [
                 CategoryInterface::TITLE,

@@ -9,7 +9,7 @@ use Magento\Store\Model\StoreManagerInterface;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  */
-class CityBaseValidator
+class CityBaseValidator implements CityBaseValidatorInterface
 {
     /**
      * @var StoreManagerInterface
@@ -26,9 +26,7 @@ class CityBaseValidator
     }
 
     /**
-     * @param CityInterface $city
-     * @return void
-     * @throws ValidatorException
+     * {@inheritdoc}
      */
     public function validate(CityInterface $city)
     {
@@ -36,12 +34,12 @@ class CityBaseValidator
 
         $errors = [];
         $value = (string)$city->getTitle();
-        if (Store::DEFAULT_STORE_ID === $storeId && '' === $value) {
+        if ((Store::DEFAULT_STORE_ID === $storeId || !$city->getCityId()) && '' === $value) {
             $errors[] = __('"%1" can not be empty.', CityInterface::TITLE);
         }
 
         if (count($errors)) {
-            throw new ValidatorException(__('Entity isn\'t valid.'), $errors);
+            throw new ValidatorException($errors);
         }
     }
 }

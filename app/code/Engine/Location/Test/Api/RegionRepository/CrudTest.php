@@ -25,7 +25,7 @@ class CrudTest extends WebapiAbstract
     {
         $data = [
             RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 10,
+            RegionInterface::POSITION => 100,
             RegionInterface::TITLE => 'Region-title',
         ];
         $serviceInfo = [
@@ -173,8 +173,8 @@ class CrudTest extends WebapiAbstract
             $this->getRegionById($regionId);
             $this->fail('Expected throwing exception');
         } catch (\Exception $e) {
-            $errorObj = $this->processRestExceptionResult($e);
-            self::assertEquals('Region with id "%1" does not exist.', $errorObj['message']);
+            $errorData = $this->processRestExceptionResult($e);
+            self::assertEquals('Region with id "%1" does not exist.', $errorData['message']);
             self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
         }
     }
@@ -188,7 +188,7 @@ class CrudTest extends WebapiAbstract
         $expectedData = [
             RegionInterface::REGION_ID => $regionId,
             RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 200,
+            RegionInterface::POSITION => 100,
             RegionInterface::TITLE => 'Region-title-100',
         ];
         $region = $this->getRegionById($regionId);
@@ -205,7 +205,7 @@ class CrudTest extends WebapiAbstract
         $expectedData = [
             RegionInterface::REGION_ID => $regionId,
             RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 200,
+            RegionInterface::POSITION => 100,
             RegionInterface::TITLE => 'Region-title-100-per-store',
         ];
         $region = $this->getRegionById($regionId, $storeCode);
@@ -233,9 +233,9 @@ class CrudTest extends WebapiAbstract
         } catch (\SoapFault $e) {
             self::assertContains($expectedMessage, $e->getMessage(), 'SoapFault does not contain expected message.');
         } catch (\Exception $e) {
-            $errorObj = $this->processRestExceptionResult($e);
-            self::assertEquals($expectedMessage, $errorObj['message']);
-            self::assertEquals($notExistingId, $errorObj['parameters'][0]);
+            $errorData = $this->processRestExceptionResult($e);
+            self::assertEquals($expectedMessage, $errorData['message']);
+            self::assertEquals($notExistingId, $errorData['parameters'][0]);
             self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
         }
     }

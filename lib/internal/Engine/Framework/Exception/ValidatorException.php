@@ -2,7 +2,6 @@
 namespace Engine\Framework\Exception;
 
 use Magento\Framework\Exception\ValidatorException as BaseValidatorException;
-use Magento\Framework\Phrase;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -15,12 +14,18 @@ class ValidatorException extends BaseValidatorException
     private $errors;
 
     /**
-     * @param Phrase $phrase
      * @param array $errors
+     * @param \Exception $previous
      */
-    public function __construct(Phrase $phrase, array $errors = [])
+    public function __construct(array $errors = [], \Exception $previous = null)
     {
-        parent::__construct($phrase);
+        $errorsCount = count($errors);
+        if ($errorsCount) {
+            $message = $errorsCount == 1 ? reset($errors) : __(implode('; ', $errors));
+        } else {
+            $message = __('Entity isn\'t valid.');
+        }
+        parent::__construct($message, $previous);
         $this->errors = $errors;
     }
 

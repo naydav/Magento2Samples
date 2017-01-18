@@ -1,13 +1,15 @@
 <?php
 namespace Engine\Category\Test\Integration\Controller\Adminhtml\Category;
 
-use Engine\Category\Model\Category\CategoryBaseValidator;
+use Engine\Category\Api\RootCategoryIdProviderInterface;
+use Engine\Category\Model\Category\CategoryUrlKeyValidator;
 use Engine\Framework\Test\AssertArrayContains;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\CategoryRepositoryInterface;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -263,8 +265,9 @@ class InlineEditTest extends AbstractBackendController
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
      * @dataProvider validationDataProvider
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
      */
     public function testValidation($field, $value, $errorMessage)
     {
@@ -306,6 +309,9 @@ class InlineEditTest extends AbstractBackendController
      */
     public function validationDataProvider()
     {
+        /** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
+        $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
+        $invalidMaxLengthUrlKey = str_repeat(1, CategoryUrlKeyValidator::MAX_URL_KEY_LENGTH + 1);
         return [
             [
                 CategoryInterface::URL_KEY,
@@ -314,9 +320,15 @@ class InlineEditTest extends AbstractBackendController
             ],
             [
                 CategoryInterface::URL_KEY,
-                str_repeat(1, 51),
-                '"' . CategoryInterface::URL_KEY . '" is more than '
-                . CategoryBaseValidator::MAX_URL_KEY_LENGTH . ' characters long.',
+                $invalidMaxLengthUrlKey,
+                'Value "' . $invalidMaxLengthUrlKey . '" for "' . CategoryInterface::URL_KEY . '" is more than '
+                . CategoryUrlKeyValidator::MAX_URL_KEY_LENGTH . ' characters long.',
+            ],
+            [
+                CategoryInterface::URL_KEY,
+                'Category-urlKey-200',
+                'Category with such url "Category-urlKey-200" already exist (Category title: Category-title-200, '
+                    . 'Category id: 200, Parent id: ' . $rootCategoryIdProvider->provide().  ').',
             ],
             [
                 CategoryInterface::TITLE,

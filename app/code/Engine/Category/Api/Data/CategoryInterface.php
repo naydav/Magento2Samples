@@ -93,22 +93,30 @@ interface CategoryInterface extends ExtensibleDataInterface
     public function setPosition($position);
 
     /**
+     * Per store value
+
      * @return string
      */
     public function getTitle();
 
     /**
+     * Per store value
+
      * @param string $title
      * @return void
      */
     public function setTitle($title);
 
     /**
+     * Per store value
+
      * @return string
      */
     public function getDescription();
 
     /**
+     * Per store value
+
      * @param string $description
      * @return void
      */

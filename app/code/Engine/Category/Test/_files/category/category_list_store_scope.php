@@ -2,6 +2,7 @@
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\Data\CategoryInterfaceFactory;
 use Engine\Category\Api\CategoryRepositoryInterface;
+use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -14,11 +15,14 @@ $hydrator = Bootstrap::getObjectManager()->get(HydratorInterface::class);
 $categoryRepository = Bootstrap::getObjectManager()->get(CategoryRepositoryInterface::class);
 /** @var StoreManagerInterface $storeManager */
 $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
+/** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
+$rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
 
 $categoriesData = [
     [
         CategoryInterface::CATEGORY_ID => 100,
-        CategoryInterface::URL_KEY => 'Category-urlKey-3',
+        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+        CategoryInterface::URL_KEY => 'Category-urlKey-100',
         CategoryInterface::IS_ANCHOR => true,
         CategoryInterface::IS_ENABLED => true,
         CategoryInterface::TITLE => 'Category-title-3',
@@ -26,7 +30,8 @@ $categoriesData = [
     ],
     [
         CategoryInterface::CATEGORY_ID => 200,
-        CategoryInterface::URL_KEY => 'Category-urlKey-2',
+        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+        CategoryInterface::URL_KEY => 'Category-urlKey-200',
         CategoryInterface::IS_ANCHOR => true,
         CategoryInterface::IS_ENABLED => true,
         CategoryInterface::TITLE => 'Category-title-2',
@@ -34,7 +39,8 @@ $categoriesData = [
     ],
     [
         CategoryInterface::CATEGORY_ID => 300,
-        CategoryInterface::URL_KEY => 'Category-urlKey-2',
+        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+        CategoryInterface::URL_KEY => 'Category-urlKey-300',
         CategoryInterface::IS_ANCHOR => false,
         CategoryInterface::IS_ENABLED => false,
         CategoryInterface::TITLE => 'Category-title-2',
@@ -42,7 +48,8 @@ $categoriesData = [
     ],
     [
         CategoryInterface::CATEGORY_ID => 400,
-        CategoryInterface::URL_KEY => 'Category-urlKey-1',
+        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+        CategoryInterface::URL_KEY => 'Category-urlKey-400',
         CategoryInterface::IS_ANCHOR => false,
         CategoryInterface::IS_ENABLED => false,
         CategoryInterface::TITLE => 'Category-title-1',

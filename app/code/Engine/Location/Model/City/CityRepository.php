@@ -26,7 +26,7 @@ class CityRepository implements CityRepositoryInterface
     private $cityFactory;
 
     /**
-     * @var CityBaseValidator
+     * @var CityBaseValidatorInterface
      */
     private $cityBaseValidator;
 
@@ -52,7 +52,7 @@ class CityRepository implements CityRepositoryInterface
 
     /**
      * @param CityInterfaceFactory $cityFactory
-     * @param CityBaseValidator $cityBaseValidator
+     * @param CityBaseValidatorInterface $cityBaseValidator
      * @param CityCollectionFactory $cityCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param CitySearchResultInterfaceFactory $citySearchResultFactory
@@ -60,7 +60,7 @@ class CityRepository implements CityRepositoryInterface
      */
     public function __construct(
         CityInterfaceFactory $cityFactory,
-        CityBaseValidator $cityBaseValidator,
+        CityBaseValidatorInterface $cityBaseValidator,
         CityCollectionFactory $cityCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
         CitySearchResultInterfaceFactory $citySearchResultFactory,

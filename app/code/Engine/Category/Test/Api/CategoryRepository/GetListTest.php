@@ -22,17 +22,6 @@ class GetListTest extends WebapiAbstract
     /**#@-*/
 
     /**
-     * @var RootCategoryIdProviderInterface
-     */
-    private $rootCategoryIdProvider;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
-    }
-
-    /**
      * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
      * @magentoApiDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list_global_scope.php
      * @param array $searchCriteria
@@ -64,6 +53,9 @@ class GetListTest extends WebapiAbstract
      */
     public function dataProviderGetListIfValueIsInGlobalScope()
     {
+        /** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
+        $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
+
         return [
             'filteringById' => [
                 [
@@ -152,7 +144,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => CategoryInterface::PARENT_ID,
-                                    'value' => $this->rootCategoryIdProvider->provide(),
+                                    'value' => $rootCategoryIdProvider->provide(),
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -195,7 +187,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => CategoryInterface::PARENT_ID,
-                                    'value' => $this->rootCategoryIdProvider->provide(),
+                                    'value' => $rootCategoryIdProvider->provide(),
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -265,6 +257,9 @@ class GetListTest extends WebapiAbstract
      */
     public function dataProviderGetListIfValueIsPerStore()
     {
+        /** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
+        $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
+
         return [
             'filteringByIdAndPerStoreFieldValue' => [
                 [
@@ -324,7 +319,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => CategoryInterface::PARENT_ID,
-                                    'value' => $this->rootCategoryIdProvider->provide(),
+                                    'value' => $rootCategoryIdProvider->provide(),
                                     'condition_type' => 'eq',
                                 ],
                             ],

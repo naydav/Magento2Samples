@@ -9,7 +9,7 @@ use Magento\Store\Model\StoreManagerInterface;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  */
-class RegionBaseValidator
+class RegionBaseValidator implements RegionBaseValidatorInterface
 {
     /**
      * @var StoreManagerInterface
@@ -26,9 +26,7 @@ class RegionBaseValidator
     }
 
     /**
-     * @param RegionInterface $region
-     * @return void
-     * @throws ValidatorException
+     * {@inheritdoc}
      */
     public function validate(RegionInterface $region)
     {
@@ -36,12 +34,12 @@ class RegionBaseValidator
 
         $errors = [];
         $value = (string)$region->getTitle();
-        if (Store::DEFAULT_STORE_ID === $storeId && '' === $value) {
+        if ((Store::DEFAULT_STORE_ID === $storeId || !$region->getRegionId()) && '' === $value) {
             $errors[] = __('"%1" can not be empty.', RegionInterface::TITLE);
         }
 
         if (count($errors)) {
-            throw new ValidatorException(__('Entity isn\'t valid.'), $errors);
+            throw new ValidatorException($errors);
         }
     }
 }

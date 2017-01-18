@@ -11,6 +11,7 @@
 <h3>Category module</h3>
 * Custom Category module (grid, form, CRUD)
 * Need for extending by other modules
+* Validation example
 
 Pay attention: Category module don't know about CategoryTree module
 
@@ -29,7 +30,7 @@ Pay attention: Category module don't know about CategoryTree module
 * Module base configuration example
 * One to Many relation example (Region <- Cities) in sane module
 * Data Per Store example
-* Controllers example (massStatus, massDelete, inlineEdit etc)
+* Controllers example (massStatus, massDelete, inlineEdit, validate etc)
 * CRUD operations example
 * Repository example
 * Work with Entity Manager
@@ -39,6 +40,7 @@ Pay attention: Category module don't know about CategoryTree module
 * Web Api example
 * Work with DI  (virtual types, preferences)
 * Api tests, Integration tests
+* Validation example (@spi extension point)
 
 <h3>PerStoreDataSupport module</h3>
 * Simple Data Per Store support

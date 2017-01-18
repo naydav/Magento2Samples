@@ -9,6 +9,7 @@ use Magento\Framework\App\ResourceConnection;
 
 /**
  * @author naydav <valeriy.nayda@gmail.com>
+ * @spi
  */
 class ReadHandler implements ExtensionInterface
 {

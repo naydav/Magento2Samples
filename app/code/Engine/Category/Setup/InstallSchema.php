@@ -55,7 +55,7 @@ class InstallSchema implements InstallSchemaInterface
         )->addColumn(
             CategoryInterface::URL_KEY,
             Table::TYPE_TEXT,
-            50,
+            100,
             [],
             'Url key'
         )->addColumn(
@@ -68,7 +68,7 @@ class InstallSchema implements InstallSchemaInterface
             CategoryInterface::IS_ENABLED,
             Table::TYPE_SMALLINT,
             1,
-            ['unsigned' => true, 'nullable' => false, 'default' => 0],
+            ['unsigned' => true, 'nullable' => false, 'default' => 1],
             'Is Enabled'
         )->addIndex(
             $setup->getIdxName(

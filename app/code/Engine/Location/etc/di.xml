@@ -4,9 +4,11 @@
     <preference for="Engine\Location\Api\Data\RegionInterface" type="Engine\Location\Model\Region\Region"/>
     <preference for="Engine\Location\Api\RegionRepositoryInterface" type="Engine\Location\Model\Region\RegionRepository"/>
     <preference for="Engine\Location\Api\Data\RegionSearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Engine\Location\Model\Region\RegionBaseValidatorInterface" type="Engine\Location\Model\Region\RegionBaseValidator"/>
     <preference for="Engine\Location\Api\Data\CityInterface" type="Engine\Location\Model\City\City"/>
     <preference for="Engine\Location\Api\CityRepositoryInterface" type="Engine\Location\Model\City\CityRepository"/>
     <preference for="Engine\Location\Api\Data\CitySearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Engine\Location\Model\City\CityBaseValidatorInterface" type="Engine\Location\Model\City\CityBaseValidator"/>
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>
             <argument name="metadata" xsi:type="array">

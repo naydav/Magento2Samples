@@ -10,12 +10,12 @@ use Magento\Store\Model\StoreManagerInterface;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  */
-class CategoryBaseValidator
+class CategoryBaseValidator implements CategoryBaseValidatorInterface
 {
     /**
-     * Max url key length
+     * @var CategoryUrlKeyValidator
      */
-    const MAX_URL_KEY_LENGTH = 50;
+    private $categoryUrlKeyValidator;
 
     /**
      * @var StoreManagerInterface
@@ -28,29 +28,22 @@ class CategoryBaseValidator
     private $rootCategoryIdProvider;
 
     /**
-     * @var int
-     */
-    private $maxUrlKeyLength;
-
-    /**
+     * @param CategoryUrlKeyValidator $categoryUrlKeyValidator
      * @param StoreManagerInterface $storeManager
      * @param RootCategoryIdProviderInterface $rootCategoryIdProvider
-     * @param int $maxUrlKeyLength
      */
     public function __construct(
+        CategoryUrlKeyValidator $categoryUrlKeyValidator,
         StoreManagerInterface $storeManager,
-        RootCategoryIdProviderInterface $rootCategoryIdProvider,
-        $maxUrlKeyLength = self::MAX_URL_KEY_LENGTH
+        RootCategoryIdProviderInterface $rootCategoryIdProvider
     ) {
+        $this->categoryUrlKeyValidator = $categoryUrlKeyValidator;
         $this->storeManager = $storeManager;
         $this->rootCategoryIdProvider = $rootCategoryIdProvider;
-        $this->maxUrlKeyLength = $maxUrlKeyLength;
     }
 
     /**
-     * @param CategoryInterface $category
-     * @return void
-     * @throws ValidatorException
+     * {@inheritdoc}
      */
     public function validate(CategoryInterface $category)
     {
@@ -59,7 +52,7 @@ class CategoryBaseValidator
         $errors = [];
         $value = $category->getParentId();
 
-        if ($this->rootCategoryIdProvider->provide() === $category->getCategoryId()) {
+        if ($this->rootCategoryIdProvider->provide() === (int)$category->getCategoryId()) {
             if (null !== $value) {
                 $errors[] = __('Root Category can\'t has parent.');
             }
@@ -67,20 +60,19 @@ class CategoryBaseValidator
             $errors[] = __('Category can\'t has empty parent.');
         }
 
-        $value = (string)$category->getUrlKey();
-        if ('' === $value) {
-            $errors[] = __('"%1" can not be empty.', CategoryInterface::URL_KEY );
-        } elseif (strlen($value) > $this->maxUrlKeyLength) {
-            $errors[] = __('"%1" is more than %2 characters long.', CategoryInterface::URL_KEY, $this->maxUrlKeyLength);
+        try {
+            $this->categoryUrlKeyValidator->validate($category);
+        } catch (ValidatorException $e) {
+            $errors = array_merge($errors, $e->getErrors());
         }
 
         $value = (string)$category->getTitle();
-        if (Store::DEFAULT_STORE_ID === $storeId && '' === $value) {
+        if ((Store::DEFAULT_STORE_ID === $storeId || !$category->getCategoryId()) && '' === $value) {
             $errors[] = __('"%1" can not be empty.', CategoryInterface::TITLE);
         }
 
         if (count($errors)) {
-            throw new ValidatorException(__('Entity isn\'t valid.'), $errors);
+            throw new ValidatorException($errors);
         }
     }
 }

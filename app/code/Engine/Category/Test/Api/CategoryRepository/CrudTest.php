@@ -67,41 +67,6 @@ class CrudTest extends WebapiAbstract
         $categoryRepository->deleteById($categoryId);
     }
 
-    public function testCreateWithEmptyParent()
-    {
-        $data = [
-            CategoryInterface::PARENT_ID => null,
-            CategoryInterface::URL_KEY => 'Category-urlKey',
-            CategoryInterface::IS_ANCHOR => true,
-            CategoryInterface::IS_ENABLED => true,
-            CategoryInterface::POSITION => 200,
-            CategoryInterface::TITLE => 'Category-title',
-            CategoryInterface::DESCRIPTION => 'Category-description',
-        ];
-        $serviceInfo = [
-            'rest' => [
-                'resourcePath' => self::RESOURCE_PATH,
-                'httpMethod' => Request::HTTP_METHOD_POST,
-            ],
-            'soap' => [
-                'service' => self::SERVICE_NAME,
-                'operation' => self::SERVICE_NAME . 'Get',
-            ],
-        ];
-
-        $expectedMessage = 'Category can\'t has empty parent.';
-        try {
-            $this->_webApiCall($serviceInfo, ['category' => $data]);
-            $this->fail('Expected throwing exception');
-        } catch (\SoapFault $e) {
-            self::assertContains($expectedMessage, $e->getMessage(), 'SoapFault does not contain expected message.');
-        } catch (\Exception $e) {
-            $errorObj = $this->processRestExceptionResult($e);
-            self::assertEquals($expectedMessage, $errorObj['message']);
-            self::assertEquals(Exception::HTTP_BAD_REQUEST, $e->getCode());
-        }
-    }
-
     /**
      * @magentoApiDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
      * @magentoApiDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
@@ -241,8 +206,8 @@ class CrudTest extends WebapiAbstract
             $this->getCategoryById($categoryId);
             $this->fail('Expected throwing exception');
         } catch (\Exception $e) {
-            $errorObj = $this->processRestExceptionResult($e);
-            self::assertEquals('Category with id "%1" does not exist.', $errorObj['message']);
+            $errorData = $this->processRestExceptionResult($e);
+            self::assertEquals('Category with id "%1" does not exist.', $errorData['message']);
             self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
         }
     }
@@ -271,8 +236,8 @@ class CrudTest extends WebapiAbstract
         } catch (\SoapFault $e) {
             self::assertContains($expectedMessage, $e->getMessage(), 'SoapFault does not contain expected message.');
         } catch (\Exception $e) {
-            $errorObj = $this->processRestExceptionResult($e);
-            self::assertEquals($expectedMessage, $errorObj['message']);
+            $errorData = $this->processRestExceptionResult($e);
+            self::assertEquals($expectedMessage, $errorData['message']);
             self::assertEquals(Exception::HTTP_BAD_REQUEST, $e->getCode());
         }
     }
@@ -339,9 +304,9 @@ class CrudTest extends WebapiAbstract
         } catch (\SoapFault $e) {
             self::assertContains($expectedMessage, $e->getMessage(), 'SoapFault does not contain expected message.');
         } catch (\Exception $e) {
-            $errorObj = $this->processRestExceptionResult($e);
-            self::assertEquals($expectedMessage, $errorObj['message']);
-            self::assertEquals($notExistingId, $errorObj['parameters'][0]);
+            $errorData = $this->processRestExceptionResult($e);
+            self::assertEquals($expectedMessage, $errorData['message']);
+            self::assertEquals($notExistingId, $errorData['parameters'][0]);
             self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
         }
     }

@@ -64,11 +64,15 @@ interface CityInterface extends ExtensibleDataInterface
     public function setPosition($position);
 
     /**
+     * Per store value
+
      * @return string
      */
     public function getTitle();
 
     /**
+     * Per store value
+
      * @param string $title
      * @return void
      */

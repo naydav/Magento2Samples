@@ -48,6 +48,7 @@ class EditTest extends AbstractBackendController
         AssertPageHeader::assert($body, __('Edit City: %1', $title));
         AssertStoreSwitcher::assert($body);
 
+        AssertFormField::assert($body, $this->formName, 'general', CityInterface::REGION_ID, 100);
         AssertFormField::assert($body, $this->formName, 'general', CityInterface::IS_ENABLED, true);
         AssertFormField::assert($body, $this->formName, 'general', CityInterface::POSITION, 100);
         AssertFormField::assert(
@@ -82,6 +83,7 @@ class EditTest extends AbstractBackendController
         AssertPageHeader::assert($body, __('Edit City: %1', $title));
         AssertStoreSwitcher::assert($body);
 
+        AssertFormField::assert($body, $this->formName, 'general', CityInterface::REGION_ID, 100);
         AssertFormField::assert($body, $this->formName, 'general', CityInterface::IS_ENABLED, true);
         AssertFormField::assert($body, $this->formName, 'general', CityInterface::POSITION, 100);
         AssertFormField::assert(

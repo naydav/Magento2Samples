@@ -134,9 +134,18 @@ class CategoryDataProvider extends DataProvider
         $configData = parent::getConfigData();
         $storeId = $this->storeManager->getStore()->getId();
 
-        $configData['submit_url'] = $this->urlBuilder->getUrl('engine_category/category/save', [
-            'store' => $storeId,
-        ]);
+        $configData['submit_url'] = $this->urlBuilder->getUrl(
+            'engine_category/category/save',
+            [
+                'store' => $storeId,
+            ]
+        );
+        $configData['validate_url'] = $this->urlBuilder->getUrl(
+            'engine_category/category/validate',
+            [
+                'store' => $storeId,
+            ]
+        );
         $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
             'store' => $storeId,
         ]);
@@ -203,13 +212,17 @@ class CategoryDataProvider extends DataProvider
     public function getData()
     {
         $data = parent::getData();
-        if ('engine_category_form_data_source' === $this->name && $data['totalRecords'] > 0) {
-            $categoryId = $data['items'][0][CategoryInterface::CATEGORY_ID];
+        if ('engine_category_form_data_source' === $this->name) {
             // It is need for support several fieldsets. For details see \Magento\Ui\Component\Form::getDataSourceData
-            $dataForSingle[$categoryId] = [
-                'general' => $data['items'][0],
-            ];
-            $data = $dataForSingle;
+            if ($data['totalRecords'] > 0) {
+                $categoryId = $data['items'][0][CategoryInterface::CATEGORY_ID];
+                $dataForSingle[$categoryId] = [
+                    'general' => $data['items'][0],
+                ];
+                $data = $dataForSingle;
+            } else {
+                $data = [];
+            }
         }
         return $data;
     }

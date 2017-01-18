@@ -26,7 +26,7 @@ class RegionRepository implements RegionRepositoryInterface
     private $regionFactory;
 
     /**
-     * @var RegionBaseValidator
+     * @var RegionBaseValidatorInterface
      */
     private $regionBaseValidator;
 
@@ -52,7 +52,7 @@ class RegionRepository implements RegionRepositoryInterface
 
     /**
      * @param RegionInterfaceFactory $regionFactory
-     * @param RegionBaseValidator $regionBaseValidator
+     * @param RegionBaseValidatorInterface $regionBaseValidator
      * @param RegionCollectionFactory $regionCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param RegionSearchResultInterfaceFactory $regionSearchResultFactory
@@ -60,7 +60,7 @@ class RegionRepository implements RegionRepositoryInterface
      */
     public function __construct(
         RegionInterfaceFactory $regionFactory,
-        RegionBaseValidator $regionBaseValidator,
+        RegionBaseValidatorInterface $regionBaseValidator,
         RegionCollectionFactory $regionCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
         RegionSearchResultInterfaceFactory $regionSearchResultFactory,

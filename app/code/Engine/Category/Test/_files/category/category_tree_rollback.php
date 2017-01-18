@@ -13,7 +13,7 @@ $searchCriteriaBuilderFactory = Bootstrap::getObjectManager()->get(SearchCriteri
 $searchCriteriaBuilder = $searchCriteriaBuilderFactory->create();
 
 $searchCriteria = $searchCriteriaBuilder
-    ->addFilter(CategoryInterface::CATEGORY_ID, [100, 200, 300, 400], 'in')
+    ->addFilter(CategoryInterface::CATEGORY_ID, [100, 400], 'in') // 200, 300 will be deleted by foreign key
     ->create();
 
 $categories = $categoryRepository->getList($searchCriteria)->getItems();
