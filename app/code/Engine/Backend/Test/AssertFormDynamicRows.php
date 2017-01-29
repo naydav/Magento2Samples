@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Backend\Test;
 
-use Engine\Framework\Test\AssertArrayContains;
+use Engine\Test\AssertArrayContains;
 
 /**
  * "Ad hock" for simple check

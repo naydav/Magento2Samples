@@ -2,9 +2,9 @@
 namespace Engine\CategoryTree\Controller\Adminhtml\Category;
 
 use Engine\CategoryTree\Api\CategoryTreeMovementInterface;
-use Engine\Framework\Tree\CouldNotMoveException;
-use Engine\Framework\Tree\MoveDataBuilderInterface;
-use Engine\Framework\Tree\MoveDataInterface;
+use Engine\Tree\Api\Data\MoveDataInterface;
+use Engine\Tree\Api\MoveDataBuilderInterface;
+use Engine\Tree\Model\CouldNotMoveException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;

@@ -4,14 +4,12 @@ namespace Engine\Location\Ui\DataProvider;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Model\City\CitiesByRegionList;
 use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Model\Region\ResourceModel\RegionCollection;
-use Engine\Location\Model\Region\ResourceModel\RegionCollectionFactory;
+use Engine\Location\Api\RegionRepositoryInterface;
 use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
 use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
@@ -39,14 +37,9 @@ class RegionDataProvider extends DataProvider
     private $dataProviderMetaModifier;
 
     /**
-     * @var RegionCollectionFactory
+     * @var RegionRepositoryInterface
      */
-    private $regionCollectionFactory;
-
-    /**
-     * @var CollectionProcessorInterface
-     */
-    private $collectionProcessor;
+    private $regionRepository;
 
     /**
      * @var DataProviderSearchResultFactoryInterface
@@ -69,8 +62,7 @@ class RegionDataProvider extends DataProvider
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
      * @param DataProviderMetaModifierInterface $dataProviderMetaModifier
-     * @param RegionCollectionFactory $regionCollectionFactory
-     * @param CollectionProcessorInterface $collectionProcessor
+     * @param RegionRepositoryInterface $regionRepository
      * @param DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory
      * @param CitiesByRegionList $citiesByRegionList
      * @param array $meta
@@ -87,8 +79,7 @@ class RegionDataProvider extends DataProvider
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
         DataProviderMetaModifierInterface $dataProviderMetaModifier,
-        RegionCollectionFactory $regionCollectionFactory,
-        CollectionProcessorInterface $collectionProcessor,
+        RegionRepositoryInterface $regionRepository,
         DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory,
         CitiesByRegionList $citiesByRegionList,
         array $meta = [],
@@ -108,8 +99,7 @@ class RegionDataProvider extends DataProvider
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
         $this->dataProviderMetaModifier = $dataProviderMetaModifier;
-        $this->regionCollectionFactory = $regionCollectionFactory;
-        $this->collectionProcessor = $collectionProcessor;
+        $this->regionRepository = $regionRepository;
         $this->dataProviderSearchResultFactory = $dataProviderSearchResultFactory;
         $this->citiesByRegionList = $citiesByRegionList;
     }
@@ -198,14 +188,11 @@ class RegionDataProvider extends DataProvider
     public function getSearchResult()
     {
         $searchCriteria = $this->getSearchCriteria();
-        /** @var RegionCollection $collection */
-        $collection = $this->regionCollectionFactory->create();
-        $collection->addStoreData();
-        $this->collectionProcessor->process($searchCriteria, $collection);
+        $result = $this->regionRepository->getList($searchCriteria);
 
         $searchResult = $this->dataProviderSearchResultFactory->create(
-            $collection->getItems(),
-            $collection->getSize(),
+            $result->getItems(),
+            $result->getTotalCount(),
             $searchCriteria,
             RegionInterface::REGION_ID
         );

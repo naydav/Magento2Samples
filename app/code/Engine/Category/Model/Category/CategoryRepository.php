@@ -27,9 +27,9 @@ class CategoryRepository implements CategoryRepositoryInterface
     private $categoryFactory;
 
     /**
-     * @var CategoryBaseValidatorInterface
+     * @var CategoryValidatorInterface
      */
-    private $categoryBaseValidator;
+    private $categoryValidator;
 
     /**
      * @var CategoryCollectionFactory
@@ -58,7 +58,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     /**
      * @param CategoryInterfaceFactory $categoryFactory
-     * @param CategoryBaseValidatorInterface $categoryBaseValidator
+     * @param CategoryValidatorInterface $categoryValidator
      * @param CategoryCollectionFactory $categoryCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param CategorySearchResultInterfaceFactory $categorySearchResultFactory
@@ -67,7 +67,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function __construct(
         CategoryInterfaceFactory $categoryFactory,
-        CategoryBaseValidatorInterface $categoryBaseValidator,
+        CategoryValidatorInterface $categoryValidator,
         CategoryCollectionFactory $categoryCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
         CategorySearchResultInterfaceFactory $categorySearchResultFactory,
@@ -75,7 +75,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         EntityManager $entityManager
     ) {
         $this->categoryFactory = $categoryFactory;
-        $this->categoryBaseValidator = $categoryBaseValidator;
+        $this->categoryValidator = $categoryValidator;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
         $this->collectionProcessor = $collectionProcessor;
         $this->categorySearchResultFactory = $categorySearchResultFactory;
@@ -122,7 +122,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function save(CategoryInterface $category)
     {
-        $this->categoryBaseValidator->validate($category);
+        $this->categoryValidator->validate($category);
         try {
             $this->entityManager->save($category);
             return $category->getCategoryId();

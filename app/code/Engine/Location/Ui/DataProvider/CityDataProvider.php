@@ -2,14 +2,12 @@
 namespace Engine\Location\Ui\DataProvider;
 
 use Engine\Location\Api\Data\CityInterface;
-use Engine\Location\Model\City\ResourceModel\CityCollection;
-use Engine\Location\Model\City\ResourceModel\CityCollectionFactory;
+use Engine\Location\Api\CityRepositoryInterface;
 use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
 use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
@@ -37,14 +35,9 @@ class CityDataProvider extends DataProvider
     private $dataProviderMetaModifier;
 
     /**
-     * @var CityCollectionFactory
+     * @var CityRepositoryInterface
      */
-    private $cityCollectionFactory;
-
-    /**
-     * @var CollectionProcessorInterface
-     */
-    private $collectionProcessor;
+    private $cityRepository;
 
     /**
      * @var DataProviderSearchResultFactoryInterface
@@ -62,8 +55,7 @@ class CityDataProvider extends DataProvider
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
      * @param DataProviderMetaModifierInterface $dataProviderMetaModifier
-     * @param CityCollectionFactory $cityCollectionFactory
-     * @param CollectionProcessorInterface $collectionProcessor
+     * @param CityRepositoryInterface $cityRepository
      * @param DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory
      * @param array $meta
      * @param array $data
@@ -79,8 +71,7 @@ class CityDataProvider extends DataProvider
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
         DataProviderMetaModifierInterface $dataProviderMetaModifier,
-        CityCollectionFactory $cityCollectionFactory,
-        CollectionProcessorInterface $collectionProcessor,
+        CityRepositoryInterface $cityRepository,
         DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory,
         array $meta = [],
         array $data = []
@@ -99,8 +90,7 @@ class CityDataProvider extends DataProvider
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
         $this->dataProviderMetaModifier = $dataProviderMetaModifier;
-        $this->cityCollectionFactory = $cityCollectionFactory;
-        $this->collectionProcessor = $collectionProcessor;
+        $this->cityRepository = $cityRepository;
         $this->dataProviderSearchResultFactory = $dataProviderSearchResultFactory;
     }
 
@@ -185,14 +175,11 @@ class CityDataProvider extends DataProvider
     public function getSearchResult()
     {
         $searchCriteria = $this->getSearchCriteria();
-        /** @var CityCollection $collection */
-        $collection = $this->cityCollectionFactory->create();
-        $collection->addStoreData();
-        $this->collectionProcessor->process($searchCriteria, $collection);
+        $result = $this->cityRepository->getList($searchCriteria);
 
         $searchResult = $this->dataProviderSearchResultFactory->create(
-            $collection->getItems(),
-            $collection->getSize(),
+            $result->getItems(),
+            $result->getTotalCount(),
             $searchCriteria,
             CityInterface::CITY_ID
         );

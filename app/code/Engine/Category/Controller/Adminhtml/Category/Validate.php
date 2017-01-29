@@ -4,8 +4,8 @@ namespace Engine\Category\Controller\Adminhtml\Category;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\Data\CategoryInterfaceFactory;
 use Engine\Category\Api\CategoryRepositoryInterface;
-use Engine\Category\Model\Category\CategoryBaseValidatorInterface;
-use Engine\Framework\Exception\ValidatorException;
+use Engine\Category\Model\Category\CategoryValidatorInterface;
+use Engine\Validation\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
@@ -38,29 +38,29 @@ class Validate extends Action
     private $hydrator;
 
     /**
-     * @var CategoryBaseValidatorInterface
+     * @var CategoryValidatorInterface
      */
-    private $categoryBaseValidator;
+    private $categoryValidator;
 
     /**
      * @param Context $context
      * @param CategoryInterfaceFactory $categoryFactory
      * @param CategoryRepositoryInterface $categoryRepository
      * @param HydratorInterface $hydrator
-     * @param CategoryBaseValidatorInterface $categoryBaseValidator
+     * @param CategoryValidatorInterface $categoryValidator
      */
     public function __construct(
         Context $context,
         CategoryInterfaceFactory $categoryFactory,
         CategoryRepositoryInterface $categoryRepository,
         HydratorInterface $hydrator,
-        CategoryBaseValidatorInterface $categoryBaseValidator
+        CategoryValidatorInterface $categoryValidator
     ) {
         parent::__construct($context);
         $this->categoryFactory = $categoryFactory;
         $this->categoryRepository = $categoryRepository;
         $this->hydrator = $hydrator;
-        $this->categoryBaseValidator = $categoryBaseValidator;
+        $this->categoryValidator = $categoryValidator;
     }
 
     /**
@@ -85,7 +85,7 @@ class Validate extends Action
             $category = $this->hydrator->hydrate($category, $requestData);
 
             try {
-                $this->categoryBaseValidator->validate($category);
+                $this->categoryValidator->validate($category);
             } catch (ValidatorException $e) {
                 $errorMessages = $e->getErrors();
             }

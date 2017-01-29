@@ -160,14 +160,10 @@
                 </item>
             </argument>
         </column>
-        <column name="parent_id">
+        <column name="parent_id" class="Engine\Category\Ui\Component\Listing\Column\ParentCategory">
             <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Engine\Category\Model\Category\Source\Category</item>
                 <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">select</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
-                    <item name="editor" xsi:type="string">select</item>
-                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="filter" xsi:type="string">textRange</item>
                     <item name="label" xsi:type="string" translate="true">Parent</item>
                     <item name="sortOrder" xsi:type="number">300</item>
                 </item>
@@ -227,21 +223,6 @@
                     <item name="dataType" xsi:type="string">select</item>
                     <item name="label" xsi:type="string" translate="true">Is Enabled</item>
                     <item name="sortOrder" xsi:type="number">700</item>
-                </item>
-            </argument>
-        </column>
-        <column name="position">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">textRange</item>
-                    <item name="editor" xsi:type="array">
-                        <item name="editorType" xsi:type="string">text</item>
-                        <item name="validation" xsi:type="array">
-                            <item name="validate-digits" xsi:type="boolean">true</item>
-                        </item>
-                    </item>
-                    <item name="label" xsi:type="string" translate="true">Position</item>
-                    <item name="sortOrder" xsi:type="number">800</item>
                 </item>
             </argument>
         </column>

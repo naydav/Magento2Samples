@@ -9,7 +9,7 @@ use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * @author naydav <valeriy.nayda@gmail.com>
- * @spi
+ * @api
  */
 class UpdateHandler implements ExtensionInterface
 {

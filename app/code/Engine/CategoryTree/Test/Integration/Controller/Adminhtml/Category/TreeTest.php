@@ -2,8 +2,8 @@
 namespace Engine\CategoryTree\Test\Integration\Controller\Adminhtml\Category;
 
 use Engine\Backend\Test\AssertAddButton;
-use Engine\Framework\Test\AssertPageHeader;
-use Engine\Framework\Test\AssertPageTitle;
+use Engine\Test\AssertPageHeader;
+use Engine\Test\AssertPageTitle;
 use Engine\Backend\Test\AssertStoreSwitcher;
 use Magento\Framework\Message\MessageInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;

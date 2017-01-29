@@ -7,6 +7,7 @@
 * Custom UI Listing column action
 * Custom UI Form button (example of custom redirect after saving)
 * Split Button example
+* Form fields based on Select field js files
 
 <h3>Category module</h3>
 * Custom Category module (grid, form, CRUD)
@@ -15,10 +16,23 @@
 
 Pay attention: Category module don't know about CategoryTree module
 
+<h3>CategoryCharacteristicGroup</h3>
+* Many to Many relation example (between Category and Characteristic Group)
+* Controller plugin example for save processing
+* Data provider plugin example for extendinf from from another module
+* Relation object (with additional data) example
+* Custom Search Criteria example (how to select entities based on relations)
+* Full UI management of Many-to-Many relations (dynamic rows, grid, modal etc)
+
 <h3>CategoryTree module</h3>
 * Example of adding functionality to another module (in this case extends Category module)
 * Add Ui Tree interface for Categories management
 * Add Category Tree Structure (loading and manipulation)
+
+<h3>CharacteristicGroup<h3>
+* Custom Characteristic Group module (grid, form, CRUD)
+* Need for extending by other modules
+* Validation example
 
 <h3>JsTree module</h3>
 * Base jstree support

@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\Region;
 
-use Engine\Framework\Test\AssertArrayContains;
+use Engine\Test\AssertArrayContains;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Magento\Framework\Data\Form\FormKey;

@@ -1,17 +1,15 @@
 <?php
 namespace Engine\Category\Ui\DataProvider;
 
+use Engine\Category\Api\CategoryRepositoryInterface;
+use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
-use Engine\Category\Model\Category\Source\GroupedCategory as GroupedCategorySource;
+use Engine\Category\Model\Category\Source\GroupedCategorySource;
 use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
 use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
-use Engine\Category\Api\Data\CategoryInterface;
-use Engine\Category\Model\Category\ResourceModel\CategoryCollection;
-use Engine\Category\Model\Category\ResourceModel\CategoryCollectionFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
@@ -23,7 +21,6 @@ use Magento\Ui\Component\Form\Field;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  * @api
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CategoryDataProvider extends DataProvider
 {
@@ -43,14 +40,9 @@ class CategoryDataProvider extends DataProvider
     private $dataProviderMetaModifier;
 
     /**
-     * @var CategoryCollectionFactory
+     * @var CategoryRepositoryInterface
      */
-    private $categoryCollectionFactory;
-
-    /**
-     * @var CollectionProcessorInterface
-     */
-    private $collectionProcessor;
+    private $categoryRepository;
 
     /**
      * @var DataProviderSearchResultFactoryInterface
@@ -78,8 +70,7 @@ class CategoryDataProvider extends DataProvider
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
      * @param DataProviderMetaModifierInterface $dataProviderMetaModifier
-     * @param CategoryCollectionFactory $categoryCollectionFactory
-     * @param CollectionProcessorInterface $collectionProcessor
+     * @param CategoryRepositoryInterface $categoryRepository
      * @param DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory
      * @param GroupedCategorySource $groupedCategorySource
      * @param RootCategoryIdProviderInterface $rootCategoryIdProvider
@@ -97,8 +88,7 @@ class CategoryDataProvider extends DataProvider
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
         DataProviderMetaModifierInterface $dataProviderMetaModifier,
-        CategoryCollectionFactory $categoryCollectionFactory,
-        CollectionProcessorInterface $collectionProcessor,
+        CategoryRepositoryInterface $categoryRepository,
         DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory,
         GroupedCategorySource $groupedCategorySource,
         RootCategoryIdProviderInterface $rootCategoryIdProvider,
@@ -119,8 +109,7 @@ class CategoryDataProvider extends DataProvider
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
         $this->dataProviderMetaModifier = $dataProviderMetaModifier;
-        $this->categoryCollectionFactory = $categoryCollectionFactory;
-        $this->collectionProcessor = $collectionProcessor;
+        $this->categoryRepository = $categoryRepository;
         $this->dataProviderSearchResultFactory = $dataProviderSearchResultFactory;
         $this->groupedCategorySource = $groupedCategorySource;
         $this->rootCategoryIdProvider = $rootCategoryIdProvider;
@@ -233,14 +222,11 @@ class CategoryDataProvider extends DataProvider
     public function getSearchResult()
     {
         $searchCriteria = $this->getSearchCriteria();
-        /** @var CategoryCollection $collection */
-        $collection = $this->categoryCollectionFactory->create();
-        $collection->addStoreData();
-        $this->collectionProcessor->process($searchCriteria, $collection);
+        $result = $this->categoryRepository->getList($searchCriteria);
 
         $searchResult = $this->dataProviderSearchResultFactory->create(
-            $collection->getItems(),
-            $collection->getSize(),
+            $result->getItems(),
+            $result->getTotalCount(),
             $searchCriteria,
             CategoryInterface::CATEGORY_ID
         );

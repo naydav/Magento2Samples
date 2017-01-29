@@ -80,7 +80,7 @@ class ValidateTest extends AbstractBackendController
             CityInterface::REGION_ID => 1000,
             CityInterface::IS_ENABLED => false,
             CityInterface::POSITION => 1000,
-            CityInterface::TITLE => 'City-title-inline-edit',
+            CityInterface::TITLE => 'City-title-edit',
         ];
         $data[$field] = $value;
 

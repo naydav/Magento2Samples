@@ -2,8 +2,8 @@
 namespace Engine\Category\Test\Integration\Controller\Adminhtml\Category;
 
 use Engine\Backend\Test\AssertFormField;
-use Engine\Framework\Test\AssertPageHeader;
-use Engine\Framework\Test\AssertPageTitle;
+use Engine\Test\AssertPageHeader;
+use Engine\Test\AssertPageTitle;
 use Engine\Backend\Test\AssertStoreSwitcher;
 use Engine\Category\Api\Data\CategoryInterface;
 use Magento\Framework\Message\MessageInterface;

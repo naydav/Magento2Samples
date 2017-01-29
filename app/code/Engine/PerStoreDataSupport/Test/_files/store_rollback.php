@@ -11,5 +11,9 @@ $registry = Bootstrap::getObjectManager()->get(Registry::class);
 $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', true);
 
-$store = $storeRepository->get('test_store');
-$store->delete();
+try {
+    $store = $storeRepository->get('test_store');
+    $store->delete();
+} catch (\Exception $e) {
+}
+

@@ -1,13 +1,13 @@
 <?php
 namespace Engine\CategoryTree\Test\Integration\Controller\Adminhtml\Category;
 
-use Engine\Framework\Test\AssertArrayEquals;
+use Engine\Test\AssertArrayEquals;
 use Engine\Category\Api\CategoryRepositoryInterface;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Engine\CategoryTree\Api\CategoryTreeLoaderInterface;
 use Engine\CategoryTree\Api\Data\CategoryTreeInterface;
-use Engine\Framework\Tree\MoveDataInterface;
+use Engine\Tree\Api\Data\MoveDataInterface;
 use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\EntityManager\HydratorInterface;

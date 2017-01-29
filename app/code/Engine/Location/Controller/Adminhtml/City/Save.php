@@ -4,7 +4,7 @@ namespace Engine\Location\Controller\Adminhtml\City;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\Data\CityInterfaceFactory;
 use Engine\Location\Api\CityRepositoryInterface;
-use Engine\Framework\Exception\ValidatorException;
+use Engine\Validation\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\EntityManager\HydratorInterface;

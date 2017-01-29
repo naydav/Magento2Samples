@@ -26,9 +26,9 @@ class CityRepository implements CityRepositoryInterface
     private $cityFactory;
 
     /**
-     * @var CityBaseValidatorInterface
+     * @var CityValidatorInterface
      */
-    private $cityBaseValidator;
+    private $cityValidator;
 
     /**
      * @var CityCollectionFactory
@@ -52,7 +52,7 @@ class CityRepository implements CityRepositoryInterface
 
     /**
      * @param CityInterfaceFactory $cityFactory
-     * @param CityBaseValidatorInterface $cityBaseValidator
+     * @param CityValidatorInterface $cityValidator
      * @param CityCollectionFactory $cityCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param CitySearchResultInterfaceFactory $citySearchResultFactory
@@ -60,14 +60,14 @@ class CityRepository implements CityRepositoryInterface
      */
     public function __construct(
         CityInterfaceFactory $cityFactory,
-        CityBaseValidatorInterface $cityBaseValidator,
+        CityValidatorInterface $cityValidator,
         CityCollectionFactory $cityCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
         CitySearchResultInterfaceFactory $citySearchResultFactory,
         EntityManager $entityManager
     ) {
         $this->cityFactory = $cityFactory;
-        $this->cityBaseValidator = $cityBaseValidator;
+        $this->cityValidator = $cityValidator;
         $this->cityCollectionFactory = $cityCollectionFactory;
         $this->collectionProcessor = $collectionProcessor;
         $this->citySearchResultFactory = $citySearchResultFactory;
@@ -110,7 +110,7 @@ class CityRepository implements CityRepositoryInterface
      */
     public function save(CityInterface $city)
     {
-        $this->cityBaseValidator->validate($city);
+        $this->cityValidator->validate($city);
         try {
             $this->entityManager->save($city);
             return $city->getCityId();

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Engine_CharacteristicGroup::characteristic_group"
+             title="Characteristic Groups"
+             translate="title"
+             module="Engine_CharacteristicGroup"
+             sortOrder="200"
+             parent="Engine_Backend::backend"
+             resource="Engine_CharacteristicGroup::characteristic_group"/>
+
+        <add id="Engine_CharacteristicGroup::characteristic_group_index"
+             title="Characteristic Group List"
+             translate="title"
+             module="Engine_CharacteristicGroup"
+             sortOrder="100"
+             parent="Engine_CharacteristicGroup::characteristic_group"
+             action="engine_characteristic_group/characteristicGroup/index"
+             resource="Engine_CharacteristicGroup::characteristic_group_characteristic_group"/>
+
+        <add id="Engine_CharacteristicGroup::characteristic_group_new"
+             title="Add Characteristic Group"
+             translate="title"
+             module="Engine_CharacteristicGroup"
+             sortOrder="200"
+             parent="Engine_CharacteristicGroup::characteristic_group"
+             action="engine_characteristic_group/characteristicGroup/new"
+             resource="Engine_CharacteristicGroup::characteristic_group_characteristic_group"/>
+    </menu>
+</config>

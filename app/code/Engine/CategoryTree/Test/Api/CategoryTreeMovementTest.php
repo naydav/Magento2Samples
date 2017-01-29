@@ -1,12 +1,12 @@
 <?php
 namespace Engine\CategoryTree\Test\Api\CategoryTreeLoader;
 
-use Engine\Framework\Test\AssertArrayEquals;
+use Engine\Test\AssertArrayEquals;
 use Engine\Category\Api\CategoryRepositoryInterface;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Engine\CategoryTree\Api\Data\CategoryTreeInterface;
-use Engine\Framework\Tree\MoveDataInterface;
+use Engine\Tree\Api\Data\MoveDataInterface;
 use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\Helper\Bootstrap;

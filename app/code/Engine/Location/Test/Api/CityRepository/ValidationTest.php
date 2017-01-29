@@ -30,7 +30,7 @@ class ValidationTest extends WebapiAbstract
     {
         $data = [
             CityInterface::IS_ENABLED => false,
-            CityInterface::TITLE => 'City-title-updated',
+            CityInterface::TITLE => 'City-title',
         ];
         $data[$field] = $value;
 

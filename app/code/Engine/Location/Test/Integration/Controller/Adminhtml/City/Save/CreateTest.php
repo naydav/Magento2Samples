@@ -4,7 +4,7 @@ namespace Engine\Location\Test\Integration\Controller\Adminhtml\City\Save;
 use Engine\Location\Controller\Adminhtml\City\Save;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
-use Engine\Framework\Test\AssertArrayContains;
+use Engine\Test\AssertArrayContains;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Data\Form\FormKey;

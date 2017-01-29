@@ -4,7 +4,7 @@ namespace Engine\Category\Controller\Adminhtml\Category;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\Data\CategoryInterfaceFactory;
 use Engine\Category\Api\CategoryRepositoryInterface;
-use Engine\Framework\Exception\ValidatorException;
+use Engine\Validation\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\EntityManager\HydratorInterface;

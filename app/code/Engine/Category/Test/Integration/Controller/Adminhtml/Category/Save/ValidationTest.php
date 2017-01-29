@@ -4,7 +4,7 @@ namespace Engine\Category\Test\Integration\Controller\Adminhtml\Category\Save;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Engine\Category\Controller\Adminhtml\Category\Save;
 use Engine\Category\Api\Data\CategoryInterface;
-use Engine\Category\Model\Category\CategoryUrlKeyValidator;
+use Engine\Category\Model\Category\Validator\UrlKeyValidator;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Message\MessageInterface;
 use Magento\Framework\Registry;
@@ -126,7 +126,7 @@ class ValidationTest extends AbstractBackendController
     {
         /** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
         $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
-        $invalidMaxLengthUrlKey = str_repeat(1, CategoryUrlKeyValidator::MAX_URL_KEY_LENGTH + 1);
+        $invalidMaxLengthUrlKey = str_repeat(1, UrlKeyValidator::MAX_URL_KEY_LENGTH + 1);
         return [
             [
                 CategoryInterface::PARENT_ID,
@@ -142,7 +142,7 @@ class ValidationTest extends AbstractBackendController
                 CategoryInterface::URL_KEY,
                 $invalidMaxLengthUrlKey,
                 'Value &quot;' . $invalidMaxLengthUrlKey . '&quot; for &quot;' . CategoryInterface::URL_KEY
-                . '&quot; is more than ' . CategoryUrlKeyValidator::MAX_URL_KEY_LENGTH . ' characters long.',
+                . '&quot; is more than ' . UrlKeyValidator::MAX_URL_KEY_LENGTH . ' characters long.',
             ],
             [
                 CategoryInterface::URL_KEY,

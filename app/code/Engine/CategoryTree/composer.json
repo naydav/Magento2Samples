@@ -2,23 +2,24 @@
     "name": "engine/category-tree",
     "description": "N/A",
     "type": "magento2-module",
-    "version": "2.0.0",
+    "version": "1.0.0",
     "license": "MIT",
     "require": {
-        "php": "~5.5.22|~5.6.0|~7.0.0",
+        "php": "~5.5.22|~5.6.0|~7.0.0~|7.1.1",
         "magento/backend": "~2.2.0",
         "magento/ui": "~2.2.0",
         "magento/framework": "~2.2.0",
         "engine/category": "100.1.*",
         "engine/js-tree": "100.1.*",
-        "engine/framework": "100.1.*"
+        "engine/test": "100.1.*",
+        "engine/tree": "100.1.*"
     },
     "autoload": {
-      "files": [
-        "registration.php"
-      ],
-      "psr-4": {
-        "Engine\\Category\\": ""
-      }
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Engine\\Category\\": ""
+        }
     }
 }

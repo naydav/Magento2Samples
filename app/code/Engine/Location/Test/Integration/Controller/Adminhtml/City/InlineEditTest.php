@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
-use Engine\Framework\Test\AssertArrayContains;
+use Engine\Test\AssertArrayContains;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
 use Magento\Framework\Data\Form\FormKey;

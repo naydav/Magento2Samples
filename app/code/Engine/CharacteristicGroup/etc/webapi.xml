@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- Characteristic Group -->
+    <route url="/V1/engine-characteristic-group/characteristic-groups" method="GET">
+        <service class="Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Engine_CharacteristicGroup::characteristic_group_characteristic_group"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-characteristic-group/characteristic-groups/:characteristicGroupId" method="GET">
+        <service class="Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface" method="get"/>
+        <resources>
+            <resource ref="Engine_CharacteristicGroup::characteristic_group_characteristic_group"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-characteristic-group/characteristic-groups" method="POST">
+        <service class="Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Engine_CharacteristicGroup::characteristic_group_characteristic_group"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-characteristic-group/characteristic-groups/:characteristicGroupId" method="PUT">
+        <service class="Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Engine_CharacteristicGroup::characteristic_group_characteristic_group"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-characteristic-group/characteristic-groups/:characteristicGroupId" method="DELETE">
+        <service class="Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="Engine_CharacteristicGroup::characteristic_group_characteristic_group"/>
+        </resources>
+    </route>
+</routes>

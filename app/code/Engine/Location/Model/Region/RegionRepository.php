@@ -26,9 +26,9 @@ class RegionRepository implements RegionRepositoryInterface
     private $regionFactory;
 
     /**
-     * @var RegionBaseValidatorInterface
+     * @var RegionValidatorInterface
      */
-    private $regionBaseValidator;
+    private $regionValidator;
 
     /**
      * @var RegionCollectionFactory
@@ -52,7 +52,7 @@ class RegionRepository implements RegionRepositoryInterface
 
     /**
      * @param RegionInterfaceFactory $regionFactory
-     * @param RegionBaseValidatorInterface $regionBaseValidator
+     * @param RegionValidatorInterface $regionValidator
      * @param RegionCollectionFactory $regionCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param RegionSearchResultInterfaceFactory $regionSearchResultFactory
@@ -60,14 +60,14 @@ class RegionRepository implements RegionRepositoryInterface
      */
     public function __construct(
         RegionInterfaceFactory $regionFactory,
-        RegionBaseValidatorInterface $regionBaseValidator,
+        RegionValidatorInterface $regionValidator,
         RegionCollectionFactory $regionCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
         RegionSearchResultInterfaceFactory $regionSearchResultFactory,
         EntityManager $entityManager
     ) {
         $this->regionFactory = $regionFactory;
-        $this->regionBaseValidator = $regionBaseValidator;
+        $this->regionValidator = $regionValidator;
         $this->regionCollectionFactory = $regionCollectionFactory;
         $this->collectionProcessor = $collectionProcessor;
         $this->regionSearchResultFactory = $regionSearchResultFactory;
@@ -110,7 +110,7 @@ class RegionRepository implements RegionRepositoryInterface
      */
     public function save(RegionInterface $region)
     {
-        $this->regionBaseValidator->validate($region);
+        $this->regionValidator->validate($region);
         try {
             $this->entityManager->save($region);
             return $region->getRegionId();

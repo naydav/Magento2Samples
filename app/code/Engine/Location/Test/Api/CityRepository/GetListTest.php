@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Location\Test\Api\CityRepository;
 
-use Engine\Framework\Test\AssertArrayContains;
+use Engine\Test\AssertArrayContains;
 use Engine\Location\Api\Data\CityInterface;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Webapi\Rest\Request;

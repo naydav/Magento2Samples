@@ -4,8 +4,8 @@ namespace Engine\Location\Controller\Adminhtml\City;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\Data\CityInterfaceFactory;
 use Engine\Location\Api\CityRepositoryInterface;
-use Engine\Location\Model\City\CityBaseValidatorInterface;
-use Engine\Framework\Exception\ValidatorException;
+use Engine\Location\Model\City\CityValidatorInterface;
+use Engine\Validation\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
@@ -38,29 +38,29 @@ class Validate extends Action
     private $hydrator;
 
     /**
-     * @var CityBaseValidatorInterface
+     * @var CityValidatorInterface
      */
-    private $cityBaseValidator;
+    private $cityValidator;
 
     /**
      * @param Context $context
      * @param CityInterfaceFactory $cityFactory
      * @param CityRepositoryInterface $cityRepository
      * @param HydratorInterface $hydrator
-     * @param CityBaseValidatorInterface $cityBaseValidator
+     * @param CityValidatorInterface $cityValidator
      */
     public function __construct(
         Context $context,
         CityInterfaceFactory $cityFactory,
         CityRepositoryInterface $cityRepository,
         HydratorInterface $hydrator,
-        CityBaseValidatorInterface $cityBaseValidator
+        CityValidatorInterface $cityValidator
     ) {
         parent::__construct($context);
         $this->cityFactory = $cityFactory;
         $this->cityRepository = $cityRepository;
         $this->hydrator = $hydrator;
-        $this->cityBaseValidator = $cityBaseValidator;
+        $this->cityValidator = $cityValidator;
     }
 
     /**
@@ -85,7 +85,7 @@ class Validate extends Action
             $city = $this->hydrator->hydrate($city, $requestData);
 
             try {
-                $this->cityBaseValidator->validate($city);
+                $this->cityValidator->validate($city);
             } catch (ValidatorException $e) {
                 $errorMessages = $e->getErrors();
             }

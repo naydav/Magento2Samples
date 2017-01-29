@@ -12,10 +12,10 @@ interface DataProviderSearchResultFactoryInterface
 {
     /**
      * @param array $items
-     * @param int $size
+     * @param int $totalCount
      * @param SearchCriteriaInterface SearchCriteriaInterface $searchCriteria
      * @param string $idFieldName
      * @return SearchResultInterface
      */
-    public function create(array $items, $size, SearchCriteriaInterface $searchCriteria, $idFieldName);
+    public function create(array $items, $totalCount, SearchCriteriaInterface $searchCriteria, $idFieldName);
 }

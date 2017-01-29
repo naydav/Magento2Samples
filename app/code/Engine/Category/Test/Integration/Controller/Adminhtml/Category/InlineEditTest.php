@@ -2,8 +2,8 @@
 namespace Engine\Category\Test\Integration\Controller\Adminhtml\Category;
 
 use Engine\Category\Api\RootCategoryIdProviderInterface;
-use Engine\Category\Model\Category\CategoryUrlKeyValidator;
-use Engine\Framework\Test\AssertArrayContains;
+use Engine\Category\Model\Category\Validator\UrlKeyValidator;
+use Engine\Test\AssertArrayContains;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\CategoryRepositoryInterface;
 use Magento\Framework\Data\Form\FormKey;
@@ -311,7 +311,7 @@ class InlineEditTest extends AbstractBackendController
     {
         /** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
         $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
-        $invalidMaxLengthUrlKey = str_repeat(1, CategoryUrlKeyValidator::MAX_URL_KEY_LENGTH + 1);
+        $invalidMaxLengthUrlKey = str_repeat(1, UrlKeyValidator::MAX_URL_KEY_LENGTH + 1);
         return [
             [
                 CategoryInterface::URL_KEY,
@@ -322,7 +322,7 @@ class InlineEditTest extends AbstractBackendController
                 CategoryInterface::URL_KEY,
                 $invalidMaxLengthUrlKey,
                 'Value "' . $invalidMaxLengthUrlKey . '" for "' . CategoryInterface::URL_KEY . '" is more than '
-                . CategoryUrlKeyValidator::MAX_URL_KEY_LENGTH . ' characters long.',
+                . UrlKeyValidator::MAX_URL_KEY_LENGTH . ' characters long.',
             ],
             [
                 CategoryInterface::URL_KEY,

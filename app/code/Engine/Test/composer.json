@@ -1,0 +1,22 @@
+{
+    "name": "engine/test",
+    "description": "N/A",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "MIT",
+    "require": {
+        "php": "~5.5.22|~5.6.0|~7.0.0~|7.1.1",
+        "magento/framework": "2.2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.1.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Engine\\Test\\": ""
+        }
+    }
+}

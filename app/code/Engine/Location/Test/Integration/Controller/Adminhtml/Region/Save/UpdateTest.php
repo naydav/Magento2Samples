@@ -4,7 +4,7 @@ namespace Engine\Location\Test\Integration\Controller\Adminhtml\Region;
 use Engine\Location\Controller\Adminhtml\Region\Save;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\Framework\Test\AssertArrayContains;
+use Engine\Test\AssertArrayContains;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Message\MessageInterface;

@@ -2,8 +2,8 @@
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
 use Engine\Backend\Test\AssertFormField;
-use Engine\Framework\Test\AssertPageHeader;
-use Engine\Framework\Test\AssertPageTitle;
+use Engine\Test\AssertPageHeader;
+use Engine\Test\AssertPageTitle;
 use Engine\Backend\Test\AssertStoreSwitcher;
 use Engine\Location\Api\Data\CityInterface;
 use Magento\Framework\Message\MessageInterface;

@@ -78,7 +78,7 @@ class ValidateTest extends AbstractBackendController
             RegionInterface::REGION_ID => $regionId,
             RegionInterface::IS_ENABLED => false,
             RegionInterface::POSITION => 1000,
-            RegionInterface::TITLE => 'Region-title-inline-edit',
+            RegionInterface::TITLE => 'Region-title-edit',
         ];
         $data[$field] = $value;
 

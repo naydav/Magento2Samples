@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface" type="Engine\CharacteristicGroup\Model\CharacteristicGroup\CharacteristicGroup"/>
+    <preference for="Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface" type="Engine\CharacteristicGroup\Model\CharacteristicGroup\CharacteristicGroupRepository"/>
+    <preference for="Engine\CharacteristicGroup\Api\Data\CharacteristicGroupSearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Engine\CharacteristicGroup\Model\CharacteristicGroup\CharacteristicGroupValidatorInterface" type="Engine\CharacteristicGroup\Model\CharacteristicGroup\Validator\ValidatorChain"/>
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">engine_characteristic_group</item>
+                    <item name="identifierField" xsi:type="string">characteristic_group_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Per store data configuration -->
+    <virtualType name="Engine\CharacteristicGroup\Model\CharacteristicGroup\EntityManager\StoreData\ReadHandler"
+                 type="Engine\PerStoreDataSupport\Model\EntityManager\ReadHandler">
+        <arguments>
+            <argument name="interfaceName" xsi:type="string">Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\CharacteristicGroup\Model\CharacteristicGroup\EntityManager\StoreData\CreateHandler"
+                 type="Engine\PerStoreDataSupport\Model\EntityManager\CreateHandler">
+        <arguments>
+            <argument name="interfaceName" xsi:type="string">Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\CharacteristicGroup\Model\CharacteristicGroup\EntityManager\StoreData\UpdateHandler"
+                 type="Engine\PerStoreDataSupport\Model\EntityManager\UpdateHandler">
+        <arguments>
+            <argument name="interfaceName" xsi:type="string">Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+        <arguments>
+            <argument name="extensionActions" xsi:type="array">
+                <item name="Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="store_data_read" xsi:type="string">Engine\CharacteristicGroup\Model\CharacteristicGroup\EntityManager\StoreData\ReadHandler</item>
+                    </item>
+                    <item name="create" xsi:type="array">
+                        <item name="store_data_create" xsi:type="string">Engine\CharacteristicGroup\Model\CharacteristicGroup\EntityManager\StoreData\CreateHandler</item>
+                    </item>
+                    <item name="update" xsi:type="array">
+                        <item name="store_data_update" xsi:type="string">Engine\CharacteristicGroup\Model\CharacteristicGroup\EntityManager\StoreData\UpdateHandler</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Engine\PerStoreDataSupport\Model\StoreDataConfigurationProvider">
+        <arguments>
+            <argument name="configuration" xsi:type="array">
+                <item name="Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface" xsi:type="array">
+                    <item name="fields" xsi:type="array">
+                        <item name="0" xsi:type="string">title</item>
+                        <item name="1" xsi:type="string">description</item>
+                    </item>
+                    <item name="storeDataTable" xsi:type="string">engine_characteristic_group_store</item>
+                    <item name="referenceField" xsi:type="string">characteristic_group_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Buttons configurations -->
+    <virtualType name="Engine\CharacteristicGroup\Ui\Component\Control\CharacteristicGroup\DeleteButton" type="Engine\Backend\Ui\Component\Control\DeleteButton">
+        <arguments>
+            <argument name="idFieldName" xsi:type="string">characteristic_group_id</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\CharacteristicGroup\Ui\Component\Control\CharacteristicGroup\SaveSplitButton" type="Engine\Backend\Ui\Component\Control\SaveSplitButton">
+        <arguments>
+            <argument name="saveTarget" xsi:type="string">engine_characteristic_group_form.engine_characteristic_group_form</argument>
+        </arguments>
+    </virtualType>
+    <!-- Collection processor: extension point for possibility to add custom collection filter processing  -->
+    <virtualType name="Engine\CharacteristicGroup\Model\CharacteristicGroup\Api\SearchCriteria\CollectionProcessor\CharacteristicGroupFilterProcessor"
+                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor"/>
+    <virtualType name="Engine\CharacteristicGroup\Model\CharacteristicGroup\Api\SearchCriteria\CharacteristicGroupCollectionProcessor"
+                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Engine\CharacteristicGroup\Model\CharacteristicGroup\Api\SearchCriteria\CollectionProcessor\CharacteristicGroupFilterProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Engine\CharacteristicGroup\Model\CharacteristicGroup\CharacteristicGroupRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Engine\CharacteristicGroup\Model\CharacteristicGroup\Api\SearchCriteria\CharacteristicGroupCollectionProcessor</argument>
+        </arguments>
+    </type>
+    <!-- Base validation -->
+    <type name="Engine\CharacteristicGroup\Model\CharacteristicGroup\Validator\ValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="title" xsi:type="object">Engine\CharacteristicGroup\Model\CharacteristicGroup\Validator\TitleValidator</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

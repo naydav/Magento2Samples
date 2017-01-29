@@ -28,7 +28,7 @@ interface CategoryRepositoryInterface
      * @param \Engine\Category\Api\Data\CategoryInterface $category
      * @return int
      * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Engine\Framework\Exception\ValidatorException
+     * @throws \Engine\Validation\Exception\ValidatorException
      */
     public function save(\Engine\Category\Api\Data\CategoryInterface $category);
 

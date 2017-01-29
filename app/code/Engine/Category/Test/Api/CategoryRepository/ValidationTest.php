@@ -3,7 +3,7 @@ namespace Engine\Category\Test\Api\CategoryRepository;
 
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
-use Engine\Category\Model\Category\CategoryUrlKeyValidator;
+use Engine\Category\Model\Category\Validator\UrlKeyValidator;
 use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -135,7 +135,7 @@ class ValidationTest extends WebapiAbstract
     {
         /** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
         $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
-        $invalidMaxLengthUrlKey = str_repeat(1, CategoryUrlKeyValidator::MAX_URL_KEY_LENGTH + 1);
+        $invalidMaxLengthUrlKey = str_repeat(1, UrlKeyValidator::MAX_URL_KEY_LENGTH + 1);
         return [
             [
                 CategoryInterface::PARENT_ID,
@@ -162,7 +162,7 @@ class ValidationTest extends WebapiAbstract
                     'parameters' => [
                         $invalidMaxLengthUrlKey,
                         CategoryInterface::URL_KEY,
-                        CategoryUrlKeyValidator::MAX_URL_KEY_LENGTH,
+                        UrlKeyValidator::MAX_URL_KEY_LENGTH,
                     ],
                 ],
             ],

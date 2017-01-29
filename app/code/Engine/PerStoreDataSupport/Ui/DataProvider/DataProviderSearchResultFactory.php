@@ -54,7 +54,7 @@ class DataProviderSearchResultFactory implements DataProviderSearchResultFactory
     /**
      * {@inheritdoc}
      */
-    public function create(array $items, $size, SearchCriteriaInterface $searchCriteria, $idFieldName)
+    public function create(array $items, $totalCount, SearchCriteriaInterface $searchCriteria, $idFieldName)
     {
         $documents = [];
         foreach ($items as $item) {
@@ -70,7 +70,7 @@ class DataProviderSearchResultFactory implements DataProviderSearchResultFactory
 
         $searchResult = $this->searchResultFactory->create();
         $searchResult->setItems($documents);
-        $searchResult->setTotalCount($size);
+        $searchResult->setTotalCount($totalCount);
         $searchResult->setSearchCriteria($searchCriteria);
         return $searchResult;
     }

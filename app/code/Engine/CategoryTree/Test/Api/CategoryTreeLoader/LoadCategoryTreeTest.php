@@ -1,7 +1,7 @@
 <?php
 namespace Engine\CategoryTree\Test\Api\CategoryTreeLoader;
 
-use Engine\Framework\Test\AssertArrayEquals;
+use Engine\Test\AssertArrayEquals;
 use Engine\Category\Api\CategoryRepositoryInterface;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;

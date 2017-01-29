@@ -9,7 +9,7 @@ use Magento\Store\Model\Store;
 
 /**
  * @author naydav <valeriy.nayda@gmail.com>
- * @spi
+ * @api
  */
 class CreateHandler implements ExtensionInterface
 {

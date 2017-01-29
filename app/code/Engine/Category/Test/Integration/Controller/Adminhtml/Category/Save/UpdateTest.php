@@ -4,7 +4,7 @@ namespace Engine\Category\Test\Integration\Controller\Adminhtml\Category;
 use Engine\Category\Controller\Adminhtml\Category\Save;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\CategoryRepositoryInterface;
-use Engine\Framework\Test\AssertArrayContains;
+use Engine\Test\AssertArrayContains;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Message\MessageInterface;

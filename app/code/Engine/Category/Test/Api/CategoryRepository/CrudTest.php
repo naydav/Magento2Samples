@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Category\Test\Api\CategoryRepository;
 
-use Engine\Framework\Test\AssertArrayContains;
+use Engine\Test\AssertArrayContains;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\CategoryRepositoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;

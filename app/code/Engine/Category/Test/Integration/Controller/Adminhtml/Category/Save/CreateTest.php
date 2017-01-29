@@ -5,7 +5,7 @@ use Engine\Category\Controller\Adminhtml\Category\Save;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\CategoryRepositoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
-use Engine\Framework\Test\AssertArrayContains;
+use Engine\Test\AssertArrayContains;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Data\Form\FormKey;

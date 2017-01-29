@@ -30,7 +30,7 @@ class ValidationTest extends WebapiAbstract
     {
         $data = [
             RegionInterface::IS_ENABLED => false,
-            RegionInterface::TITLE => 'Region-title-updated',
+            RegionInterface::TITLE => 'Region-title',
         ];
         $data[$field] = $value;
 

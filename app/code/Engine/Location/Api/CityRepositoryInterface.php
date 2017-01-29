@@ -26,7 +26,7 @@ interface CityRepositoryInterface
      * @param \Engine\Location\Api\Data\CityInterface $city
      * @return int
      * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Engine\Framework\Exception\ValidatorException
+     * @throws \Engine\Validation\Exception\ValidatorException
      */
     public function save(\Engine\Location\Api\Data\CityInterface $city);
 

@@ -4,8 +4,8 @@ namespace Engine\Location\Controller\Adminhtml\Region;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\Data\RegionInterfaceFactory;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\Location\Model\Region\RegionBaseValidatorInterface;
-use Engine\Framework\Exception\ValidatorException;
+use Engine\Location\Model\Region\RegionValidatorInterface;
+use Engine\Validation\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
@@ -38,29 +38,29 @@ class Validate extends Action
     private $hydrator;
 
     /**
-     * @var RegionBaseValidatorInterface
+     * @var RegionValidatorInterface
      */
-    private $regionBaseValidator;
+    private $regionValidator;
 
     /**
      * @param Context $context
      * @param RegionInterfaceFactory $regionFactory
      * @param RegionRepositoryInterface $regionRepository
      * @param HydratorInterface $hydrator
-     * @param RegionBaseValidatorInterface $regionBaseValidator
+     * @param RegionValidatorInterface $regionValidator
      */
     public function __construct(
         Context $context,
         RegionInterfaceFactory $regionFactory,
         RegionRepositoryInterface $regionRepository,
         HydratorInterface $hydrator,
-        RegionBaseValidatorInterface $regionBaseValidator
+        RegionValidatorInterface $regionValidator
     ) {
         parent::__construct($context);
         $this->regionFactory = $regionFactory;
         $this->regionRepository = $regionRepository;
         $this->hydrator = $hydrator;
-        $this->regionBaseValidator = $regionBaseValidator;
+        $this->regionValidator = $regionValidator;
     }
 
     /**
@@ -85,7 +85,7 @@ class Validate extends Action
             $region = $this->hydrator->hydrate($region, $requestData);
 
             try {
-                $this->regionBaseValidator->validate($region);
+                $this->regionValidator->validate($region);
             } catch (ValidatorException $e) {
                 $errorMessages = $e->getErrors();
             }

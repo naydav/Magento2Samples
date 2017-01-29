@@ -5,7 +5,7 @@ use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\Data\RegionInterfaceFactory;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Engine\Location\Model\RegionCityRelationProcessor;
-use Engine\Framework\Exception\ValidatorException;
+use Engine\Validation\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\EntityManager\HydratorInterface;

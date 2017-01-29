@@ -4,7 +4,7 @@
     <preference for="Engine\Category\Api\Data\CategoryInterface" type="Engine\Category\Model\Category\Category"/>
     <preference for="Engine\Category\Api\CategoryRepositoryInterface" type="Engine\Category\Model\Category\CategoryRepository"/>
     <preference for="Engine\Category\Api\Data\CategorySearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
-    <preference for="Engine\Category\Model\Category\CategoryBaseValidatorInterface" type="Engine\Category\Model\Category\CategoryBaseValidator"/>
+    <preference for="Engine\Category\Model\Category\CategoryValidatorInterface" type="Engine\Category\Model\Category\Validator\ValidatorChain"/>
     <preference for="Engine\Category\Api\RootCategoryIdProviderInterface" type="Engine\Category\Model\Category\RootCategoryIdProvider"/>
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>
@@ -91,6 +91,16 @@
     <type name="Engine\Category\Model\Category\CategoryRepository">
         <arguments>
             <argument name="collectionProcessor" xsi:type="object">Engine\Category\Model\Category\Api\SearchCriteria\CategoryCollectionProcessor</argument>
+        </arguments>
+    </type>
+    <!-- Base validation -->
+    <type name="Engine\Category\Model\Category\Validator\ValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="parent" xsi:type="object">Engine\Category\Model\Category\Validator\ParentValidator</item>
+                <item name="title" xsi:type="object">Engine\Category\Model\Category\Validator\TitleValidator</item>
+                <item name="url_key" xsi:type="object">Engine\Category\Model\Category\Validator\UrlKeyValidator</item>
+            </argument>
         </arguments>
     </type>
 </config>
