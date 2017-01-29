@@ -16,7 +16,7 @@
 
 Pay attention: Category module don't know about CategoryTree module
 
-<h3>CategoryCharacteristicGroup</h3>
+<h3>CategoryCharacteristicGroup module</h3>
 * Many to Many relation example (between Category and Characteristic Group)
 * Controller plugin example for save processing
 * Data provider plugin example for extendinf from from another module
@@ -29,7 +29,7 @@ Pay attention: Category module don't know about CategoryTree module
 * Add Ui Tree interface for Categories management
 * Add Category Tree Structure (loading and manipulation)
 
-<h3>CharacteristicGroup</h3>
+<h3>CharacteristicGroup module</h3>
 * Custom Characteristic Group module (grid, form, CRUD)
 * Need for extending by other modules
 * Validation example
@@ -42,7 +42,7 @@ Pay attention: Category module don't know about CategoryTree module
 
 <h3>Location module</h3>
 * Module base configuration example
-* One to Many relation example (Region <- Cities) in sane module
+* One to Many relation example (Region <- Cities) in same module
 * Data Per Store example
 * Controllers example (massStatus, massDelete, inlineEdit, validate etc)
 * CRUD operations example
