@@ -29,7 +29,7 @@ Pay attention: Category module don't know about CategoryTree module
 * Add Ui Tree interface for Categories management
 * Add Category Tree Structure (loading and manipulation)
 
-<h3>CharacteristicGroup<h3>
+<h3>CharacteristicGroup</h3>
 * Custom Characteristic Group module (grid, form, CRUD)
 * Need for extending by other modules
 * Validation example
@@ -59,8 +59,6 @@ Pay attention: Category module don't know about CategoryTree module
 <h3>PerStoreDataSupport module</h3>
 * Simple Data Per Store support
 * Help module for managing data per store
-
-<h2>Example of Adding new php library into Magento2</h2>
 
 <h2>Related Links</h2>
 * <a href="http://devdocs.magento.com/">Magento 2 Dev Docs</a>
