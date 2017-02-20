@@ -56,7 +56,7 @@ class ProcessRelations
         $relationsRequestData = $this->request->getParam('categories', []);
         if ($characteristicGroupId && $relationsRequestData) {
             try {
-                $this->characteristicGroupRelationsProcessor->processRelations(
+                $this->characteristicGroupRelationsProcessor->process(
                     $characteristicGroupId,
                     $relationsRequestData['assigned_categories']
                 );

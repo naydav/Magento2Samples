@@ -4,7 +4,7 @@ namespace Engine\CategoryCharacteristicGroup\Model\CategoryCharacteristicGroupRe
 use Engine\CategoryCharacteristicGroup\Api\Data\RelationInterface;
 use Engine\CategoryCharacteristicGroup\Api\Data\RelationInterfaceFactory;
 use Engine\CategoryCharacteristicGroup\Api\Data\RelationSearchResultInterface;
-use Engine\CategoryCharacteristicGroup\Api\Data\RelationSearchResultInterfaceFactory;;
+use Engine\CategoryCharacteristicGroup\Api\Data\RelationSearchResultInterfaceFactory;
 use Engine\CategoryCharacteristicGroup\Api\RelationRepositoryInterface;
 use Engine\CategoryCharacteristicGroup\Model\CategoryCharacteristicGroupRelation\ResourceModel\RelationCollection;
 use Engine\CategoryCharacteristicGroup\Model\CategoryCharacteristicGroupRelation\ResourceModel\RelationCollectionFactory;
@@ -136,7 +136,7 @@ class RelationRepository implements RelationRepositoryInterface
         $relation = $this->relationFactory->create();
 
         $this->entityManager->load($relation, $relationId);
-        if (!$relation->getCategoryId()) {
+        if (!$relation->getRelationId()) {
             throw new NoSuchEntityException(
                 __('Relation with id "%1" does not exist.', $relationId)
             );

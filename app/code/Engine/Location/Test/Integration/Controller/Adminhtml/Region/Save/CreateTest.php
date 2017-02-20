@@ -96,7 +96,7 @@ class CreateTest extends AbstractBackendController
         $this->assertRedirect($this->stringContains($redirect));
 
         self::assertEquals(
-            $region->getregionId(),
+            $region->getRegionId(),
             $this->registry->registry(Save::REGISTRY_REGION_ID_KEY)
         );
     }

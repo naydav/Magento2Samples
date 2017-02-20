@@ -60,7 +60,7 @@ class CharacteristicGroupRelationsManagementTest extends AbstractBackendControll
     /**
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list_global_scope.php
      */
-    public function testCreateWithCategoryAssignment()
+    public function testCreateWithCategoriesAssignment()
     {
         $data = [
             CharacteristicGroupInterface::TITLE => 'characteristic-group-title',
@@ -113,7 +113,7 @@ class CharacteristicGroupRelationsManagementTest extends AbstractBackendControll
      * @magentoDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_100.php
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list_global_scope.php
      */
-    public function testUpdateWithCategoryAssignment()
+    public function testUpdateWithCategoriesAssignment()
     {
         $characteristicGroupId = 100;
         $data = [
@@ -165,7 +165,7 @@ class CharacteristicGroupRelationsManagementTest extends AbstractBackendControll
      *
      * @magentoDataFixture ../../../../app/code/Engine/CategoryCharacteristicGroup/Test/_files/category_group_structure.php
      */
-    public function testUnassignCategoryFromGroup()
+    public function testUnassignCategoryFromCharacteristicGroup()
     {
         $characteristicGroupId = 200;
         $data = [
@@ -211,7 +211,7 @@ class CharacteristicGroupRelationsManagementTest extends AbstractBackendControll
     /**
      * @magentoDataFixture ../../../../app/code/Engine/CategoryCharacteristicGroup/Test/_files/category_group_structure.php
      */
-    public function testUnassignAllCategoriesFromGroup()
+    public function testUnassignAllCategoriesFromCharacteristicGroup()
     {
         $characteristicGroupId = 200;
         $data = [

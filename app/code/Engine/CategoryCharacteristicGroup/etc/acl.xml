@@ -5,8 +5,7 @@
         <resources>
             <resource id="Magento_Backend::admin">
                 <resource id="Engine_Backend::backend">
-                    <resource id="Engine_CharacteristicCategory::characteristic_category"
-                              title="Category Characteristic Group Management" translate="title" sortOrder="300"/>
+                    <resource id="Engine_CategoryCharacteristicGroup::relation" title="Category to Characteristic Group Management" translate="title" sortOrder="100"/>
                 </resource>
             </resource>
         </resources>

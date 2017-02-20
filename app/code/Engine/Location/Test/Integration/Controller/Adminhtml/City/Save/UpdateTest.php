@@ -74,7 +74,7 @@ class UpdateTest extends AbstractBackendController
             CityInterface::CITY_ID => $cityId,
             CityInterface::REGION_ID => 200,
             CityInterface::IS_ENABLED => false,
-            CityInterface::POSITION => 100,
+            CityInterface::POSITION => 200,
             CityInterface::TITLE => 'City-title-updated',
         ];
 
@@ -122,7 +122,7 @@ class UpdateTest extends AbstractBackendController
             CityInterface::CITY_ID => $cityId,
             CityInterface::REGION_ID => 200,
             CityInterface::IS_ENABLED => false,
-            CityInterface::POSITION => 100,
+            CityInterface::POSITION => 200,
             CityInterface::TITLE => 'City-title-per-store',
         ];
 

@@ -13,9 +13,10 @@ class AssertFormField
      * @param string $fieldset
      * @param string $field
      * @param string|int|bool|null $value
+     * @param string|null $dataNamespace
      * @return void
      */
-    public static function assert($html, $form, $fieldset, $field, $value = null)
+    public static function assert($html, $form, $fieldset, $field, $value = null, $dataNamespace = null)
     {
         \PHPUnit_Framework_Assert::assertSelectCount('.form-inline', 1, $html, "Form container is missed");
 
@@ -51,13 +52,25 @@ class AssertFormField
             }
             $formData = $formConfig[$form . '_data_source']['config']['data'];
 
-            if (!isset($formData[$fieldset])) {
-                \PHPUnit_Framework_Assert::fail("Fieldset '{$fieldset}' data is missed");
+            if (null === $dataNamespace) {
+                if (!isset($formData[$fieldset])) {
+                    \PHPUnit_Framework_Assert::fail("Data namespace '{$dataNamespace}' is missed");
+                }
+                $fieldsetData = $formData[$fieldset];
+            } else {
+                $namespaces = explode('/', $dataNamespace);
+                if (count($namespaces)) {
+                    foreach ($namespaces as $namespace) {
+                        $formData = $formData[$namespace];
+                    }
+                    $fieldsetData = $formData;
+                } else {
+                    \PHPUnit_Framework_Assert::fail("Fieldset '{$fieldset}' is missed");
+                }
             }
-            $fieldsetData = $formData[$fieldset];
 
             if (!isset($fieldsetData[$field])) {
-                \PHPUnit_Framework_Assert::fail("Field '{$field}' data is missed");
+                 \PHPUnit_Framework_Assert::fail("Field '{$field}' is missed");
             }
             $fieldData = $fieldsetData[$field];
 

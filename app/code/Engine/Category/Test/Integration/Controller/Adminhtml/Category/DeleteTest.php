@@ -1,6 +1,7 @@
 <?php
 namespace Engine\Category\Test\Integration\Controller\Adminhtml\Category;
 
+use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Message\MessageInterface;
@@ -45,7 +46,7 @@ class DeleteTest extends AbstractBackendController
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
-            'category_id' => 100,
+            CategoryInterface::CATEGORY_ID => 100,
         ]);
 
         $this->dispatch(self::REQUEST_URI);
@@ -66,7 +67,7 @@ class DeleteTest extends AbstractBackendController
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
-            'category_id' => $categoryId,
+            CategoryInterface::CATEGORY_ID => $categoryId,
         ]);
 
         $this->dispatch(self::REQUEST_URI);
@@ -90,7 +91,7 @@ class DeleteTest extends AbstractBackendController
         $request->setMethod(Request::METHOD_GET);
         $request->setQueryValue([
             'form_key' => $this->formKey->getFormKey(),
-            'category_id' => 100,
+            CategoryInterface::CATEGORY_ID => 100,
         ]);
 
         $this->dispatch(self::REQUEST_URI);
@@ -121,7 +122,7 @@ class DeleteTest extends AbstractBackendController
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
-            'category_id' => -1,
+            CategoryInterface::CATEGORY_ID => -1,
         ]);
 
         $this->dispatch(self::REQUEST_URI);

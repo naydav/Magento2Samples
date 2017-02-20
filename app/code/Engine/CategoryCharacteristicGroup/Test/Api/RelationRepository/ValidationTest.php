@@ -22,11 +22,11 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param mixed $value
      * @param array $expectedErrorObj
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoApiDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
      * @magentoApiDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_100.php
      */
-    public function testValidationOnCreate($field, $value, array $expectedErrorObj)
+    public function testFailedValidationOnCreate($field, $value, array $expectedErrorObj)
     {
         $data = [
             RelationInterface::CATEGORY_ID => 100,
@@ -65,7 +65,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         return [
             [

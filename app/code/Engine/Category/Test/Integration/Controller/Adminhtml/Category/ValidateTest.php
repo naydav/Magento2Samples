@@ -40,13 +40,72 @@ class ValidateTest extends AbstractBackendController
     }
 
     /**
+     * @param array $data
+     * @dataProvider successfulfailedValidationDataProvider
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
+     */
+    public function testSuccessfulValidation(array $data)
+    {
+        $request = $this->getRequest();
+        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $data,
+        ]);
+        $this->dispatch(self::REQUEST_URI);
+        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
+
+        $body = $this->getResponse()->getBody();
+        self::assertNotEmpty($body);
+
+        $jsonResponse = json_decode($body);
+        self::assertNotEmpty($jsonResponse);
+        self::assertEquals(0, $jsonResponse->error);
+        self::assertEmpty($jsonResponse->messages);
+    }
+
+    /**
+     * @return array
+     */
+    public function successfulfailedValidationDataProvider()
+    {
+        $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
+        return [
+            'on_create' => [
+                [
+                    CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+                    CategoryInterface::URL_KEY => 'Category-urlKey',
+                    CategoryInterface::IS_ANCHOR => false,
+                    CategoryInterface::IS_ENABLED => false,
+                    CategoryInterface::POSITION => 1000,
+                    CategoryInterface::TITLE => 'Category-title',
+                    CategoryInterface::DESCRIPTION => 'Category-description',
+                ],
+            ],
+            'on_update' => [
+                [
+                    CategoryInterface::CATEGORY_ID => 100,
+                    CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+                    CategoryInterface::URL_KEY => 'Category-urlKey',
+                    CategoryInterface::IS_ANCHOR => false,
+                    CategoryInterface::IS_ENABLED => false,
+                    CategoryInterface::POSITION => 1000,
+                    CategoryInterface::TITLE => 'Category-title',
+                    CategoryInterface::DESCRIPTION => 'Category-description',
+                ],
+            ],
+        ];
+    }
+
+    /**
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
      */
-    public function testValidationOnCreate($field, $value, $errorMessage)
+    public function testFailedValidationOnCreate($field, $value, $errorMessage)
     {
         $data = [
             CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
@@ -78,16 +137,15 @@ class ValidateTest extends AbstractBackendController
         self::assertContains($errorMessage, $jsonResponse->messages);
     }
 
-
     /**
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
      */
-    public function testValidationOnUpdate($field, $value, $errorMessage)
+    public function testFailedValidationOnUpdate($field, $value, $errorMessage)
     {
         $categoryId = 100;
         $data = [
@@ -124,7 +182,7 @@ class ValidateTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         /** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
         $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);

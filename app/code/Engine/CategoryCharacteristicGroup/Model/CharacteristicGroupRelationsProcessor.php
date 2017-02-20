@@ -76,7 +76,7 @@ class CharacteristicGroupRelationsProcessor
      * @return void
      * @throws LocalizedException
      */
-    public function processRelations($characteristicGroupId, array $relationsData)
+    public function process($characteristicGroupId, array $relationsData)
     {
         $characteristicGroup = $this->characteristicGroupRepository->get($characteristicGroupId);
         $currentRelationMap = $this->getCurrentRelationMap($characteristicGroup->getCharacteristicGroupId());

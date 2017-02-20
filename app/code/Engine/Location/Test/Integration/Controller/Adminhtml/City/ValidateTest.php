@@ -30,12 +30,64 @@ class ValidateTest extends AbstractBackendController
     }
 
     /**
+     * @param array $data
+     * @dataProvider successfulfailedValidationDataProvider
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     */
+    public function testSuccessfulValidation(array $data)
+    {
+        $request = $this->getRequest();
+        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $data,
+        ]);
+        $this->dispatch(self::REQUEST_URI);
+        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
+
+        $body = $this->getResponse()->getBody();
+        self::assertNotEmpty($body);
+
+        $jsonResponse = json_decode($body);
+        self::assertNotEmpty($jsonResponse);
+        self::assertEquals(0, $jsonResponse->error);
+        self::assertEmpty($jsonResponse->messages);
+    }
+
+    /**
+     * @return array
+     */
+    public function successfulfailedValidationDataProvider()
+    {
+        return [
+            'on_create' => [
+                [
+                    CityInterface::REGION_ID => 100,
+                    CityInterface::IS_ENABLED => true,
+                    CityInterface::POSITION => 100,
+                    CityInterface::TITLE => 'City-title',
+                ],
+            ],
+            'on_update' => [
+                [
+                    CityInterface::CITY_ID => 100,
+                    CityInterface::REGION_ID => 1000,
+                    CityInterface::IS_ENABLED => false,
+                    CityInterface::POSITION => 1000,
+                    CityInterface::TITLE => 'City-title-edit',
+                ],
+            ],
+        ];
+    }
+
+    /**
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      */
-    public function testValidationOnCreate($field, $value, $errorMessage)
+    public function testFailedValidationOnCreate($field, $value, $errorMessage)
     {
         $data = [
             CityInterface::REGION_ID => 100,
@@ -64,15 +116,14 @@ class ValidateTest extends AbstractBackendController
         self::assertContains($errorMessage, $jsonResponse->messages);
     }
 
-
     /**
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      */
-    public function testValidationOnUpdate($field, $value, $errorMessage)
+    public function testFailedValidationOnUpdate($field, $value, $errorMessage)
     {
         $cityId = 100;
         $data = [
@@ -106,7 +157,7 @@ class ValidateTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         return [
             [

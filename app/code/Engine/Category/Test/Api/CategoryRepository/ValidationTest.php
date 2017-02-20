@@ -36,10 +36,10 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param mixed $value
      * @param array $expectedErrorObj
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoApiDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
      */
-    public function testValidationOnCreate($field, $value, array $expectedErrorObj)
+    public function testFailedValidationOnCreate($field, $value, array $expectedErrorObj)
     {
         $data = [
             CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
@@ -83,11 +83,11 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param mixed $value
      * @param array $expectedErrorObj
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoApiDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
      * @magentoApiDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
      */
-    public function testValidationOnUpdate($field, $value, array $expectedErrorObj)
+    public function testFailedValidationOnUpdate($field, $value, array $expectedErrorObj)
     {
         $categoryId = 100;
         $data = [
@@ -131,7 +131,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         /** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
         $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);

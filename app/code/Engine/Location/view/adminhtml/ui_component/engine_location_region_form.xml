@@ -106,7 +106,9 @@
             <item name="config" xsi:type="array">
                 <item name="label" xsi:type="string" translate="true">Cities</item>
                 <item name="collapsible" xsi:type="boolean">true</item>
+                <item name="opened" xsi:type="boolean">true</item>
                 <item name="dataScope" xsi:type="string">cities</item>
+                <item name="sortOrder" xsi:type="number">200</item>
             </item>
         </argument>
         <container name="assign_city_container">
@@ -146,7 +148,7 @@
                     <item name="label" xsi:type="string">Assigned Cities</item>
                     <item name="renderDefaultRecord" xsi:type="boolean">false</item>
                     <item name="component" xsi:type="string">Magento_Ui/js/dynamic-rows/dynamic-rows-grid</item>
-                    <item name="addButtonLabel" xsi:type="string">Add City</item>
+                    <item name="addButtonLabel" xsi:type="string" translate="true">Add City</item>
                     <item name="addButton" xsi:type="boolean">true</item>
                     <item name="recordTemplate" xsi:type="string">record</item>
                     <item name="dataScope" xsi:type="string"/>

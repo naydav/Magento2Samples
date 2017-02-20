@@ -50,7 +50,7 @@ foreach ($regionsData as $regionData) {
 }
 
 // save per store data
-require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
+require_once '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
 $currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);

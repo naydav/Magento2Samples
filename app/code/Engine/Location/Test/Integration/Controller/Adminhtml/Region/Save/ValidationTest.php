@@ -43,9 +43,9 @@ class ValidationTest extends AbstractBackendController
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      */
-    public function testValidationOnCreate($field, $value, $errorMessage)
+    public function testFailedValidationOnCreate($field, $value, $errorMessage)
     {
         $data = [
             RegionInterface::IS_ENABLED => true,
@@ -72,16 +72,16 @@ class ValidationTest extends AbstractBackendController
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
      */
-    public function testValidationOnUpdate($field, $value, $errorMessage)
+    public function testFailedValidationOnUpdate($field, $value, $errorMessage)
     {
         $regionId = 100;
         $data = [
             RegionInterface::REGION_ID => $regionId,
             RegionInterface::IS_ENABLED => false,
-            RegionInterface::POSITION => 100,
+            RegionInterface::POSITION => 200,
             RegionInterface::TITLE => 'Region-title-updated',
         ];
         $data[$field] = $value;
@@ -103,7 +103,7 @@ class ValidationTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         return [
             [

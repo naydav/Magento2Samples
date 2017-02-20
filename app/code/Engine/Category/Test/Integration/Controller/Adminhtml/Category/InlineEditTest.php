@@ -265,11 +265,11 @@ class InlineEditTest extends AbstractBackendController
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
      */
-    public function testValidation($field, $value, $errorMessage)
+    public function testFailedValidation($field, $value, $errorMessage)
     {
         $categoryId = 100;
         $itemData = [
@@ -307,7 +307,7 @@ class InlineEditTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         /** @var RootCategoryIdProviderInterface $rootCategoryIdProvider */
         $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);

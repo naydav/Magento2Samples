@@ -24,9 +24,9 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param mixed $value
      * @param array $expectedErrorObj
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      */
-    public function testValidationOnCreate($field, $value, array $expectedErrorObj)
+    public function testFailedValidationOnCreate($field, $value, array $expectedErrorObj)
     {
         $data = [
             RegionInterface::IS_ENABLED => false,
@@ -65,10 +65,10 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param mixed $value
      * @param array $expectedErrorObj
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
      */
-    public function testValidationOnUpdate($field, $value, array $expectedErrorObj)
+    public function testFailedValidationOnUpdate($field, $value, array $expectedErrorObj)
     {
         $regionId = 100;
         $data = [
@@ -107,7 +107,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         return [
             [

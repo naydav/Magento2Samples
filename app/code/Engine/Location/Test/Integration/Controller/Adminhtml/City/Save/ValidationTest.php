@@ -43,9 +43,9 @@ class ValidationTest extends AbstractBackendController
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      */
-    public function testValidationOnCreate($field, $value, $errorMessage)
+    public function testFailedValidationOnCreate($field, $value, $errorMessage)
     {
         $data = [
             CityInterface::REGION_ID => 100,
@@ -73,17 +73,17 @@ class ValidationTest extends AbstractBackendController
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      */
-    public function testValidationOnUpdate($field, $value, $errorMessage)
+    public function testFailedValidationOnUpdate($field, $value, $errorMessage)
     {
         $cityId = 100;
         $data = [
             CityInterface::CITY_ID => $cityId,
             CityInterface::REGION_ID => 100,
             CityInterface::IS_ENABLED => false,
-            CityInterface::POSITION => 100,
+            CityInterface::POSITION => 200,
             CityInterface::TITLE => 'City-title-updated',
         ];
         $data[$field] = $value;
@@ -105,7 +105,7 @@ class ValidationTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         return [
             [

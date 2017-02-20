@@ -256,9 +256,9 @@ class InlineEditTest extends AbstractBackendController
      * @param mixed $value
      * @param string $errorMessage
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      */
-    public function testValidation($field, $value, $errorMessage)
+    public function testFailedValidation($field, $value, $errorMessage)
     {
         $cityId = 100;
         $itemData = [
@@ -293,7 +293,7 @@ class InlineEditTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         return [
             [

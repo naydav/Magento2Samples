@@ -67,7 +67,7 @@ class CategoryRelationsManagementTest extends AbstractBackendController
     /**
      * @magentoDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_list_global_scope.php
      */
-    public function testCreateWithGroupAssignment()
+    public function testCreateWithGroupsAssignment()
     {
         $data = [
             CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
@@ -117,7 +117,7 @@ class CategoryRelationsManagementTest extends AbstractBackendController
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
      * @magentoDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_list_global_scope.php
      */
-    public function testUpdateWithGroupAssignment()
+    public function testUpdateWithCharacteristicGroupsAssignment()
     {
         $categoryId = 100;
         $data = [
@@ -166,7 +166,7 @@ class CategoryRelationsManagementTest extends AbstractBackendController
      *
      * @magentoDataFixture ../../../../app/code/Engine/CategoryCharacteristicGroup/Test/_files/category_group_structure.php
      */
-    public function testUnassignGroupFromCategory()
+    public function testUnassignCharacteristicGroupFromCategory()
     {
         $categoryId = 200;
         $data = [
@@ -206,7 +206,7 @@ class CategoryRelationsManagementTest extends AbstractBackendController
     /**
      * @magentoDataFixture ../../../../app/code/Engine/CategoryCharacteristicGroup/Test/_files/category_group_structure.php
      */
-    public function testUnassignAllGroupsFromCategory()
+    public function testUnassignAllCharacteristicGroupsFromCategory()
     {
         $categoryId = 200;
         $data = [

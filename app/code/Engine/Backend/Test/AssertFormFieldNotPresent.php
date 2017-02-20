@@ -41,7 +41,7 @@ class AssertFormFieldNotPresent
         $fieldSetConfig = $formStructureConfig['children'][$fieldset];
 
         if (isset($fieldSetConfig['children'][$field])) {
-            \PHPUnit_Framework_Assert::fail("Field '{$field}' configuration is present");
+            \PHPUnit_Framework_Assert::fail("Field '{$field}' configuration must not be present present");
         }
     }
 }

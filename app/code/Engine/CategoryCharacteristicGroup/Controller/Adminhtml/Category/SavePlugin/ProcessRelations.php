@@ -56,7 +56,7 @@ class ProcessRelations
         $relationsRequestData = $this->request->getParam('characteristic_groups', []);
         if ($categoryId && $relationsRequestData) {
             try {
-                $this->categoryRelationsProcessor->processRelations(
+                $this->categoryRelationsProcessor->process(
                     $categoryId,
                     $relationsRequestData['assigned_characteristic_groups']
                 );

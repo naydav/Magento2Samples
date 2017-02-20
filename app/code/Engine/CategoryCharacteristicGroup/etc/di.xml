@@ -25,8 +25,7 @@
     <type name="Engine\Category\Ui\DataProvider\CategoryDataProvider">
         <plugin name="add_relation_data" type="Engine\CategoryCharacteristicGroup\Ui\CategoryDataProviderPlugin\AddRelationData"/>
     </type>
-    <virtualType name="Engine\Category\Model\Category\Api\SearchCriteria\CollectionProcessor\CategoryFilterProcessor"
-                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
+    <virtualType name="Engine\Category\Model\Category\Api\SearchCriteria\CollectionProcessor\CategoryFilterProcessor">
         <arguments>
             <argument name="customFilters" xsi:type="array">
                 <item name="assigned_to_characteristic_group" xsi:type="object">Engine\CategoryCharacteristicGroup\Model\Category\Api\SearchCriteria\CollectionProcessor\AssignedToCharacteristicGroupFilterProcessor</item>
@@ -40,8 +39,7 @@
     <type name="Engine\CharacteristicGroup\Ui\DataProvider\CharacteristicGroupDataProvider">
         <plugin name="add_relation_data" type="Engine\CategoryCharacteristicGroup\Ui\CharacteristicGroupDataProviderPlugin\AddRelationData"/>
     </type>
-    <virtualType name="Engine\CharacteristicGroup\Model\CharacteristicGroup\Api\SearchCriteria\CollectionProcessor\CharacteristicGroupFilterProcessor"
-                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
+    <virtualType name="Engine\CharacteristicGroup\Model\CharacteristicGroup\Api\SearchCriteria\CollectionProcessor\CharacteristicGroupFilterProcessor">
         <arguments>
             <argument name="customFilters" xsi:type="array">
                 <item name="assigned_to_category" xsi:type="object">Engine\CategoryCharacteristicGroup\Model\CharacteristicGroup\Api\SearchCriteria\CollectionProcessor\AssignedToCategoryFilterProcessor</item>

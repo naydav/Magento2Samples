@@ -63,7 +63,7 @@ class InstallSchema implements InstallSchemaInterface
             'Characteristic Group Position'
         )->addIndex(
             $setup->getIdxName(
-                $categoryTable,
+                $relationTable,
                 [
                     RelationInterface::CHARACTERISTIC_GROUP_ID,
                     RelationInterface::CATEGORY_ID,

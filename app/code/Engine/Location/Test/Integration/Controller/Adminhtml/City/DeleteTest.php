@@ -1,6 +1,7 @@
 <?php
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
+use Engine\Location\Api\Data\CityInterface;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Message\MessageInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
@@ -38,7 +39,7 @@ class DeleteTest extends AbstractBackendController
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
-            'city_id' => 100,
+            CityInterface::CITY_ID => 100,
         ]);
 
         $this->dispatch(self::REQUEST_URI);
@@ -61,7 +62,7 @@ class DeleteTest extends AbstractBackendController
         $request->setMethod(Request::METHOD_GET);
         $request->setQueryValue([
             'form_key' => $this->formKey->getFormKey(),
-            'city_id' => 100,
+            CityInterface::CITY_ID => 100,
         ]);
 
         $this->dispatch(self::REQUEST_URI);
@@ -92,7 +93,7 @@ class DeleteTest extends AbstractBackendController
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
-            'city_id' => -1,
+            CityInterface::CITY_ID => -1,
         ]);
 
         $this->dispatch(self::REQUEST_URI);

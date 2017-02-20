@@ -72,7 +72,7 @@ class UpdateTest extends AbstractBackendController
         $data = [
             RegionInterface::REGION_ID => $regionId,
             RegionInterface::IS_ENABLED => false,
-            RegionInterface::POSITION => 100,
+            RegionInterface::POSITION => 200,
             RegionInterface::TITLE => 'Region-title-updated',
         ];
 

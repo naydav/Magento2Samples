@@ -61,7 +61,10 @@ class RegionCityRelationProcessor
     }
 
     /**
-     * {@inheritdoc}
+     * @param int $regionId
+     * @param array $citiesData
+     * @return bool
+     * @throws LocalizedException
      */
     public function process($regionId, array $citiesData)
     {

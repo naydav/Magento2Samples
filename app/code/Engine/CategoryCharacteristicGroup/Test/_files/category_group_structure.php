@@ -27,14 +27,14 @@ use Magento\TestFramework\Helper\Bootstrap;
  */
 
 // Create Categories
-require '../../../app/code/Engine/Category/Test/_files/category/category_id_100.php';
-require '../../../app/code/Engine/Category/Test/_files/category/category_id_200.php';
-require '../../../app/code/Engine/Category/Test/_files/category/category_id_300.php';
+require_once '../../../app/code/Engine/Category/Test/_files/category/category_id_100.php';
+require_once '../../../app/code/Engine/Category/Test/_files/category/category_id_200.php';
+require_once '../../../app/code/Engine/Category/Test/_files/category/category_id_300.php';
 
 // Create Characteristic Groups
-require '../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_100.php';
-require '../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_200.php';
-require '../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_300.php';
+require_once '../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_100.php';
+require_once '../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_200.php';
+require_once '../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_300.php';
 
 // Create Relations
 /** @var RelationInterfaceFactory $relationFactory */

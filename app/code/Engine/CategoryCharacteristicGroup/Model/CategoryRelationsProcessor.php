@@ -76,7 +76,7 @@ class CategoryRelationsProcessor
      * @return void
      * @throws LocalizedException
      */
-    public function processRelations($categoryId, array $relationsData)
+    public function process($categoryId, array $relationsData)
     {
         $category = $this->categoryRepository->get($categoryId);
         $currentRelationMap = $this->getCurrentRelationMap($category->getCategoryId());
