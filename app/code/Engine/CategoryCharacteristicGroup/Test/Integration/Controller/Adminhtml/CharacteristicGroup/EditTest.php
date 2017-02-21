@@ -91,4 +91,53 @@ class EditTest extends AbstractBackendController
             ]
         );
     }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Engine/CategoryCharacteristicGroup/Test/_files/category_group_structure_store_scope.php
+     */
+    public function testEditInStoreScope()
+    {
+        $storeCode = 'test_store';
+        $characteristicGroupId = 200;
+
+        $this->dispatch(
+            self::REQUEST_URI . '/' . CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID . '/'
+            . $characteristicGroupId . '/store/' . $storeCode . '/'
+        );
+        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
+
+        $body = $this->getResponse()->getBody();
+        self::assertNotEmpty($body);
+
+        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->provide());
+        AssertFormDynamicRows::assert(
+            $body,
+            $this->formName,
+            'categories',
+            'assigned_categories',
+            [
+                [
+                    CategoryInterface::CATEGORY_ID => 200,
+                    CategoryInterface::TITLE => 'Category-title-200-per-store',
+                    CategoryInterface::PARENT_ID => sprintf(
+                        '%s (ID: %d)',
+                        $rootCategory->getTitle(),
+                        $rootCategory->getCategoryId()
+                    ),
+                    CategoryInterface::IS_ENABLED => 1,
+                ],
+                [
+                    CategoryInterface::CATEGORY_ID => 300,
+                    CategoryInterface::TITLE => 'Category-title-300-per-store',
+                    CategoryInterface::PARENT_ID => sprintf(
+                        '%s (ID: %d)',
+                        $rootCategory->getTitle(),
+                        $rootCategory->getCategoryId()
+                    ),
+                    CategoryInterface::IS_ENABLED => 1,
+                ],
+            ]
+        );
+    }
 }

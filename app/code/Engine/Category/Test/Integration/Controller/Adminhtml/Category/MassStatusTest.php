@@ -55,7 +55,7 @@ class MassStatusTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list.php
      */
     public function testMassStatus()
     {
@@ -82,7 +82,7 @@ class MassStatusTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list.php
      */
     public function testMassStatusWithWrongRequestMethod()
     {
@@ -105,7 +105,7 @@ class MassStatusTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list.php
      */
     public function testMassStatusWithNotExistEntityId()
     {

@@ -11,4 +11,4 @@ try {
     // City doesn't exist
 }
 
-require_once '../../../app/code/Engine/Location/Test/_files/region/region_id_100_rollback.php';
+require '../../../app/code/Engine/Location/Test/_files/region/region_id_100_rollback.php';

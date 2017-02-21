@@ -15,7 +15,7 @@ $cityRepository = Bootstrap::getObjectManager()->get(CityRepositoryInterface::cl
 /** @var StoreManagerInterface $storeManager */
 $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
 
-require_once '../../../app/code/Engine/Location/Test/_files/region/region_id_100.php';
+require '../../../app/code/Engine/Location/Test/_files/region/region_id_100.php';
 
 /** @var CityInterface $city */
 $city = $cityFactory->create();
@@ -29,7 +29,7 @@ $city = $hydrator->hydrate($city, [
 $cityId = $cityRepository->save($city);
 
 // save per store data
-require_once '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
+require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
 $currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);

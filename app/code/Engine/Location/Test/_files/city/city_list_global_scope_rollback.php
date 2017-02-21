@@ -21,4 +21,4 @@ foreach ($cities as $city) {
     $cityRepository->deleteById($city->getCityId());
 }
 
-require_once '../../../app/code/Engine/Location/Test/_files/region/region_id_100_rollback.php';
+require '../../../app/code/Engine/Location/Test/_files/region/region_id_100_rollback.php';

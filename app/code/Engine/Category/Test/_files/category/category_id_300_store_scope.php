@@ -21,14 +21,14 @@ $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProvi
 /** @var CategoryInterface $category */
 $category = $categoryFactory->create();
 $category = $hydrator->hydrate($category, [
-    CategoryInterface::CATEGORY_ID => 100,
+    CategoryInterface::CATEGORY_ID => 300,
     CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
-    CategoryInterface::URL_KEY => 'Category-urlKey-100',
+    CategoryInterface::URL_KEY => 'Category-urlKey-300',
     CategoryInterface::IS_ANCHOR => true,
     CategoryInterface::IS_ENABLED => true,
     CategoryInterface::POSITION => 200,
-    CategoryInterface::TITLE => 'Category-title-100',
-    CategoryInterface::DESCRIPTION => 'Category-description-100',
+    CategoryInterface::TITLE => 'Category-title-300',
+    CategoryInterface::DESCRIPTION => 'Category-description-300',
 ]);
 $categoryId = $categoryRepository->save($category);
 

@@ -58,7 +58,7 @@ class CharacteristicGroupRelationsManagementTest extends AbstractBackendControll
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list.php
      */
     public function testCreateWithCategoriesAssignment()
     {
@@ -111,7 +111,7 @@ class CharacteristicGroupRelationsManagementTest extends AbstractBackendControll
 
     /**
      * @magentoDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_100.php
-     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list.php
      */
     public function testUpdateWithCategoriesAssignment()
     {

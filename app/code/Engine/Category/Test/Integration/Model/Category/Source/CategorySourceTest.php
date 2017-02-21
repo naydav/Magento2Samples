@@ -37,7 +37,7 @@ class CategorySourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_list.php
      */
     public function testToOptionArray()
     {

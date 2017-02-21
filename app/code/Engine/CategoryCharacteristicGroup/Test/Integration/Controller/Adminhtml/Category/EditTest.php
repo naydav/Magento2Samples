@@ -63,4 +63,44 @@ class EditTest extends AbstractBackendController
             ]
         );
     }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Engine/CategoryCharacteristicGroup/Test/_files/category_group_structure_store_scope.php
+     */
+    public function testEditInStoreScope()
+    {
+        $storeCode = 'test_store';
+        $categoryId = 200;
+
+        $this->dispatch(
+            self::REQUEST_URI . '/' . CategoryInterface::CATEGORY_ID . '/'
+            . $categoryId . '/store/' . $storeCode . '/'
+        );
+        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
+
+        $body = $this->getResponse()->getBody();
+        self::assertNotEmpty($body);
+
+        AssertFormDynamicRows::assert(
+            $body,
+            $this->formName,
+            'characteristic_groups',
+            'assigned_characteristic_groups',
+            [
+                [
+                    CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID => 200,
+                    CharacteristicGroupInterface::TITLE => 'CharacteristicGroup-title-200-per-store',
+                    CharacteristicGroupInterface::BACKEND_TITLE => 'CharacteristicGroup-backendTitle-200',
+                    CharacteristicGroupInterface::IS_ENABLED => 1,
+                ],
+                [
+                    CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID => 100,
+                    CharacteristicGroupInterface::TITLE => 'CharacteristicGroup-title-100-per-store',
+                    CharacteristicGroupInterface::BACKEND_TITLE => 'CharacteristicGroup-backendTitle-100',
+                    CharacteristicGroupInterface::IS_ENABLED => 1,
+                ],
+            ]
+        );
+    }
 }
