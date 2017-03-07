@@ -1,5 +1,5 @@
 {
-    "name": "engine/characteristicgroup",
+    "name": "engine/characteristic-group",
     "description": "N/A",
     "type": "magento2-module",
     "version": "1.0.0",
@@ -10,8 +10,9 @@
         "magento/ui": "2.2.*",
         "magento/store": "2.2.*",
         "magento/framework": "2.2.*",
-        "engine/test": "100.1.*",
+        "engine/characteristic": "100.1.*",
         "engine/per-store-data-support": "100.1.*",
+        "engine/test": "100.1.*",
         "engine/validation": "100.1.*"
     },
     "autoload": {

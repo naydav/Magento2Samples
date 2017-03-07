@@ -9,7 +9,7 @@
         "magento/ui": "2.2.*",
         "magento/framework": "2.2.*",
         "engine/category": "100.1.*",
-        "engine/characteristic": "100.1.*",
+        "engine/characteristic-group": "100.1.*",
         "engine/test": "100.1.*",
         "engine/validation": "100.1.*"
     },
