@@ -23,7 +23,7 @@ class RegionSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list.php
      */
     public function testToOptionArray()
     {

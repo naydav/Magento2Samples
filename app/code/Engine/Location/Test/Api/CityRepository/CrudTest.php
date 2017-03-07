@@ -42,7 +42,7 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Get',
             ],
         ];
-        $cityId = $this->_webApiCall($serviceInfo, ['city' => $data]);
+        $cityId = $this->_webApiCall($serviceInfo, ['city' => $data], null, 'all');
         self::assertNotEmpty($cityId);
 
         $city = $this->getCityById($cityId);
@@ -72,7 +72,7 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Get',
             ],
         ];
-        $cityId = $this->_webApiCall($serviceInfo, ['city' => $data]);
+        $cityId = $this->_webApiCall($serviceInfo, ['city' => $data], null, 'all');
         self::assertNotEmpty($cityId);
 
         $city = $this->getCityById($cityId);

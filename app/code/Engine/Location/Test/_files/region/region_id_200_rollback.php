@@ -8,5 +8,5 @@ $regionRepository = Bootstrap::getObjectManager()->get(RegionRepositoryInterface
 try {
     $regionRepository->deleteById(200);
 } catch (NoSuchEntityException $e) {
-    // Region doesn't exist
+    // Region already deleted
 }

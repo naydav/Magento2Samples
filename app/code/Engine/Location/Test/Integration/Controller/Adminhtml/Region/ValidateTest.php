@@ -16,7 +16,7 @@ class ValidateTest extends AbstractBackendController
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/engine-location/region/validate/store/0';
+    const REQUEST_URI = 'backend/engine-location/region/validate/store/%s';
 
     /**
      * @var FormKey
@@ -31,7 +31,7 @@ class ValidateTest extends AbstractBackendController
 
     /**
      * @param array $data
-     * @dataProvider successfulfailedValidationDataProvider
+     * @dataProvider successfulValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
      */
     public function testSuccessfulValidation(array $data)
@@ -43,7 +43,7 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -58,11 +58,19 @@ class ValidateTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function successfulfailedValidationDataProvider()
+    public function successfulValidationDataProvider()
     {
         return [
             'on_create' => [
                 [
+                    RegionInterface::IS_ENABLED => true,
+                    RegionInterface::POSITION => 100,
+                    RegionInterface::TITLE => 'Region-title',
+                ],
+            ],
+            'on_create_with_preset_id' => [
+                [
+                    RegionInterface::REGION_ID => 200,
                     RegionInterface::IS_ENABLED => true,
                     RegionInterface::POSITION => 100,
                     RegionInterface::TITLE => 'Region-title',
@@ -101,7 +109,42 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
+
+        $body = $this->getResponse()->getBody();
+        self::assertNotEmpty($body);
+
+        $jsonResponse = json_decode($body);
+        self::assertNotEmpty($jsonResponse);
+        self::assertEquals(1, $jsonResponse->error);
+        self::assertContains($errorMessage, $jsonResponse->messages);
+    }
+
+    /**
+     * @param string $field
+     * @param mixed $value
+     * @param string $errorMessage
+     * @dataProvider failedValidationDataProvider
+     */
+    public function testFailedValidationOnCreateWithPresetId($field, $value, $errorMessage)
+    {
+        $data = [
+            RegionInterface::REGION_ID => 100,
+            RegionInterface::IS_ENABLED => true,
+            RegionInterface::POSITION => 100,
+            RegionInterface::TITLE => 'Region-title',
+        ];
+        $data[$field] = $value;
+
+        $request = $this->getRequest();
+        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $data,
+        ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -138,7 +181,7 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -156,7 +199,7 @@ class ValidateTest extends AbstractBackendController
     public function failedValidationDataProvider()
     {
         return [
-            [
+            'empty_title' => [
                 RegionInterface::TITLE,
                 '',
                 '"' . RegionInterface::TITLE . '" can not be empty.',
@@ -175,11 +218,10 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => [
                 RegionInterface::REGION_ID => 100,
-                RegionInterface::IS_ENABLED => false,
             ],
         ]);
 
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -203,11 +245,10 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => [
                 RegionInterface::REGION_ID => 100,
-                RegionInterface::IS_ENABLED => false,
             ],
         ]);
 
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();

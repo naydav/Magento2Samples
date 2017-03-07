@@ -1,8 +1,8 @@
 <?php
 namespace Engine\PerStoreDataSupport\Model\ResourceModel;
 
-use Engine\PerStoreDataSupport\Api\StoreDataConfigurationProviderInterface;
-use Engine\PerStoreDataSupport\Api\StoreDataSelectProcessorInterface;
+use Engine\PerStoreDataSupport\Model\StoreDataConfigurationProviderInterface;
+use Engine\PerStoreDataSupport\Model\StoreDataSelectProcessorInterface;
 use Magento\Framework\Data\Collection\Db\FetchStrategyInterface;
 use Magento\Framework\Data\Collection\EntityFactoryInterface;
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
+ * @api
  */
 abstract class AbstractCollection extends BaseAbstarctCollection
 {

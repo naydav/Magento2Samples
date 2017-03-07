@@ -56,7 +56,7 @@ class InlineEdit extends Action
         $request = $this->getRequest();
         $requestData = $request->getParam('items', []);
 
-        if ($request->isXmlHttpRequest() && $this->getRequest()->isPost() && $requestData) {
+        if ($request->isXmlHttpRequest() && $request->isPost() && $requestData) {
             foreach ($requestData as $itemData) {
                 try {
                     $region = $this->regionRepository->get(

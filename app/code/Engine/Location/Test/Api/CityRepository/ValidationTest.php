@@ -2,10 +2,8 @@
 namespace Engine\Location\Test\Api\CityRepository;
 
 use Engine\Location\Api\Data\CityInterface;
-use Engine\Location\Model\City\CityBaseValidator;
 use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
-use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
 /**
@@ -46,7 +44,7 @@ class ValidationTest extends WebapiAbstract
         ];
 
         try {
-            $this->_webApiCall($serviceInfo, ['city' => $data]);
+            $this->_webApiCall($serviceInfo, ['city' => $data], null, 'all');
             $this->fail('Expected throwing exception');
         } catch (\SoapFault $e) {
             self::assertContains(
@@ -110,7 +108,7 @@ class ValidationTest extends WebapiAbstract
     public function failedValidationDataProvider()
     {
         return [
-            [
+            'empty_title' => [
                 CityInterface::TITLE,
                 '',
                 [

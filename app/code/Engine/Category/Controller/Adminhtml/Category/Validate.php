@@ -72,7 +72,7 @@ class Validate extends Action
         $request = $this->getRequest();
         $requestData = $this->getRequest()->getParam('general');
 
-        if ($request->isXmlHttpRequest() && $this->getRequest()->isPost() && $requestData) {
+        if ($request->isXmlHttpRequest() && $request->isPost() && $requestData) {
             $categoryId = !empty($requestData[CategoryInterface::CATEGORY_ID])
                 ? $requestData[CategoryInterface::CATEGORY_ID] : null;
 

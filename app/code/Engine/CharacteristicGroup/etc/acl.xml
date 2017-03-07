@@ -7,6 +7,7 @@
                 <resource id="Engine_Backend::backend">
                     <resource id="Engine_CharacteristicGroup::characteristic_group" title="Characteristic Groups" translate="title" sortOrder="200">
                         <resource id="Engine_CharacteristicGroup::characteristic_group_characteristic_group" title="Characteristic Group" translate="title" sortOrder="100"/>
+                        <resource id="Engine_CharacteristicGroup::relation" title="Characteristic Group to Characteristic Management" translate="title" sortOrder="200"/>
                     </resource>
                 </resource>
             </resource>

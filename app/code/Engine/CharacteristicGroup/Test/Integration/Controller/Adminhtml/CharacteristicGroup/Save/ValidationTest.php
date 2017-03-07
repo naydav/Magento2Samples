@@ -43,9 +43,9 @@ class ValidationTest extends AbstractBackendController
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      */
-    public function testValidationOnCreate($field, $value, $errorMessage)
+    public function testFailedValidationOnCreate($field, $value, $errorMessage)
     {
         $data = [
             CharacteristicGroupInterface::IS_ENABLED => true,
@@ -73,10 +73,41 @@ class ValidationTest extends AbstractBackendController
      * @param string $field
      * @param mixed $value
      * @param string $errorMessage
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
+     */
+    public function testFailedValidationOnCreateWithPresetId($field, $value, $errorMessage)
+    {
+        $data = [
+            CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID => 100,
+            CharacteristicGroupInterface::IS_ENABLED => true,
+            CharacteristicGroupInterface::BACKEND_TITLE => 'CharacteristicGroup-backendTitle',
+            CharacteristicGroupInterface::TITLE => 'CharacteristicGroup-title',
+            CharacteristicGroupInterface::DESCRIPTION => 'CharacteristicGroup-description',
+        ];
+        $data[$field] = $value;
+
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $data,
+        ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertRedirect($this->stringContains('backend/engine-characteristic-group/characteristicGroup'));
+        $this->assertSessionMessages($this->contains($errorMessage), MessageInterface::TYPE_ERROR);
+        self::assertNull($this->registry->registry(Save::REGISTRY_CHARACTERISTIC_GROUP_ID_KEY));
+    }
+
+    /**
+     * @param string $field
+     * @param mixed $value
+     * @param string $errorMessage
+     * @dataProvider failedValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_100.php
      */
-    public function testValidationOnUpdate($field, $value, $errorMessage)
+    public function testFailedValidationOnUpdate($field, $value, $errorMessage)
     {
         $characteristicGroupId = 100;
         $data = [
@@ -105,7 +136,7 @@ class ValidationTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         return [
             [

@@ -1,7 +1,9 @@
 <?php
 namespace Engine\CharacteristicGroup\Test\Integration\Controller\Adminhtml\CharacteristicGroup;
 
+use Engine\Backend\Test\AssertFormDynamicRows;
 use Engine\Backend\Test\AssertFormField;
+use Engine\Characteristic\Api\Data\CharacteristicInterface;
 use Engine\Test\AssertPageHeader;
 use Engine\Test\AssertPageTitle;
 use Engine\Backend\Test\AssertStoreSwitcher;
@@ -27,12 +29,12 @@ class EditTest extends AbstractBackendController
     private $formName = 'engine_characteristic_group_form';
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_characteristic_structure.php
      */
     public function testEdit()
     {
-        $characteristicGroupId = 100;
-        $title = 'CharacteristicGroup-title-100';
+        $characteristicGroupId = 200;
+        $title = 'CharacteristicGroup-title-200';
 
         $this->dispatch(
             self::REQUEST_URI . '/' . CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID . '/'
@@ -54,7 +56,7 @@ class EditTest extends AbstractBackendController
             $this->formName,
             'general',
             CharacteristicGroupInterface::BACKEND_TITLE,
-            'CharacteristicGroup-backendTitle-100'
+            'CharacteristicGroup-backendTitle-200'
         );
         AssertFormField::assert(
             $body,
@@ -68,18 +70,38 @@ class EditTest extends AbstractBackendController
             $this->formName,
             'general',
             CharacteristicGroupInterface::DESCRIPTION,
-            'CharacteristicGroup-description-100'
+            'CharacteristicGroup-description-200'
+        );
+        AssertFormDynamicRows::assert(
+            $body,
+            $this->formName,
+            'characteristics',
+            'assigned_characteristics',
+            [
+                [
+                    CharacteristicInterface::CHARACTERISTIC_ID => 200,
+                    CharacteristicInterface::IS_ENABLED => 1,
+                    CharacteristicInterface::BACKEND_TITLE => 'Characteristic-backendTitle-200',
+                    CharacteristicInterface::TITLE => 'Characteristic-title-200',
+                ],
+                [
+                    CharacteristicInterface::CHARACTERISTIC_ID => 100,
+                    CharacteristicInterface::IS_ENABLED => 1,
+                    CharacteristicInterface::BACKEND_TITLE => 'Characteristic-backendTitle-100',
+                    CharacteristicInterface::TITLE => 'Characteristic-title-100',
+                ],
+            ]
         );
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_100_store_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_characteristic_structure_store_scope.php
      */
     public function testEditInStoreScope()
     {
         $storeCode = 'test_store';
-        $characteristicGroupId = 100;
-        $title = 'CharacteristicGroup-title-100-per-store';
+        $characteristicGroupId = 200;
+        $title = 'CharacteristicGroup-title-200-per-store';
 
         $this->dispatch(
             self::REQUEST_URI . '/' . CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID . '/'
@@ -101,7 +123,7 @@ class EditTest extends AbstractBackendController
             $this->formName,
             'general',
             CharacteristicGroupInterface::BACKEND_TITLE,
-            'CharacteristicGroup-backendTitle-100'
+            'CharacteristicGroup-backendTitle-200'
         );
         AssertFormField::assert(
             $body,
@@ -115,7 +137,27 @@ class EditTest extends AbstractBackendController
             $this->formName,
             'general',
             CharacteristicGroupInterface::DESCRIPTION,
-            'CharacteristicGroup-description-100-per-store'
+            'CharacteristicGroup-description-200-per-store'
+        );
+        AssertFormDynamicRows::assert(
+            $body,
+            $this->formName,
+            'characteristics',
+            'assigned_characteristics',
+            [
+                [
+                    CharacteristicInterface::CHARACTERISTIC_ID => 200,
+                    CharacteristicInterface::IS_ENABLED => 1,
+                    CharacteristicInterface::BACKEND_TITLE => 'Characteristic-backendTitle-200',
+                    CharacteristicInterface::TITLE => 'Characteristic-title-200-per-store',
+                ],
+                [
+                    CharacteristicInterface::CHARACTERISTIC_ID => 100,
+                    CharacteristicInterface::IS_ENABLED => 1,
+                    CharacteristicInterface::BACKEND_TITLE => 'Characteristic-backendTitle-100',
+                    CharacteristicInterface::TITLE => 'Characteristic-title-100-per-store',
+                ],
+            ]
         );
     }
 

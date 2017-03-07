@@ -1,4 +1,5 @@
 <?php
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Registry;
 use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -14,6 +15,6 @@ $registry->register('isSecureArea', true);
 try {
     $store = $storeRepository->get('test_store');
     $store->delete();
-} catch (\Exception $e) {
+} catch (NoSuchEntityException $e) {
+    // Category already deleted
 }
-

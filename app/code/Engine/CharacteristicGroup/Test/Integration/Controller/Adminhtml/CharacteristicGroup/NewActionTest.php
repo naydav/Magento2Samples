@@ -1,6 +1,7 @@
 <?php
 namespace Engine\CharacteristicGroup\Test\Integration\Controller\Adminhtml\CharacteristicGroup;
 
+use Engine\Backend\Test\AssertFormDynamicRows;
 use Engine\Backend\Test\AssertFormField;
 use Engine\Test\AssertPageHeader;
 use Engine\Test\AssertPageTitle;
@@ -62,6 +63,12 @@ class NewActionTest extends AbstractBackendController
             $this->formName,
             'general',
             CharacteristicGroupInterface::DESCRIPTION
+        );
+        AssertFormDynamicRows::assert(
+            $body,
+            $this->formName,
+            'characteristics',
+            'assigned_characteristics'
         );
     }
 }

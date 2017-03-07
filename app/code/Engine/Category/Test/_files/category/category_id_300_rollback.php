@@ -8,5 +8,5 @@ $categoryRepository = Bootstrap::getObjectManager()->get(CategoryRepositoryInter
 try {
     $categoryRepository->deleteById(300);
 } catch (NoSuchEntityException $e) {
-    // Category doesn't exist
+    // Category already deleted
 }

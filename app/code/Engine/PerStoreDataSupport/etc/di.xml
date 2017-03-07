@@ -2,9 +2,6 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Engine\PerStoreDataSupport\Api\Data\StoreDataConfigurationInterface" type="Engine\PerStoreDataSupport\Model\StoreDataConfiguration"/>
-    <preference for="Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface" type="Engine\PerStoreDataSupport\Ui\DataProvider\DataProviderMetaModifier"/>
-    <preference for="Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface" type="Engine\PerStoreDataSupport\Ui\DataProvider\DataProviderSearchResultFactory"/>
-    <preference for="Engine\PerStoreDataSupport\Api\StoreDataConfigurationProviderInterface" type="Engine\PerStoreDataSupport\Model\StoreDataConfigurationProvider"/>
-    <preference for="Engine\PerStoreDataSupport\Api\StoreDataSelectProcessorInterface" type="Engine\PerStoreDataSupport\Model\StoreDataSelectProcessor"/>
+    <preference for="Engine\PerStoreDataSupport\Model\StoreDataConfigurationProviderInterface" type="Engine\PerStoreDataSupport\Model\StoreDataConfigurationProvider"/>
+    <preference for="Engine\PerStoreDataSupport\Model\StoreDataSelectProcessorInterface" type="Engine\PerStoreDataSupport\Model\StoreDataSelectProcessor"/>
 </config>

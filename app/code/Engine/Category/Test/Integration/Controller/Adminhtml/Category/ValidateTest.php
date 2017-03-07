@@ -19,7 +19,7 @@ class ValidateTest extends AbstractBackendController
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/engine-category/category/validate/store/0';
+    const REQUEST_URI = 'backend/engine-category/category/validate/store/%s';
 
     /**
      * @var FormKey
@@ -41,7 +41,7 @@ class ValidateTest extends AbstractBackendController
 
     /**
      * @param array $data
-     * @dataProvider successfulfailedValidationDataProvider
+     * @dataProvider successValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
      */
     public function testSuccessfulValidation(array $data)
@@ -53,7 +53,7 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -68,12 +68,24 @@ class ValidateTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function successfulfailedValidationDataProvider()
+    public function successValidationDataProvider()
     {
         $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
         return [
             'on_create' => [
                 [
+                    CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+                    CategoryInterface::URL_KEY => 'Category-urlKey',
+                    CategoryInterface::IS_ANCHOR => false,
+                    CategoryInterface::IS_ENABLED => false,
+                    CategoryInterface::POSITION => 1000,
+                    CategoryInterface::TITLE => 'Category-title',
+                    CategoryInterface::DESCRIPTION => 'Category-description',
+                ],
+            ],
+            'on_create_with_preset_id' => [
+                [
+                    CategoryInterface::CATEGORY_ID => 200,
                     CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
                     CategoryInterface::URL_KEY => 'Category-urlKey',
                     CategoryInterface::IS_ANCHOR => false,
@@ -125,7 +137,47 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
+
+        $body = $this->getResponse()->getBody();
+        self::assertNotEmpty($body);
+
+        $jsonResponse = json_decode($body);
+        self::assertNotEmpty($jsonResponse);
+        self::assertEquals(1, $jsonResponse->error);
+        self::assertContains($errorMessage, $jsonResponse->messages);
+    }
+
+    /**
+     * @param string $field
+     * @param mixed $value
+     * @param string $errorMessage
+     * @dataProvider failedValidationDataProvider
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
+     */
+    public function testFailedValidationOnCreateWithPresetId($field, $value, $errorMessage)
+    {
+        $data = [
+            CategoryInterface::CATEGORY_ID => 100,
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::URL_KEY => 'Category-urlKey',
+            CategoryInterface::IS_ANCHOR => false,
+            CategoryInterface::IS_ENABLED => false,
+            CategoryInterface::POSITION => 1000,
+            CategoryInterface::TITLE => 'Category-title',
+            CategoryInterface::DESCRIPTION => 'Category-description',
+        ];
+        $data[$field] = $value;
+
+        $request = $this->getRequest();
+        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $data,
+        ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -167,7 +219,7 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -236,7 +288,7 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -245,7 +297,6 @@ class ValidateTest extends AbstractBackendController
         $jsonResponse = json_decode($body);
         self::assertNotEmpty($jsonResponse);
         self::assertEquals(1, $jsonResponse->error);
-
         $errorMessage = 'Root Category can\'t has parent.';
         self::assertContains($errorMessage, $jsonResponse->messages);
     }
@@ -265,7 +316,7 @@ class ValidateTest extends AbstractBackendController
             ],
         ]);
 
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -289,11 +340,10 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => [
                 CategoryInterface::CATEGORY_ID => 100,
-                CategoryInterface::IS_ENABLED => false,
             ],
         ]);
 
-        $this->dispatch(self::REQUEST_URI);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();

@@ -74,6 +74,37 @@ class ValidationTest extends AbstractBackendController
      * @param mixed $value
      * @param string $errorMessage
      * @dataProvider failedValidationDataProvider
+     */
+    public function testFailedValidationOnCreateWithPresetId($field, $value, $errorMessage)
+    {
+        $data = [
+            CityInterface::CITY_ID => 100,
+            CityInterface::REGION_ID => 100,
+            CityInterface::IS_ENABLED => true,
+            CityInterface::POSITION => 100,
+            CityInterface::TITLE => 'City-title',
+        ];
+        $data[$field] = $value;
+
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $data,
+        ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertRedirect($this->stringContains('backend/engine-location/city'));
+        $this->assertSessionMessages($this->contains($errorMessage), MessageInterface::TYPE_ERROR);
+        self::assertNull($this->registry->registry(Save::REGISTRY_CITY_ID_KEY));
+    }
+
+    /**
+     * @param string $field
+     * @param mixed $value
+     * @param string $errorMessage
+     * @dataProvider failedValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      */
     public function testFailedValidationOnUpdate($field, $value, $errorMessage)

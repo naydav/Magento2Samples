@@ -1,7 +1,7 @@
 <?php
 namespace Engine\PerStoreDataSupport\Model\EntityManager;
 
-use Engine\PerStoreDataSupport\Api\StoreDataConfigurationProviderInterface;
+use Engine\PerStoreDataSupport\Model\StoreDataConfigurationProviderInterface;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\EntityManager\Operation\ExtensionInterface;
 use Magento\Framework\App\ResourceConnection;
@@ -9,7 +9,7 @@ use Magento\Store\Model\Store;
 
 /**
  * @author naydav <valeriy.nayda@gmail.com>
- * @api
+ * @spi
  */
 class CreateHandler implements ExtensionInterface
 {

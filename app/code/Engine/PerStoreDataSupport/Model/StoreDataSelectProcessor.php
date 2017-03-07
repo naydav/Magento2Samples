@@ -1,8 +1,6 @@
 <?php
 namespace Engine\PerStoreDataSupport\Model;
 
-use Engine\PerStoreDataSupport\Api\StoreDataConfigurationProviderInterface;
-use Engine\PerStoreDataSupport\Api\StoreDataSelectProcessorInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Store\Model\Store;

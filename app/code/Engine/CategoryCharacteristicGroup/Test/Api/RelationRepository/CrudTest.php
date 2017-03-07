@@ -41,7 +41,7 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Get',
             ],
         ];
-        $relationId = $this->_webApiCall($serviceInfo, ['relation' => $data]);
+        $relationId = $this->_webApiCall($serviceInfo, ['relation' => $data], null, 'all');
         self::assertNotEmpty($relationId);
 
         $relation = $this->getRelationById($relationId);

@@ -1,12 +1,11 @@
 <?php
 namespace Engine\PerStoreDataSupport\Model;
 
-use Engine\PerStoreDataSupport\Api\Data\StoreDataConfigurationInterface;
 use Magento\Framework\Api\AbstractSimpleObjectBuilder;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
- * @method StoreDataConfigurationInterface create()
+ * @method StoreDataConfiguration create()
  */
 class StoreDataConfigurationBuilder extends AbstractSimpleObjectBuilder
 {
@@ -16,7 +15,7 @@ class StoreDataConfigurationBuilder extends AbstractSimpleObjectBuilder
      */
     public function setFields(array $fields)
     {
-        $this->_set(StoreDataConfigurationInterface::FIELDS, $fields);
+        $this->_set(StoreDataConfiguration::FIELDS, $fields);
         return $this;
     }
 
@@ -26,7 +25,7 @@ class StoreDataConfigurationBuilder extends AbstractSimpleObjectBuilder
      */
     public function setStoreDataTable($storeDataTable)
     {
-        $this->_set(StoreDataConfigurationInterface::STORE_DATA_TABLE, $storeDataTable);
+        $this->_set(StoreDataConfiguration::STORE_DATA_TABLE, $storeDataTable);
         return $this;
     }
 
@@ -36,7 +35,7 @@ class StoreDataConfigurationBuilder extends AbstractSimpleObjectBuilder
      */
     public function setReferenceField($referenceField)
     {
-        $this->_set(StoreDataConfigurationInterface::REFERENCE_FIELD, $referenceField);
+        $this->_set(StoreDataConfiguration::REFERENCE_FIELD, $referenceField);
         return $this;
     }
 }

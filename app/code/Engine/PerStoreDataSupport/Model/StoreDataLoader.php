@@ -1,7 +1,6 @@
 <?php
 namespace Engine\PerStoreDataSupport\Model;
 
-use Engine\PerStoreDataSupport\Api\StoreDataConfigurationProviderInterface;
 use Magento\Framework\App\ResourceConnection;
 
 /**

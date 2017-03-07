@@ -8,5 +8,5 @@ $characteristicGroupRepository = Bootstrap::getObjectManager()->get(Characterist
 try {
     $characteristicGroupRepository->deleteById(300);
 } catch (NoSuchEntityException $e) {
-    // Characteristic Group doesn't exist
+    // Characteristic Group already deleted
 }

@@ -92,17 +92,23 @@ class GetListTest extends WebapiAbstract
                             ],
                         ],
                     ],
+                    'sort_orders' => [
+                        [
+                            'field' => CategoryInterface::CATEGORY_ID,
+                            'direction' => SortOrder::SORT_DESC,
+                        ],
+                    ],
                 ],
                 [
-                    [
-                        CategoryInterface::CATEGORY_ID => 300,
-                        CategoryInterface::IS_ENABLED => false,
-                        CategoryInterface::TITLE => 'Category-title-2',
-                    ],
                     [
                         CategoryInterface::CATEGORY_ID => 400,
                         CategoryInterface::IS_ENABLED => false,
                         CategoryInterface::TITLE => 'Category-title-1',
+                    ],
+                    [
+                        CategoryInterface::CATEGORY_ID => 300,
+                        CategoryInterface::IS_ENABLED => false,
+                        CategoryInterface::TITLE => 'Category-title-2',
                     ],
                 ],
             ],

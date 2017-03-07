@@ -81,9 +81,8 @@ class EditTest extends AbstractBackendController
      }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100_store_scope.php
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_200.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100_store_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_200_store_scope.php
      */
     public function testEditInStoreScope()
     {
@@ -122,12 +121,12 @@ class EditTest extends AbstractBackendController
             [
                 [
                     CityInterface::CITY_ID => 100,
-                    CityInterface::TITLE => 'City-title-100',
+                    CityInterface::TITLE => 'City-title-100-per-store',
                     CityInterface::IS_ENABLED => 1,
                 ],
                 [
                     CityInterface::CITY_ID => 200,
-                    CityInterface::TITLE => 'City-title-200',
+                    CityInterface::TITLE => 'City-title-200-per-store',
                     CityInterface::IS_ENABLED => 1,
                 ],
             ]

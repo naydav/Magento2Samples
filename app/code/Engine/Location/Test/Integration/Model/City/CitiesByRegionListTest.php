@@ -23,7 +23,7 @@ class CitiesByRegionListTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
      */
     public function testGetList()
     {

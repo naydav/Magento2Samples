@@ -64,7 +64,7 @@ class ValidationTest extends WebapiAbstract
         ];
 
         try {
-            $this->_webApiCall($serviceInfo, ['category' => $data]);
+            $this->_webApiCall($serviceInfo, ['category' => $data], null, 'all');
             $this->fail('Expected throwing exception');
         } catch (\SoapFault $e) {
             self::assertContains(
@@ -137,14 +137,14 @@ class ValidationTest extends WebapiAbstract
         $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
         $invalidMaxLengthUrlKey = str_repeat(1, UrlKeyValidator::MAX_URL_KEY_LENGTH + 1);
         return [
-            [
+            'empty_parent_id' => [
                 CategoryInterface::PARENT_ID,
                 null,
                 [
                     'message' => 'Category can\'t has empty parent.',
                 ],
             ],
-            [
+            'empty_url_key' => [
                 CategoryInterface::URL_KEY,
                 '',
                 [
@@ -154,7 +154,7 @@ class ValidationTest extends WebapiAbstract
                     ],
                 ],
             ],
-            [
+            'long_url_key' => [
                 CategoryInterface::URL_KEY,
                 $invalidMaxLengthUrlKey,
                 [
@@ -166,7 +166,7 @@ class ValidationTest extends WebapiAbstract
                     ],
                 ],
             ],
-            [
+            'already_exist_url_key' => [
                 CategoryInterface::URL_KEY,
                 'Category-urlKey-200',
                 [
@@ -180,7 +180,7 @@ class ValidationTest extends WebapiAbstract
                     ],
                 ],
             ],
-            [
+            'empty_title' => [
                 CategoryInterface::TITLE,
                 '',
                 [

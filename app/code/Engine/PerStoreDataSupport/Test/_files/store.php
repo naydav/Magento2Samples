@@ -17,7 +17,7 @@ if (null === $store->getId()) {
     $dataObjectHelper->populateWithArray(
         $store,
         [
-            'code' => 'test_store',
+            'code' => $storeCode,
             'website_id' => 1,
             'group_id' => 1,
             'name' => 'Test Store',

@@ -21,7 +21,7 @@ class GetListTest extends WebapiAbstract
 
     /**
      * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
-     * @magentoApiDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_list_global_scope.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_list.php
      * @param array $searchCriteria
      * @param array $expectedItemsData
      * @dataProvider dataProviderGetListIfValueIsInGlobalScope
@@ -87,17 +87,23 @@ class GetListTest extends WebapiAbstract
                             ],
                         ],
                     ],
+                    'sort_orders' => [
+                        [
+                            'field' => CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID,
+                            'direction' => SortOrder::SORT_DESC,
+                        ],
+                    ],
                 ],
                 [
-                    [
-                        CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID => 300,
-                        CharacteristicGroupInterface::IS_ENABLED => false,
-                        CharacteristicGroupInterface::TITLE => 'CharacteristicGroup-title-2',
-                    ],
                     [
                         CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID => 400,
                         CharacteristicGroupInterface::IS_ENABLED => false,
                         CharacteristicGroupInterface::TITLE => 'CharacteristicGroup-title-1',
+                    ],
+                    [
+                        CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID => 300,
+                        CharacteristicGroupInterface::IS_ENABLED => false,
+                        CharacteristicGroupInterface::TITLE => 'CharacteristicGroup-title-2',
                     ],
                 ],
             ],

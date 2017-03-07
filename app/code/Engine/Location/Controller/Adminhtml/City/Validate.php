@@ -72,7 +72,7 @@ class Validate extends Action
         $request = $this->getRequest();
         $requestData = $this->getRequest()->getParam('general');
 
-        if ($request->isXmlHttpRequest() && $this->getRequest()->isPost() && $requestData) {
+        if ($request->isXmlHttpRequest() && $request->isPost() && $requestData) {
             $cityId = !empty($requestData[CityInterface::CITY_ID])
                 ? $requestData[CityInterface::CITY_ID] : null;
 

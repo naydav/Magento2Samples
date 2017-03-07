@@ -7,7 +7,7 @@
 * Custom UI Listing column action
 * Custom UI Form button (example of custom redirect after saving)
 * Split Button example
-* Form fields based on Select field js files
+* Js components. Form fields depended on Select field.
 
 <h3>Category module</h3>
 * Custom Category module (grid, form, CRUD)
@@ -19,10 +19,10 @@ Pay attention: Category module don't know about CategoryTree module
 <h3>CategoryCharacteristicGroup module</h3>
 * Many to Many relation example (between Category and Characteristic Group)
 * Controller plugin example for save processing
-* Data provider plugin example for extendinf from from another module
+* Data provider plugin example for extending from from another module
 * Relation object (with additional data) example
 * Custom Search Criteria example (how to select entities based on relations)
-* Full UI management of Many-to-Many relations (dynamic rows, grid, modal etc)
+* Full UI management of Many-to-Many relations (dynamic rows, grid, modal etc) in separate module
 
 <h3>CategoryTree module</h3>
 * Example of adding functionality to another module (in this case extends Category module)
@@ -33,6 +33,7 @@ Pay attention: Category module don't know about CategoryTree module
 * Custom Characteristic Group module (grid, form, CRUD)
 * Need for extending by other modules
 * Validation example
+* Many to Many relation example (between Characteristic Group and Characteristic) in one of related module
 
 <h3>JsTree module</h3>
 * Base jstree support
@@ -55,6 +56,10 @@ Pay attention: Category module don't know about CategoryTree module
 * Work with DI  (virtual types, preferences)
 * Api tests, Integration tests
 * Validation example (@spi extension point)
+
+<h3>MagentoFix module</h3>
+* Some fixes of Core code
+* Example how to override core classes 
 
 <h3>PerStoreDataSupport module</h3>
 * Simple Data Per Store support

@@ -105,7 +105,7 @@ class CityManagementTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
      */
     public function testCreateWithCurrentCitiesSelecting()
     {
@@ -210,7 +210,7 @@ class CityManagementTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
      */
     public function testUpdateWithCurrentCitiesSelecting()
     {
@@ -262,7 +262,7 @@ class CityManagementTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
      */
     public function testUpdateWithCitiesReplacing()
     {
@@ -314,7 +314,7 @@ class CityManagementTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
      */
     public function testCitiesDataUpdating()
     {
@@ -372,7 +372,7 @@ class CityManagementTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
      */
     public function testUpdateWithWrongRequestMethod()
     {

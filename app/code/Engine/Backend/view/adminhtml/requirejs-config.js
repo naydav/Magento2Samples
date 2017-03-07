@@ -8,6 +8,7 @@ var config = {
             EngineDependOnOptionFieldset: 'Engine_Backend/js/form/depend-on-option/fieldset',
             EngineDependOnOptionInput: 'Engine_Backend/js/form/depend-on-option/input',
             EngineDependOnOptionSelect: 'Engine_Backend/js/form/depend-on-option/select',
+            EngineDependOnOptionUiSelect: 'Engine_Backend/js/form/depend-on-option/ui-select',
             EngineDependOnOptionTextarea: 'Engine_Backend/js/form/depend-on-option/textarea',
             EngineDependOnOptionYesNo: 'Engine_Backend/js/form/depend-on-option/yesno'
         }

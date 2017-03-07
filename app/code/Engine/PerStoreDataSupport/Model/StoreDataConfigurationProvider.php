@@ -1,8 +1,6 @@
 <?php
 namespace Engine\PerStoreDataSupport\Model;
 
-use Engine\PerStoreDataSupport\Api\Data\StoreDataConfigurationInterface;
-use Engine\PerStoreDataSupport\Api\StoreDataConfigurationProviderInterface;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
@@ -41,18 +39,18 @@ class StoreDataConfigurationProvider implements StoreDataConfigurationProviderIn
     {
         if (!isset(
             $this->configuration[$interfaceName],
-            $this->configuration[$interfaceName][StoreDataConfigurationInterface::FIELDS],
-            $this->configuration[$interfaceName][StoreDataConfigurationInterface::REFERENCE_FIELD],
-            $this->configuration[$interfaceName][StoreDataConfigurationInterface::STORE_DATA_TABLE]
+            $this->configuration[$interfaceName][StoreDataConfiguration::FIELDS],
+            $this->configuration[$interfaceName][StoreDataConfiguration::REFERENCE_FIELD],
+            $this->configuration[$interfaceName][StoreDataConfiguration::STORE_DATA_TABLE]
         )) {
             throw new LocalizedException(__('Invalid configuration for "%1".', $interfaceName));
         }
         $configurationData = $this->configuration[$interfaceName];
 
         $configuration = $this->storeDataConfigurationBuilder
-            ->setFields($configurationData[StoreDataConfigurationInterface::FIELDS])
-            ->setReferenceField($configurationData[StoreDataConfigurationInterface::REFERENCE_FIELD])
-            ->setStoreDataTable($configurationData[StoreDataConfigurationInterface::STORE_DATA_TABLE])
+            ->setFields($configurationData[StoreDataConfiguration::FIELDS])
+            ->setReferenceField($configurationData[StoreDataConfiguration::REFERENCE_FIELD])
+            ->setStoreDataTable($configurationData[StoreDataConfiguration::STORE_DATA_TABLE])
             ->create();
         return $configuration;
     }

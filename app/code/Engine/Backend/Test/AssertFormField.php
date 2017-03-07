@@ -54,7 +54,7 @@ class AssertFormField
 
             if (null === $dataNamespace) {
                 if (!isset($formData[$fieldset])) {
-                    \PHPUnit_Framework_Assert::fail("Data namespace '{$dataNamespace}' is missed");
+                    \PHPUnit_Framework_Assert::fail("Data namespace '{$fieldset}' is missed");
                 }
                 $fieldsetData = $formData[$fieldset];
             } else {

@@ -1,13 +1,17 @@
 <?php
 namespace Engine\CharacteristicGroup\Ui\DataProvider;
 
+use Engine\Characteristic\Api\CharacteristicRepositoryInterface;
+use Engine\Characteristic\Api\Data\CharacteristicInterface;
 use Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface;
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
-use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
-use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
+use Engine\PerStoreDataSupport\Ui\DataProvider\MetaDataBuilder;
+use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
+use Magento\Framework\Api\Search\SearchCriteriaBuilder as SearchSearchCriteriaBuilder;
+use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
@@ -30,9 +34,9 @@ class CharacteristicGroupDataProvider extends DataProvider
     private $storeManager;
 
     /**
-     * @var DataProviderMetaModifierInterface
+     * @var MetaDataBuilder
      */
-    private $dataProviderMetaModifier;
+    private $metaDataBuilder;
 
     /**
      * @var CharacteristicGroupRepositoryInterface
@@ -40,23 +44,35 @@ class CharacteristicGroupDataProvider extends DataProvider
     private $characteristicGroupRepository;
 
     /**
-     * @var DataProviderSearchResultFactoryInterface
+     * @var SearchResultFactory
      */
-    private $dataProviderSearchResultFactory;
+    private $searchResultFactory;
+
+    /**
+     * @var CharacteristicRepositoryInterface
+     */
+    private $characteristicRepository;
+
+    /**
+     * @var SearchCriteriaBuilderFactory
+     */
+    private $searchCriteriaBuilderFactory;
 
     /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
      * @param ReportingInterface $reporting
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param SearchSearchCriteriaBuilder $searchCriteriaBuilder
      * @param RequestInterface $request
      * @param FilterBuilder $filterBuilder
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
-     * @param DataProviderMetaModifierInterface $dataProviderMetaModifier
+     * @param MetaDataBuilder $metaDataBuilder
      * @param CharacteristicGroupRepositoryInterface $characteristicGroupRepository
-     * @param DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory
+     * @param SearchResultFactory $searchResultFactory
+     * @param CharacteristicRepositoryInterface $characteristicRepository
+     * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
      * @param array $meta
      * @param array $data
      */
@@ -65,14 +81,16 @@ class CharacteristicGroupDataProvider extends DataProvider
         $primaryFieldName,
         $requestFieldName,
         ReportingInterface $reporting,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
+        SearchSearchCriteriaBuilder $searchCriteriaBuilder,
         RequestInterface $request,
         FilterBuilder $filterBuilder,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
-        DataProviderMetaModifierInterface $dataProviderMetaModifier,
+        MetaDataBuilder $metaDataBuilder,
         CharacteristicGroupRepositoryInterface $characteristicGroupRepository,
-        DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory,
+        SearchResultFactory $searchResultFactory,
+        CharacteristicRepositoryInterface $characteristicRepository,
+        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         array $meta = [],
         array $data = []
     ) {
@@ -89,9 +107,11 @@ class CharacteristicGroupDataProvider extends DataProvider
         );
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
-        $this->dataProviderMetaModifier = $dataProviderMetaModifier;
+        $this->metaDataBuilder = $metaDataBuilder;
         $this->characteristicGroupRepository = $characteristicGroupRepository;
-        $this->dataProviderSearchResultFactory = $dataProviderSearchResultFactory;
+        $this->searchResultFactory = $searchResultFactory;
+        $this->characteristicRepository = $characteristicRepository;
+        $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
     }
 
     /**
@@ -129,11 +149,13 @@ class CharacteristicGroupDataProvider extends DataProvider
         if ('engine_characteristic_group_form_data_source' === $this->name) {
             $characteristicGroupId = $this->request->getParam(CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID);
             if (null !== $characteristicGroupId) {
-                $meta = $this->dataProviderMetaModifier->modify(
+                $fieldsMeta = $this->metaDataBuilder->build(
                     CharacteristicGroupInterface::class,
-                    $characteristicGroupId,
-                    $meta
+                    $characteristicGroupId
                 );
+                $meta['general']['children'] = (isset($meta['general']['children']))
+                    ? array_merge($meta['general']['children'], $fieldsMeta)
+                    : $fieldsMeta;
             }
         }
 
@@ -160,6 +182,9 @@ class CharacteristicGroupDataProvider extends DataProvider
                 $characteristicGroupId = $data['items'][0][CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID];
                 $dataForSingle[$characteristicGroupId] = [
                     'general' => $data['items'][0],
+                    'characteristics' => [
+                        'assigned_characteristics' => $this->getAssignedCharacteristicsData($characteristicGroupId),
+                    ],
                 ];
                 $data = $dataForSingle;
             } else {
@@ -177,12 +202,37 @@ class CharacteristicGroupDataProvider extends DataProvider
         $searchCriteria = $this->getSearchCriteria();
         $result = $this->characteristicGroupRepository->getList($searchCriteria);
 
-        $searchResult = $this->dataProviderSearchResultFactory->create(
+        $searchResult = $this->searchResultFactory->create(
             $result->getItems(),
             $result->getTotalCount(),
             $searchCriteria,
             CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID
         );
         return $searchResult;
+    }
+
+    /**
+     * @param int $characteristicGroupId
+     * @return array
+     */
+    private function getAssignedCharacteristicsData($characteristicGroupId)
+    {
+        /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
+        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
+        $searchCriteria = $searchCriteriaBuilder
+            ->addFilter('assigned_to_characteristic_group', $characteristicGroupId)
+            ->create();
+        $characteristics = $this->characteristicRepository->getList($searchCriteria)->getItems();
+
+        $assignedCharacteristicData = [];
+        foreach ($characteristics as $characteristic) {
+            $assignedCharacteristicData[] = [
+                CharacteristicInterface::CHARACTERISTIC_ID => (string)$characteristic->getCharacteristicId(),
+                CharacteristicInterface::IS_ENABLED => (int)$characteristic->getIsEnabled(),
+                CharacteristicInterface::BACKEND_TITLE => $characteristic->getBackendTitle(),
+                CharacteristicInterface::TITLE => $characteristic->getTitle(),
+            ];
+        }
+        return $assignedCharacteristicData;
     }
 }

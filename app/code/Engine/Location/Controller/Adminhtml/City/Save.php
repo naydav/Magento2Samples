@@ -96,7 +96,7 @@ class Save extends Action
                 }
                 $city = $this->hydrator->hydrate($city, $requestData);
                 $cityId = $this->cityRepository->save($city);
-                // Keep data for plugins on Save controller. Now we can not call separate services from one form.
+                // Keep data for plugins on Save controller. Now we can not call to separate services from one form.
                 $this->registry->register(self::REGISTRY_CITY_ID_KEY, $cityId);
 
                 $this->messageManager->addSuccessMessage(__('The City has been saved.'));

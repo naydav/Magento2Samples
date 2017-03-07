@@ -1,16 +1,23 @@
 <?php
 namespace Engine\PerStoreDataSupport\Model;
 
-use Engine\PerStoreDataSupport\Api\Data\StoreDataConfigurationInterface;
 use Magento\Framework\Api\AbstractSimpleObject;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  */
-class StoreDataConfiguration extends AbstractSimpleObject implements StoreDataConfigurationInterface
+class StoreDataConfiguration extends AbstractSimpleObject
 {
+    /**#@+
+     * Constants defined for keys of data array
+     */
+    const FIELDS = 'fields';
+    const STORE_DATA_TABLE = 'storeDataTable';
+    const REFERENCE_FIELD = 'referenceField';
+    /**#@-*/
+
     /**
-     * {@inheritdoc}
+     * @return array
      */
     public function getFields()
     {
@@ -18,7 +25,8 @@ class StoreDataConfiguration extends AbstractSimpleObject implements StoreDataCo
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $fields
+     * @return void
      */
     public function setFields(array $fields)
     {
@@ -26,7 +34,7 @@ class StoreDataConfiguration extends AbstractSimpleObject implements StoreDataCo
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getStoreDataTable()
     {
@@ -34,7 +42,8 @@ class StoreDataConfiguration extends AbstractSimpleObject implements StoreDataCo
     }
 
     /**
-     * {@inheritdoc}
+     * @param $storeDataTable
+     * @return void
      */
     public function setStoreDataTable($storeDataTable)
     {
@@ -42,7 +51,7 @@ class StoreDataConfiguration extends AbstractSimpleObject implements StoreDataCo
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getReferenceField()
     {
@@ -50,7 +59,8 @@ class StoreDataConfiguration extends AbstractSimpleObject implements StoreDataCo
     }
 
     /**
-     * {@inheritdoc}
+     * @param $referenceField
+     * @return void
      */
     public function setReferenceField($referenceField)
     {

@@ -2,10 +2,8 @@
 namespace Engine\CharacteristicGroup\Test\Api\CharacteristicGroupRepository;
 
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
-use Engine\CharacteristicGroup\Model\CharacteristicGroup\CharacteristicGroupValidator;
 use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
-use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
 /**
@@ -24,9 +22,9 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param mixed $value
      * @param array $expectedErrorObj
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      */
-    public function testValidationOnCreate($field, $value, array $expectedErrorObj)
+    public function testFailedValidationOnCreate($field, $value, array $expectedErrorObj)
     {
         $data = [
             CharacteristicGroupInterface::IS_ENABLED => false,
@@ -48,7 +46,7 @@ class ValidationTest extends WebapiAbstract
         ];
 
         try {
-            $this->_webApiCall($serviceInfo, ['characteristicGroup' => $data]);
+            $this->_webApiCall($serviceInfo, ['characteristicGroup' => $data], null, 'all');
             $this->fail('Expected throwing exception');
         } catch (\SoapFault $e) {
             self::assertContains(
@@ -67,10 +65,10 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param mixed $value
      * @param array $expectedErrorObj
-     * @dataProvider validationDataProvider
+     * @dataProvider failedValidationDataProvider
      * @magentoApiDataFixture ../../../../app/code/Engine/CharacteristicGroup/Test/_files/characteristic_group/characteristic_group_id_100.php
      */
-    public function testValidationOnUpdate($field, $value, array $expectedErrorObj)
+    public function testFailedValidationOnUpdate($field, $value, array $expectedErrorObj)
     {
         $characteristicGroupId = 100;
         $data = [
@@ -111,10 +109,10 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function validationDataProvider()
+    public function failedValidationDataProvider()
     {
         return [
-            [
+            'empty_title' => [
                 CharacteristicGroupInterface::TITLE,
                 '',
                 [

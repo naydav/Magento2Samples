@@ -3,8 +3,8 @@ namespace Engine\Location\Ui\DataProvider;
 
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
-use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
-use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
+use Engine\PerStoreDataSupport\Ui\DataProvider\MetaDataBuilder;
+use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
@@ -30,9 +30,9 @@ class CityDataProvider extends DataProvider
     private $storeManager;
 
     /**
-     * @var DataProviderMetaModifierInterface
+     * @var MetaDataBuilder
      */
-    private $dataProviderMetaModifier;
+    private $metaDataBuilder;
 
     /**
      * @var CityRepositoryInterface
@@ -40,9 +40,9 @@ class CityDataProvider extends DataProvider
     private $cityRepository;
 
     /**
-     * @var DataProviderSearchResultFactoryInterface
+     * @var SearchResultFactory
      */
-    private $dataProviderSearchResultFactory;
+    private $searchResultFactory;
 
     /**
      * @param string $name
@@ -54,9 +54,9 @@ class CityDataProvider extends DataProvider
      * @param FilterBuilder $filterBuilder
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
-     * @param DataProviderMetaModifierInterface $dataProviderMetaModifier
+     * @param MetaDataBuilder $metaDataBuilder
      * @param CityRepositoryInterface $cityRepository
-     * @param DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory
+     * @param SearchResultFactory $searchResultFactory
      * @param array $meta
      * @param array $data
      */
@@ -70,9 +70,9 @@ class CityDataProvider extends DataProvider
         FilterBuilder $filterBuilder,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
-        DataProviderMetaModifierInterface $dataProviderMetaModifier,
+        MetaDataBuilder $metaDataBuilder,
         CityRepositoryInterface $cityRepository,
-        DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory,
+        SearchResultFactory $searchResultFactory,
         array $meta = [],
         array $data = []
     ) {
@@ -89,9 +89,9 @@ class CityDataProvider extends DataProvider
         );
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
-        $this->dataProviderMetaModifier = $dataProviderMetaModifier;
+        $this->metaDataBuilder = $metaDataBuilder;
         $this->cityRepository = $cityRepository;
-        $this->dataProviderSearchResultFactory = $dataProviderSearchResultFactory;
+        $this->searchResultFactory = $searchResultFactory;
     }
 
     /**
@@ -129,11 +129,13 @@ class CityDataProvider extends DataProvider
         if ('engine_location_city_form_data_source' === $this->name) {
             $cityId = $this->request->getParam(CityInterface::CITY_ID);
             if (null !== $cityId) {
-                $meta = $this->dataProviderMetaModifier->modify(
+                $fieldsMeta = $this->metaDataBuilder->build(
                     CityInterface::class,
-                    $cityId,
-                    $meta
+                    $cityId
                 );
+                $meta['general']['children'] = (isset($meta['general']['children']))
+                    ? array_merge($meta['general']['children'], $fieldsMeta)
+                    : $fieldsMeta;
             }
         }
 
@@ -177,7 +179,7 @@ class CityDataProvider extends DataProvider
         $searchCriteria = $this->getSearchCriteria();
         $result = $this->cityRepository->getList($searchCriteria);
 
-        $searchResult = $this->dataProviderSearchResultFactory->create(
+        $searchResult = $this->searchResultFactory->create(
             $result->getItems(),
             $result->getTotalCount(),
             $searchCriteria,

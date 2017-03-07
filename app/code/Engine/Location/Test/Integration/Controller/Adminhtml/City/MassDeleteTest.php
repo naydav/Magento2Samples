@@ -47,7 +47,7 @@ class MassDeleteTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
      */
     public function testMassDelete()
     {
@@ -76,7 +76,7 @@ class MassDeleteTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
      */
     public function testMassDeleteWithWrongRequestMethod()
     {
@@ -101,7 +101,7 @@ class MassDeleteTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
      */
     public function testMassDeleteWithNotExistEntityId()
     {

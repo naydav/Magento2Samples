@@ -87,6 +87,41 @@ class ValidationTest extends AbstractBackendController
      * @param mixed $value
      * @param string $errorMessage
      * @dataProvider failedValidationDataProvider
+     * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
+     */
+    public function testFailedValidationOnCreateWithPresetId($field, $value, $errorMessage)
+    {
+        $data = [
+            CategoryInterface::CATEGORY_ID => 100,
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::URL_KEY => 'Category-urlKey',
+            CategoryInterface::IS_ANCHOR => true,
+            CategoryInterface::IS_ENABLED => true,
+            CategoryInterface::POSITION => 100,
+            CategoryInterface::TITLE => 'Category-title',
+            CategoryInterface::DESCRIPTION => 'Category-description',
+        ];
+        $data[$field] = $value;
+
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $data,
+        ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertRedirect($this->stringContains('backend/engine-category/category'));
+        $this->assertSessionMessages($this->contains($errorMessage), MessageInterface::TYPE_ERROR);
+        self::assertNull($this->registry->registry(Save::REGISTRY_CATEGORY_ID_KEY));
+    }
+
+    /**
+     * @param string $field
+     * @param mixed $value
+     * @param string $errorMessage
+     * @dataProvider failedValidationDataProvider
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_100.php
      * @magentoDataFixture ../../../../app/code/Engine/Category/Test/_files/category/category_id_200.php
      */
@@ -148,7 +183,7 @@ class ValidationTest extends AbstractBackendController
                 CategoryInterface::URL_KEY,
                 'Category-urlKey-200',
                 'Category with such url &quot;Category-urlKey-200&quot; already exist (Category title: '
-                    . 'Category-title-200, Category id: 200, Parent id: ' . $rootCategoryIdProvider->provide().  ').',
+                . 'Category-title-200, Category id: 200, Parent id: ' . $rootCategoryIdProvider->provide() . ').',
             ],
             [
                 CategoryInterface::TITLE,

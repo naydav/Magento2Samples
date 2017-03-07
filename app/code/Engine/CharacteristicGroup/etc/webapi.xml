@@ -32,4 +32,29 @@
             <resource ref="Engine_CharacteristicGroup::characteristic_group_characteristic_group"/>
         </resources>
     </route>
+    <!-- Characteristic Group to Characteristic Relation -->
+    <route url="/V1/engine-characteristic-group-characteristic/relations" method="GET">
+        <service class="Engine\CharacteristicGroup\Api\RelationRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Engine_CharacteristicGroup::relation"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-characteristic-group-characteristic/relations" method="POST">
+        <service class="Engine\CharacteristicGroup\Api\RelationRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Engine_CharacteristicGroup::relation"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-characteristic-group-characteristic/relations/:relationId" method="PUT">
+        <service class="Engine\CharacteristicGroup\Api\RelationRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Engine_CharacteristicGroup::relation"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-characteristic-group-characteristic/relations/:relationId" method="DELETE">
+        <service class="Engine\CharacteristicGroup\Api\RelationRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="Engine_CharacteristicGroup::relation"/>
+        </resources>
+    </route>
 </routes>

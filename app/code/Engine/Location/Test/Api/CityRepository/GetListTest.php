@@ -21,7 +21,7 @@ class GetListTest extends WebapiAbstract
 
     /**
      * @magentoApiDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
-     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list_global_scope.php
+     * @magentoApiDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
      * @param array $searchCriteria
      * @param array $expectedItemsData
      * @dataProvider dataProviderGetListIfValueIsInGlobalScope

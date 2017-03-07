@@ -4,6 +4,7 @@ namespace Engine\Category\Model\Category\Validator;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Model\Category\CategoryValidatorInterface;
 use Engine\Validation\Exception\ValidatorException;
+use Magento\Framework\EntityManager\EntityManager;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -18,12 +19,20 @@ class TitleValidator implements CategoryValidatorInterface
     private $storeManager;
 
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
      * @param StoreManagerInterface $storeManager
+     * @param EntityManager $entityManager
      */
     public function __construct(
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        EntityManager $entityManager
     ) {
         $this->storeManager = $storeManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -32,14 +41,10 @@ class TitleValidator implements CategoryValidatorInterface
     public function validate(CategoryInterface $category)
     {
         $storeId = (int)$this->storeManager->getStore()->getId();
-        $errors = [];
-
         $value = (string)$category->getTitle();
-        if ((Store::DEFAULT_STORE_ID === $storeId || !$category->getCategoryId()) && '' === $value) {
-            $errors[] = __('"%1" can not be empty.', CategoryInterface::TITLE);
-        }
 
-        if (count($errors)) {
+        if ((Store::DEFAULT_STORE_ID === $storeId || !$this->entityManager->has($category)) && '' === $value) {
+            $errors[] = __('"%1" can not be empty.', CategoryInterface::TITLE);
             throw new ValidatorException($errors);
         }
     }

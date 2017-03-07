@@ -72,7 +72,7 @@ class Validate extends Action
         $request = $this->getRequest();
         $requestData = $this->getRequest()->getParam('general');
 
-        if ($request->isXmlHttpRequest() && $this->getRequest()->isPost() && $requestData) {
+        if ($request->isXmlHttpRequest() && $request->isPost() && $requestData) {
             $regionId = !empty($requestData[RegionInterface::REGION_ID])
                 ? $requestData[RegionInterface::REGION_ID] : null;
 

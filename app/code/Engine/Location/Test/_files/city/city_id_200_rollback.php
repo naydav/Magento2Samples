@@ -8,7 +8,7 @@ $cityRepository = Bootstrap::getObjectManager()->get(CityRepositoryInterface::cl
 try {
     $cityRepository->deleteById(200);
 } catch (NoSuchEntityException $e) {
-    // City doesn't exist
+    // City already deleted
 }
 
 require '../../../app/code/Engine/Location/Test/_files/region/region_id_100_rollback.php';

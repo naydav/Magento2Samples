@@ -11,7 +11,7 @@
              resource="Engine_CharacteristicGroup::characteristic_group"/>
 
         <add id="Engine_CharacteristicGroup::characteristic_group_index"
-             title="Characteristic Group List"
+             title="Group List"
              translate="title"
              module="Engine_CharacteristicGroup"
              sortOrder="100"
@@ -20,7 +20,7 @@
              resource="Engine_CharacteristicGroup::characteristic_group_characteristic_group"/>
 
         <add id="Engine_CharacteristicGroup::characteristic_group_new"
-             title="Add Characteristic Group"
+             title="Add Group"
              translate="title"
              module="Engine_CharacteristicGroup"
              sortOrder="200"

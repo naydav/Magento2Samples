@@ -1,15 +1,15 @@
 <?php
 namespace Engine\PerStoreDataSupport\Model\EntityManager;
 
-use Engine\PerStoreDataSupport\Api\StoreDataConfigurationProviderInterface;
-use Engine\PerStoreDataSupport\Api\StoreDataSelectProcessorInterface;
+use Engine\PerStoreDataSupport\Model\StoreDataConfigurationProviderInterface;
+use Engine\PerStoreDataSupport\Model\StoreDataSelectProcessorInterface;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\EntityManager\Operation\ExtensionInterface;
 use Magento\Framework\App\ResourceConnection;
 
 /**
  * @author naydav <valeriy.nayda@gmail.com>
- * @api
+ * @spi
  */
 class ReadHandler implements ExtensionInterface
 {

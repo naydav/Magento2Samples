@@ -54,7 +54,7 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Get',
             ],
         ];
-        $categoryId = $this->_webApiCall($serviceInfo, ['category' => $data]);
+        $categoryId = $this->_webApiCall($serviceInfo, ['category' => $data], null, 'all');
         self::assertNotEmpty($categoryId);
 
         $category = $this->getCategoryById($categoryId);

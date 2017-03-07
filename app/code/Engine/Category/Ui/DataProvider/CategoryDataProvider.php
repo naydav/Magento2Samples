@@ -5,8 +5,8 @@ use Engine\Category\Api\CategoryRepositoryInterface;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Engine\Category\Model\Category\Source\GroupedCategorySource;
-use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
-use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
+use Engine\PerStoreDataSupport\Ui\DataProvider\MetaDataBuilder;
+use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
@@ -35,9 +35,9 @@ class CategoryDataProvider extends DataProvider
     private $storeManager;
 
     /**
-     * @var DataProviderMetaModifierInterface
+     * @var MetaDataBuilder
      */
-    private $dataProviderMetaModifier;
+    private $metaDataBuilder;
 
     /**
      * @var CategoryRepositoryInterface
@@ -45,9 +45,9 @@ class CategoryDataProvider extends DataProvider
     private $categoryRepository;
 
     /**
-     * @var DataProviderSearchResultFactoryInterface
+     * @var SearchResultFactory
      */
-    private $dataProviderSearchResultFactory;
+    private $searchResultFactory;
 
     /**
      * @var GroupedCategorySource
@@ -69,9 +69,9 @@ class CategoryDataProvider extends DataProvider
      * @param FilterBuilder $filterBuilder
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
-     * @param DataProviderMetaModifierInterface $dataProviderMetaModifier
+     * @param MetaDataBuilder $metaDataBuilder
      * @param CategoryRepositoryInterface $categoryRepository
-     * @param DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory
+     * @param SearchResultFactory $searchResultFactory
      * @param GroupedCategorySource $groupedCategorySource
      * @param RootCategoryIdProviderInterface $rootCategoryIdProvider
      * @param array $meta
@@ -87,9 +87,9 @@ class CategoryDataProvider extends DataProvider
         FilterBuilder $filterBuilder,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
-        DataProviderMetaModifierInterface $dataProviderMetaModifier,
+        MetaDataBuilder $metaDataBuilder,
         CategoryRepositoryInterface $categoryRepository,
-        DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory,
+        SearchResultFactory $searchResultFactory,
         GroupedCategorySource $groupedCategorySource,
         RootCategoryIdProviderInterface $rootCategoryIdProvider,
         array $meta = [],
@@ -108,9 +108,9 @@ class CategoryDataProvider extends DataProvider
         );
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
-        $this->dataProviderMetaModifier = $dataProviderMetaModifier;
+        $this->metaDataBuilder = $metaDataBuilder;
         $this->categoryRepository = $categoryRepository;
-        $this->dataProviderSearchResultFactory = $dataProviderSearchResultFactory;
+        $this->searchResultFactory = $searchResultFactory;
         $this->groupedCategorySource = $groupedCategorySource;
         $this->rootCategoryIdProvider = $rootCategoryIdProvider;
     }
@@ -176,10 +176,9 @@ class CategoryDataProvider extends DataProvider
                 ];
             }
             if (null !== $categoryId) {
-                $meta = $this->dataProviderMetaModifier->modify(
+                $meta['general']['children'] = $this->metaDataBuilder->build(
                     CategoryInterface::class,
-                    $categoryId,
-                    $meta
+                    $categoryId
                 );
             }
         }
@@ -224,7 +223,7 @@ class CategoryDataProvider extends DataProvider
         $searchCriteria = $this->getSearchCriteria();
         $result = $this->categoryRepository->getList($searchCriteria);
 
-        $searchResult = $this->dataProviderSearchResultFactory->create(
+        $searchResult = $this->searchResultFactory->create(
             $result->getItems(),
             $result->getTotalCount(),
             $searchCriteria,

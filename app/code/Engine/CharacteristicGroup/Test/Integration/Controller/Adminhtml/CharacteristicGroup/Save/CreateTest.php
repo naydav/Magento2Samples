@@ -97,7 +97,7 @@ class CreateTest extends AbstractBackendController
         $this->assertRedirect($this->stringContains($redirect));
 
         self::assertEquals(
-            $characteristicGroup->getcharacteristicGroupId(),
+            $characteristicGroup->getCharacteristicGroupId(),
             $this->registry->registry(Save::REGISTRY_CHARACTERISTIC_GROUP_ID_KEY)
         );
     }

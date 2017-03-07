@@ -39,7 +39,7 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Get',
             ],
         ];
-        $characteristicGroupId = $this->_webApiCall($serviceInfo, ['characteristicGroup' => $data]);
+        $characteristicGroupId = $this->_webApiCall($serviceInfo, ['characteristicGroup' => $data], null, 'all');
         self::assertNotEmpty($characteristicGroupId);
 
         $characteristicGroup = $this->getCharacteristicGroupById($characteristicGroupId);

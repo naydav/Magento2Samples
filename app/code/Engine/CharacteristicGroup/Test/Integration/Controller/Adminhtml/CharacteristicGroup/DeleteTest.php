@@ -1,6 +1,7 @@
 <?php
 namespace Engine\CharacteristicGroup\Test\Integration\Controller\Adminhtml\CharacteristicGroup;
 
+use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Message\MessageInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
@@ -38,7 +39,7 @@ class DeleteTest extends AbstractBackendController
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
-            'characteristic_group_id' => 100,
+            CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID => 100,
         ]);
 
         $this->dispatch(self::REQUEST_URI);
@@ -61,7 +62,7 @@ class DeleteTest extends AbstractBackendController
         $request->setMethod(Request::METHOD_GET);
         $request->setQueryValue([
             'form_key' => $this->formKey->getFormKey(),
-            'characteristic_group_id' => 100,
+            CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID => 100,
         ]);
 
         $this->dispatch(self::REQUEST_URI);
@@ -92,7 +93,7 @@ class DeleteTest extends AbstractBackendController
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
-            'characteristic_group_id' => -1,
+            CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID => -1,
         ]);
 
         $this->dispatch(self::REQUEST_URI);

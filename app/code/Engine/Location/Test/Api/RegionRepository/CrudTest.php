@@ -25,7 +25,6 @@ class CrudTest extends WebapiAbstract
     {
         $data = [
             RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 100,
             RegionInterface::TITLE => 'Region-title',
         ];
         $serviceInfo = [
@@ -38,7 +37,7 @@ class CrudTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Get',
             ],
         ];
-        $regionId = $this->_webApiCall($serviceInfo, ['region' => $data]);
+        $regionId = $this->_webApiCall($serviceInfo, ['region' => $data], null, 'all');
         self::assertNotEmpty($regionId);
 
         $region = $this->getRegionById($regionId);
@@ -60,7 +59,6 @@ class CrudTest extends WebapiAbstract
         $regionId = 100;
         $data = [
             RegionInterface::IS_ENABLED => false,
-            RegionInterface::POSITION => 20,
             RegionInterface::TITLE => 'Region-title-updated',
         ];
         $serviceInfo = [
@@ -129,7 +127,6 @@ class CrudTest extends WebapiAbstract
         $storeCode = 'test_store';
         $data = [
             RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 10,
             RegionInterface::TITLE => null,
         ];
         $serviceInfo = [
@@ -188,7 +185,6 @@ class CrudTest extends WebapiAbstract
         $expectedData = [
             RegionInterface::REGION_ID => $regionId,
             RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 100,
             RegionInterface::TITLE => 'Region-title-100',
         ];
         $region = $this->getRegionById($regionId);
@@ -205,7 +201,6 @@ class CrudTest extends WebapiAbstract
         $expectedData = [
             RegionInterface::REGION_ID => $regionId,
             RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 100,
             RegionInterface::TITLE => 'Region-title-100-per-store',
         ];
         $region = $this->getRegionById($regionId, $storeCode);

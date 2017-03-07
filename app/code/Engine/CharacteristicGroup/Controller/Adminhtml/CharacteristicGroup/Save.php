@@ -4,6 +4,7 @@ namespace Engine\CharacteristicGroup\Controller\Adminhtml\CharacteristicGroup;
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterfaceFactory;
 use Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface;
+use Engine\CharacteristicGroup\Model\CharacteristicGroupCharacteristicRelation\CharacteristicGroupRelationsProcessor;
 use Engine\Validation\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -48,24 +49,32 @@ class Save extends Action
     private $registry;
 
     /**
+     * @var CharacteristicGroupRelationsProcessor
+     */
+    private $characteristicGroupRelationsProcessor;
+
+    /**
      * @param Context $context
      * @param CharacteristicGroupInterfaceFactory $characteristicGroupFactory
      * @param CharacteristicGroupRepositoryInterface $characteristicGroupRepository
      * @param HydratorInterface $hydrator
      * @param Registry $registry
+     * @param CharacteristicGroupRelationsProcessor $characteristicGroupRelationsProcessor
      */
     public function __construct(
         Context $context,
         CharacteristicGroupInterfaceFactory $characteristicGroupFactory,
         CharacteristicGroupRepositoryInterface $characteristicGroupRepository,
         HydratorInterface $hydrator,
-        Registry $registry
+        Registry $registry,
+        CharacteristicGroupRelationsProcessor $characteristicGroupRelationsProcessor
     ) {
         parent::__construct($context);
         $this->characteristicGroupFactory = $characteristicGroupFactory;
         $this->characteristicGroupRepository = $characteristicGroupRepository;
         $this->hydrator = $hydrator;
         $this->registry = $registry;
+        $this->characteristicGroupRelationsProcessor = $characteristicGroupRelationsProcessor;
     }
 
     /**
@@ -96,7 +105,16 @@ class Save extends Action
                 }
                 $characteristicGroup = $this->hydrator->hydrate($characteristicGroup, $requestData);
                 $characteristicGroupId = $this->characteristicGroupRepository->save($characteristicGroup);
-                // Keep data for plugins on Save controller. Now we can not call separate services from one form.
+
+                $characteristicsRequestData = $this->getRequest()->getParam('characteristics', []);
+                if ($characteristicsRequestData) {
+                    $this->characteristicGroupRelationsProcessor->process(
+                        $characteristicGroupId,
+                        $characteristicsRequestData['assigned_characteristics']
+                    );
+                }
+
+                // Keep data for plugins on Save controller. Now we can not call to separate services from one form.
                 $this->registry->register(self::REGISTRY_CHARACTERISTIC_GROUP_ID_KEY, $characteristicGroupId);
 
                 $this->messageManager->addSuccessMessage(__('The Characteristic Group has been saved.'));

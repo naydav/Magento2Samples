@@ -5,8 +5,8 @@ use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Model\City\CitiesByRegionList;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\PerStoreDataSupport\Api\DataProviderMetaModifierInterface;
-use Engine\PerStoreDataSupport\Api\DataProviderSearchResultFactoryInterface;
+use Engine\PerStoreDataSupport\Ui\DataProvider\MetaDataBuilder;
+use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
@@ -32,9 +32,9 @@ class RegionDataProvider extends DataProvider
     private $storeManager;
 
     /**
-     * @var DataProviderMetaModifierInterface
+     * @var MetaDataBuilder
      */
-    private $dataProviderMetaModifier;
+    private $metaDataBuilder;
 
     /**
      * @var RegionRepositoryInterface
@@ -42,9 +42,9 @@ class RegionDataProvider extends DataProvider
     private $regionRepository;
 
     /**
-     * @var DataProviderSearchResultFactoryInterface
+     * @var SearchResultFactory
      */
-    private $dataProviderSearchResultFactory;
+    private $searchResultFactory;
 
     /**
      * @var CitiesByRegionList
@@ -61,9 +61,9 @@ class RegionDataProvider extends DataProvider
      * @param FilterBuilder $filterBuilder
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
-     * @param DataProviderMetaModifierInterface $dataProviderMetaModifier
+     * @param MetaDataBuilder $metaDataBuilder
      * @param RegionRepositoryInterface $regionRepository
-     * @param DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory
+     * @param SearchResultFactory $searchResultFactory
      * @param CitiesByRegionList $citiesByRegionList
      * @param array $meta
      * @param array $data
@@ -78,9 +78,9 @@ class RegionDataProvider extends DataProvider
         FilterBuilder $filterBuilder,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
-        DataProviderMetaModifierInterface $dataProviderMetaModifier,
+        MetaDataBuilder $metaDataBuilder,
         RegionRepositoryInterface $regionRepository,
-        DataProviderSearchResultFactoryInterface $dataProviderSearchResultFactory,
+        SearchResultFactory $searchResultFactory,
         CitiesByRegionList $citiesByRegionList,
         array $meta = [],
         array $data = []
@@ -98,9 +98,9 @@ class RegionDataProvider extends DataProvider
         );
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
-        $this->dataProviderMetaModifier = $dataProviderMetaModifier;
+        $this->metaDataBuilder = $metaDataBuilder;
         $this->regionRepository = $regionRepository;
-        $this->dataProviderSearchResultFactory = $dataProviderSearchResultFactory;
+        $this->searchResultFactory = $searchResultFactory;
         $this->citiesByRegionList = $citiesByRegionList;
     }
 
@@ -139,11 +139,13 @@ class RegionDataProvider extends DataProvider
         if ('engine_location_region_form_data_source' === $this->name) {
             $regionId = $this->request->getParam(RegionInterface::REGION_ID);
             if (null !== $regionId) {
-                $meta = $this->dataProviderMetaModifier->modify(
+                $fieldsMeta = $this->metaDataBuilder->build(
                     RegionInterface::class,
-                    $regionId,
-                    $meta
+                    $regionId
                 );
+                $meta['general']['children'] = (isset($meta['general']['children']))
+                    ? array_merge($meta['general']['children'], $fieldsMeta)
+                    : $fieldsMeta;
             }
         }
 
@@ -190,7 +192,7 @@ class RegionDataProvider extends DataProvider
         $searchCriteria = $this->getSearchCriteria();
         $result = $this->regionRepository->getList($searchCriteria);
 
-        $searchResult = $this->dataProviderSearchResultFactory->create(
+        $searchResult = $this->searchResultFactory->create(
             $result->getItems(),
             $result->getTotalCount(),
             $searchCriteria,

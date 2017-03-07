@@ -31,13 +31,13 @@ class MenuTest extends AbstractBackendController
         AssertMenuItem::assert(
             $body,
             'engine-characteristicgroup-characteristic-group-index',
-            'Characteristic Group List',
+            'Group List',
             'engine-characteristic-group/characteristicGroup'
         );
         AssertMenuItem::assert(
             $body,
             'engine-characteristicgroup-characteristic-group-new',
-            'Add Characteristic Group',
+            'Add Group',
             'engine-characteristic-group/characteristicGroup/new'
         );
     }

@@ -48,7 +48,7 @@
                 <item name="config" xsi:type="array">
                     <item name="label" xsi:type="string">Assigned Characteristic Groups</item>
                     <item name="renderDefaultRecord" xsi:type="boolean">false</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/dynamic-rows/dynamic-rows-grid</item>
+                    <item name="component" xsi:type="string">Engine_MagentoFix/js/dynamic-rows/dynamic-rows-grid</item>
                     <item name="addButton" xsi:type="boolean">false</item>
                     <item name="recordTemplate" xsi:type="string">record</item>
                     <item name="dataScope" xsi:type="string"/>

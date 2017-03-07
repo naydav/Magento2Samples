@@ -100,4 +100,52 @@
             </argument>
         </arguments>
     </type>
+    <!-- Characteristic Group to Characteristic Relation -->
+    <preference for="Engine\CharacteristicGroup\Api\Data\RelationInterface" type="Engine\CharacteristicGroup\Model\CharacteristicGroupCharacteristicRelation\Relation"/>
+    <preference for="Engine\CharacteristicGroup\Api\Data\RelationSearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Engine\CharacteristicGroup\Api\RelationRepositoryInterface"
+                type="Engine\CharacteristicGroup\Model\CharacteristicGroupCharacteristicRelation\RelationRepository"/>
+    <preference for="Engine\CharacteristicGroup\Model\CharacteristicGroupCharacteristicRelation\RelationValidatorInterface"
+                type="Engine\CharacteristicGroup\Model\CharacteristicGroupCharacteristicRelation\Validator\ValidatorChain"/>
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Engine\CharacteristicGroup\Api\Data\RelationInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">engine_characteristic_group_characteristic_relation</item>
+                    <item name="identifierField" xsi:type="string">relation_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Characteristic Group -->
+    <virtualType name="Engine\CharacteristicGroup\Model\CharacteristicGroup\Api\SearchCriteria\CollectionProcessor\CharacteristicGroupFilterProcessor">
+        <arguments>
+            <argument name="customFilters" xsi:type="array">
+                <item name="assigned_to_characteristic" xsi:type="object">Engine\CharacteristicGroup\Model\CharacteristicGroup\Api\SearchCriteria\CollectionProcessor\AssignedToCharacteristicFilterProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Characteristic -->
+    <type name="Engine\Characteristic\Controller\Adminhtml\Characteristic\Save">
+        <plugin name="save_characteristic_group_characteristic_relation" type="Engine\CharacteristicGroup\Controller\Adminhtml\Characteristic\SavePlugin\ProcessRelations"/>
+    </type>
+    <type name="Engine\Characteristic\Ui\DataProvider\CharacteristicDataProvider">
+        <plugin name="add_relation_data" type="Engine\CharacteristicGroup\Ui\DataProvider\CharacteristicDataProviderPlugin\AddRelationData"/>
+    </type>
+    <virtualType name="Engine\Characteristic\Model\Characteristic\Api\SearchCriteria\CollectionProcessor\CharacteristicFilterProcessor">
+        <arguments>
+            <argument name="customFilters" xsi:type="array">
+                <item name="assigned_to_characteristic_group" xsi:type="object">Engine\CharacteristicGroup\Model\Characteristic\Api\SearchCriteria\CollectionProcessor\AssignedToCharacteristicGroupFilterProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Base validation -->
+    <type name="Engine\CharacteristicGroup\Model\CharacteristicGroupCharacteristicRelation\Validator\ValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="characteristic_group" xsi:type="object">Engine\CharacteristicGroup\Model\CharacteristicGroupCharacteristicRelation\Validator\CharacteristicGroupValidator</item>
+                <item name="characteristic" xsi:type="object">Engine\CharacteristicGroup\Model\CharacteristicGroupCharacteristicRelation\Validator\CharacteristicValidator</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

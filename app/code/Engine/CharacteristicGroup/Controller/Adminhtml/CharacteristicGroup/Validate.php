@@ -72,7 +72,7 @@ class Validate extends Action
         $request = $this->getRequest();
         $requestData = $this->getRequest()->getParam('general');
 
-        if ($request->isXmlHttpRequest() && $this->getRequest()->isPost() && $requestData) {
+        if ($request->isXmlHttpRequest() && $request->isPost() && $requestData) {
             $characteristicGroupId = !empty($requestData[CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID])
                 ? $requestData[CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID] : null;
 

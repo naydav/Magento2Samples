@@ -2,10 +2,8 @@
 namespace Engine\Location\Test\Api\RegionRepository;
 
 use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Model\Region\RegionBaseValidator;
 use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
-use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
 /**
@@ -46,7 +44,7 @@ class ValidationTest extends WebapiAbstract
         ];
 
         try {
-            $this->_webApiCall($serviceInfo, ['region' => $data]);
+            $this->_webApiCall($serviceInfo, ['region' => $data], null, 'all');
             $this->fail('Expected throwing exception');
         } catch (\SoapFault $e) {
             self::assertContains(
@@ -110,7 +108,7 @@ class ValidationTest extends WebapiAbstract
     public function failedValidationDataProvider()
     {
         return [
-            [
+            'empty_title' => [
                 RegionInterface::TITLE,
                 '',
                 [

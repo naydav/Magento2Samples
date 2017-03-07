@@ -111,7 +111,7 @@ class Save extends Action
                     $this->regionCityRelationProcessor->process($regionId, $citiesRequestData['assigned_cities']);
                 }
 
-                // Keep data for plugins on Save controller. Now we can not call separate services from one form.
+                // Keep data for plugins on Save controller. Now we can not call to separate services from one form.
                 $this->registry->register(self::REGISTRY_REGION_ID_KEY, $regionId);
 
                 $this->messageManager->addSuccessMessage(__('The Region has been saved.'));
