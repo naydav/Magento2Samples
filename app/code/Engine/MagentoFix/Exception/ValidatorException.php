@@ -1,9 +1,11 @@
 <?php
-namespace Engine\Validation\Exception;
+namespace Engine\MagentoFix\Exception;
 
 use Magento\Framework\Exception\ValidatorException as BaseValidatorException;
 
 /**
+ * Add possibility to set several messages to exception
+ *
  * @author  naydav <valeriy.nayda@gmail.com>
  */
 class ValidatorException extends BaseValidatorException

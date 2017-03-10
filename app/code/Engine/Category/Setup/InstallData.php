@@ -9,8 +9,6 @@ use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Magento\Store\Model\Store;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -38,28 +36,20 @@ class InstallData implements InstallDataInterface
     private $rootCategoryIdProvider;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * @param CategoryInterfaceFactory $categoryFactory
      * @param CategoryRepositoryInterface $categoryRepository
      * @param HydratorInterface $hydrator
-     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         CategoryInterfaceFactory $categoryFactory,
         CategoryRepositoryInterface $categoryRepository,
         HydratorInterface $hydrator,
-        RootCategoryIdProviderInterface $rootCategoryIdProvider,
-        StoreManagerInterface $storeManager
+        RootCategoryIdProviderInterface $rootCategoryIdProvider
     ) {
         $this->categoryFactory = $categoryFactory;
         $this->categoryRepository = $categoryRepository;
         $this->hydrator = $hydrator;
         $this->rootCategoryIdProvider = $rootCategoryIdProvider;
-        $this->storeManager = $storeManager;
     }
 
     /**
@@ -67,7 +57,6 @@ class InstallData implements InstallDataInterface
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
-        $this->storeManager->setCurrentStore(Store::DEFAULT_STORE_ID);
         /** @var CategoryInterface $category */
         $category = $this->categoryFactory->create();
         $category = $this->hydrator->hydrate($category, [

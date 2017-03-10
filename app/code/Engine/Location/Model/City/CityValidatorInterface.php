@@ -2,7 +2,7 @@
 namespace Engine\Location\Model\City;
 
 use Engine\Location\Api\Data\CityInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 
 /**
  * Extension point for base validation

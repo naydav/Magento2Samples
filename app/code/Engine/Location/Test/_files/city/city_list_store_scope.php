@@ -55,7 +55,6 @@ foreach ($citiesData as $cityData) {
 
 // save per store data
 require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
-$currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);
 
@@ -69,4 +68,3 @@ foreach ($cityIds as $key => $cityId) {
     $city->setTitle('z-sort-' . $city->getTitle() . '-per-store');
     $cityRepository->save($city);
 }
-$storeManager->setCurrentStore($currentStore);

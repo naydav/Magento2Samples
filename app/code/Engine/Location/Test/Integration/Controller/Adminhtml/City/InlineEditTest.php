@@ -312,15 +312,10 @@ class InlineEditTest extends AbstractBackendController
     private function getCityById($cityId, $storeCode = null)
     {
         if (null !== $storeCode) {
-            $currentStore = $this->storeManager->getStore()->getCode();
             $this->storeManager->setCurrentStore($storeCode);
         }
 
         $city = $this->cityRepository->get($cityId);
-
-        if (null !== $storeCode) {
-            $this->storeManager->setCurrentStore($currentStore);
-        }
         return $city;
     }
 }

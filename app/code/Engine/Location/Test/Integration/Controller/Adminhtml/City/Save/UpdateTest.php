@@ -176,9 +176,9 @@ class UpdateTest extends AbstractBackendController
             'general' => [
                 CityInterface::CITY_ID => $cityId,
                 CityInterface::TITLE => 'City-title-per-store',
-            ],
-            'use_default' => [
-                CityInterface::TITLE => 1,
+                '_use_default' => [
+                    CityInterface::TITLE => 1,
+                ],
             ],
         ]);
         $this->dispatch(sprintf(self::REQUEST_URI, $storeCode));
@@ -258,15 +258,10 @@ class UpdateTest extends AbstractBackendController
     private function getCityById($cityId, $storeCode = null)
     {
         if (null !== $storeCode) {
-            $currentStore = $this->storeManager->getStore()->getCode();
             $this->storeManager->setCurrentStore($storeCode);
         }
 
         $city = $this->cityRepository->get($cityId);
-
-        if (null !== $storeCode) {
-            $this->storeManager->setCurrentStore($currentStore);
-        }
         return $city;
     }
 }

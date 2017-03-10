@@ -3,7 +3,7 @@ namespace Engine\CharacteristicGroup\Controller\Adminhtml\CharacteristicGroup;
 
 use Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface;
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;

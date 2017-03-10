@@ -134,7 +134,7 @@ class CityDataProvider extends DataProvider
                     $cityId
                 );
                 $meta['general']['children'] = (isset($meta['general']['children']))
-                    ? array_merge($meta['general']['children'], $fieldsMeta)
+                    ? array_replace_recursive($meta['general']['children'], $fieldsMeta)
                     : $fieldsMeta;
             }
         }

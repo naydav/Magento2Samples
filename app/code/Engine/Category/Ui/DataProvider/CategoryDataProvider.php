@@ -176,10 +176,13 @@ class CategoryDataProvider extends DataProvider
                 ];
             }
             if (null !== $categoryId) {
-                $meta['general']['children'] = $this->metaDataBuilder->build(
+                $fieldsMeta = $this->metaDataBuilder->build(
                     CategoryInterface::class,
                     $categoryId
                 );
+                $meta['general']['children'] = (isset($meta['general']['children']))
+                    ? array_replace_recursive($meta['general']['children'], $fieldsMeta)
+                    : $fieldsMeta;
             }
         }
 

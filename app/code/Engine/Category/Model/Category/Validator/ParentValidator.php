@@ -4,7 +4,7 @@ namespace Engine\Category\Model\Category\Validator;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Engine\Category\Model\Category\CategoryValidatorInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>

@@ -2,7 +2,7 @@
 namespace Engine\Category\Model\Category;
 
 use Engine\Category\Api\Data\CategoryInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 
 /**
  * Extension point for base validation

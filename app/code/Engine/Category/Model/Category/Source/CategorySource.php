@@ -2,7 +2,6 @@
 namespace Engine\Category\Model\Category\Source;
 
 use Engine\Category\Api\Data\CategoryInterface;
-use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Engine\Category\Model\Category\ResourceModel\CategoryCollection;
 use Engine\Category\Model\Category\ResourceModel\CategoryCollectionFactory;
 use Magento\Framework\Data\OptionSourceInterface;
@@ -19,25 +18,17 @@ class CategorySource implements OptionSourceInterface
     private $categoryCollectionFactory;
 
     /**
-     * @var RootCategoryIdProviderInterface
-     */
-    private $rootCategoryIdProvider;
-
-    /**
      * @var array|null
      */
     private $data;
 
     /**
      * @param CategoryCollectionFactory $categoryCollectionFactory
-     * @param RootCategoryIdProviderInterface $rootCategoryIdProvider
      */
     public function __construct(
-        CategoryCollectionFactory $categoryCollectionFactory,
-        RootCategoryIdProviderInterface $rootCategoryIdProvider
+        CategoryCollectionFactory $categoryCollectionFactory
     ) {
         $this->categoryCollectionFactory = $categoryCollectionFactory;
-        $this->rootCategoryIdProvider = $rootCategoryIdProvider;
     }
 
     /**

@@ -66,7 +66,6 @@ foreach ($categoriesData as $categoryData) {
 
 // save per store data
 require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
-$currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);
 
@@ -81,4 +80,3 @@ foreach ($categoryIds as $key => $categoryId) {
     $category->setDescription('z-sort-' . $category->getDescription() . '-per-store');
     $categoryRepository->save($category);
 }
-$storeManager->setCurrentStore($currentStore);

@@ -51,7 +51,6 @@ foreach ($regionsData as $regionData) {
 
 // save per store data
 require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
-$currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);
 
@@ -65,4 +64,3 @@ foreach ($regionIds as $key => $regionId) {
     $region->setTitle('z-sort-' . $region->getTitle() . '-per-store');
     $regionRepository->save($region);
 }
-$storeManager->setCurrentStore($currentStore);

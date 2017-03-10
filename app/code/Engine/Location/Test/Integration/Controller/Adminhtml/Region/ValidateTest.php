@@ -68,14 +68,6 @@ class ValidateTest extends AbstractBackendController
                     RegionInterface::TITLE => 'Region-title',
                 ],
             ],
-            'on_create_with_preset_id' => [
-                [
-                    RegionInterface::REGION_ID => 200,
-                    RegionInterface::IS_ENABLED => true,
-                    RegionInterface::POSITION => 100,
-                    RegionInterface::TITLE => 'Region-title',
-                ],
-            ],
             'on_update' => [
                 [
                     RegionInterface::REGION_ID => 100,
@@ -96,41 +88,6 @@ class ValidateTest extends AbstractBackendController
     public function testFailedValidationOnCreate($field, $value, $errorMessage)
     {
         $data = [
-            RegionInterface::IS_ENABLED => true,
-            RegionInterface::POSITION => 100,
-            RegionInterface::TITLE => 'Region-title',
-        ];
-        $data[$field] = $value;
-
-        $request = $this->getRequest();
-        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
-        $request->setMethod(Request::METHOD_POST);
-        $request->setPostValue([
-            'form_key' => $this->formKey->getFormKey(),
-            'general' => $data,
-        ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
-        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
-
-        $body = $this->getResponse()->getBody();
-        self::assertNotEmpty($body);
-
-        $jsonResponse = json_decode($body);
-        self::assertNotEmpty($jsonResponse);
-        self::assertEquals(1, $jsonResponse->error);
-        self::assertContains($errorMessage, $jsonResponse->messages);
-    }
-
-    /**
-     * @param string $field
-     * @param mixed $value
-     * @param string $errorMessage
-     * @dataProvider failedValidationDataProvider
-     */
-    public function testFailedValidationOnCreateWithPresetId($field, $value, $errorMessage)
-    {
-        $data = [
-            RegionInterface::REGION_ID => 100,
             RegionInterface::IS_ENABLED => true,
             RegionInterface::POSITION => 100,
             RegionInterface::TITLE => 'Region-title',
@@ -258,5 +215,29 @@ class ValidateTest extends AbstractBackendController
         self::assertNotEmpty($jsonResponse);
         self::assertEquals(1, $jsonResponse->error);
         self::assertContains('Please correct the data sent.', $jsonResponse->messages);
+    }
+
+    public function testValidateWithNotExistEntityId()
+    {
+        $request = $this->getRequest();
+        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
+        $request->setMethod(Request::METHOD_POST);
+        $request->setQueryValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => [
+                RegionInterface::REGION_ID => -1,
+            ],
+        ]);
+
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
+
+        $body = $this->getResponse()->getBody();
+        self::assertNotEmpty($body);
+
+        $jsonResponse = json_decode($body);
+        self::assertNotEmpty($jsonResponse);
+        self::assertEquals(1, $jsonResponse->error);
+        self::assertContains('The Region does not exist.', $jsonResponse->messages);
     }
 }

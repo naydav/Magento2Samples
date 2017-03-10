@@ -5,7 +5,7 @@ use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterfaceFactory;
 use Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface;
 use Engine\CharacteristicGroup\Model\CharacteristicGroupCharacteristicRelation\CharacteristicGroupRelationsProcessor;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\EntityManager\HydratorInterface;
@@ -86,9 +86,9 @@ class Save extends Action
         $requestData = $this->getRequest()->getParam('general');
         if ($this->getRequest()->isPost() && $requestData) {
             try {
-                $useDefaults = $this->getRequest()->getParam('use_default', []);
-                if ($useDefaults) {
-                    foreach ($useDefaults as $field => $useDefaultState) {
+                if (isset($requestData['_use_default'])) {
+                    // UI component sends value even if field is disabled, so 'Use Config Settings' must be set to null
+                    foreach ($requestData['_use_default'] as $field => $useDefaultState) {
                         if (1 === (int)$useDefaultState) {
                             $requestData[$field] = null;
                         }

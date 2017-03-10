@@ -4,7 +4,7 @@ namespace Engine\CategoryCharacteristicGroup\Model\CategoryCharacteristicGroupRe
 use Engine\CategoryCharacteristicGroup\Api\Data\RelationInterface;
 use Engine\CategoryCharacteristicGroup\Model\CategoryCharacteristicGroupRelation\RelationValidatorInterface;
 use Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**

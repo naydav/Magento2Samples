@@ -346,15 +346,10 @@ class InlineEditTest extends AbstractBackendController
     private function getCategoryById($categoryId, $storeCode = null)
     {
         if (null !== $storeCode) {
-            $currentStore = $this->storeManager->getStore()->getCode();
             $this->storeManager->setCurrentStore($storeCode);
         }
 
         $category = $this->categoryRepository->get($categoryId);
-
-        if (null !== $storeCode) {
-            $this->storeManager->setCurrentStore($currentStore);
-        }
         return $category;
     }
 }

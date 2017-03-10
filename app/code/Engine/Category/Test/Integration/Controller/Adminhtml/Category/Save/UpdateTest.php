@@ -190,10 +190,10 @@ class UpdateTest extends AbstractBackendController
                 CategoryInterface::POSITION => 100,
                 CategoryInterface::TITLE => 'Category-title-per-store',
                 CategoryInterface::DESCRIPTION => 'Category-description-per-store',
-            ],
-            'use_default' => [
-                CategoryInterface::TITLE => 1,
-                CategoryInterface::DESCRIPTION => 1,
+                '_use_default' => [
+                    CategoryInterface::TITLE => 1,
+                    CategoryInterface::DESCRIPTION => 1,
+                ],
             ],
         ]);
         $this->dispatch(sprintf(self::REQUEST_URI, $storeCode));
@@ -274,15 +274,10 @@ class UpdateTest extends AbstractBackendController
     private function getCategoryById($categoryId, $storeCode = null)
     {
         if (null !== $storeCode) {
-            $currentStore = $this->storeManager->getStore()->getCode();
             $this->storeManager->setCurrentStore($storeCode);
         }
 
         $category = $this->categoryRepository->get($categoryId);
-
-        if (null !== $storeCode) {
-            $this->storeManager->setCurrentStore($currentStore);
-        }
         return $category;
     }
 }

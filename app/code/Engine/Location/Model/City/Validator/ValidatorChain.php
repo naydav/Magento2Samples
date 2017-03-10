@@ -3,7 +3,7 @@ namespace Engine\Location\Model\City\Validator;
 
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Model\City\CityValidatorInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Framework\Exception\LocalizedException;
 
 /**

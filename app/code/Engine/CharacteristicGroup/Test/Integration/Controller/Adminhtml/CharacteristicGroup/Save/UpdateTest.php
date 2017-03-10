@@ -178,10 +178,10 @@ class UpdateTest extends AbstractBackendController
                 CharacteristicGroupInterface::BACKEND_TITLE => 'CharacteristicGroup-backendTitle-updated',
                 CharacteristicGroupInterface::TITLE => 'CharacteristicGroup-title-per-store',
                 CharacteristicGroupInterface::DESCRIPTION => 'CharacteristicGroup-description-per-store',
-            ],
-            'use_default' => [
-                CharacteristicGroupInterface::TITLE => 1,
-                CharacteristicGroupInterface::DESCRIPTION => 1,
+                '_use_default' => [
+                    CharacteristicGroupInterface::TITLE => 1,
+                    CharacteristicGroupInterface::DESCRIPTION => 1,
+                ],
             ],
         ]);
         $this->dispatch(sprintf(self::REQUEST_URI, $storeCode));
@@ -261,15 +261,10 @@ class UpdateTest extends AbstractBackendController
     private function getCharacteristicGroupById($characteristicGroupId, $storeCode = null)
     {
         if (null !== $storeCode) {
-            $currentStore = $this->storeManager->getStore()->getCode();
             $this->storeManager->setCurrentStore($storeCode);
         }
 
         $characteristicGroup = $this->characteristicGroupRepository->get($characteristicGroupId);
-
-        if (null !== $storeCode) {
-            $this->storeManager->setCurrentStore($currentStore);
-        }
         return $characteristicGroup;
     }
 }

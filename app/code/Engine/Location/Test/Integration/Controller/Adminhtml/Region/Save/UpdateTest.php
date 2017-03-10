@@ -172,9 +172,9 @@ class UpdateTest extends AbstractBackendController
             'general' => [
                 RegionInterface::REGION_ID => $regionId,
                 RegionInterface::TITLE => 'Region-title-per-store',
-            ],
-            'use_default' => [
-                RegionInterface::TITLE => 1,
+                '_use_default' => [
+                    RegionInterface::TITLE => 1,
+                ],
             ],
         ]);
         $this->dispatch(sprintf(self::REQUEST_URI, $storeCode));
@@ -253,15 +253,10 @@ class UpdateTest extends AbstractBackendController
     private function getRegionById($regionId, $storeCode = null)
     {
         if (null !== $storeCode) {
-            $currentStore = $this->storeManager->getStore()->getCode();
             $this->storeManager->setCurrentStore($storeCode);
         }
 
         $region = $this->regionRepository->get($regionId);
-
-        if (null !== $storeCode) {
-            $this->storeManager->setCurrentStore($currentStore);
-        }
         return $region;
     }
 }

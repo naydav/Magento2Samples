@@ -26,7 +26,7 @@ interface CharacteristicGroupRepositoryInterface
      * @param \Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface $characteristicGroup
      * @return int
      * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Engine\Validation\Exception\ValidatorException
+     * @throws \Engine\MagentoFix\Exception\ValidatorException
      */
     public function save(\Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface $characteristicGroup);
 

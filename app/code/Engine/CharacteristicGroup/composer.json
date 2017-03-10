@@ -13,7 +13,7 @@
         "engine/characteristic": "100.1.*",
         "engine/per-store-data-support": "100.1.*",
         "engine/test": "100.1.*",
-        "engine/validation": "100.1.*"
+        "engine/magento-fix": "100.1.*"
     },
     "autoload": {
         "files": [

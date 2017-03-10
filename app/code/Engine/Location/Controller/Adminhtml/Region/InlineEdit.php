@@ -3,7 +3,7 @@ namespace Engine\Location\Controller\Adminhtml\Region;
 
 use Engine\Location\Api\RegionRepositoryInterface;
 use Engine\Location\Api\Data\RegionInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;

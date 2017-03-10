@@ -5,12 +5,13 @@ use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterfaceFactory;
 use Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface;
 use Engine\CharacteristicGroup\Model\CharacteristicGroup\CharacteristicGroupValidatorInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\EntityManager\HydratorInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -76,16 +77,17 @@ class Validate extends Action
             $characteristicGroupId = !empty($requestData[CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID])
                 ? $requestData[CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID] : null;
 
-            if ($characteristicGroupId) {
-                $characteristicGroup = $this->characteristicGroupRepository->get($characteristicGroupId);
-            } else {
-                /** @var CharacteristicGroupInterface $characteristicGroup */
-                $characteristicGroup = $this->characteristicGroupFactory->create();
-            }
-            $characteristicGroup = $this->hydrator->hydrate($characteristicGroup, $requestData);
-
             try {
+                if ($characteristicGroupId) {
+                    $characteristicGroup = $this->characteristicGroupRepository->get($characteristicGroupId);
+                } else {
+                    /** @var CharacteristicGroupInterface $characteristicGroup */
+                    $characteristicGroup = $this->characteristicGroupFactory->create();
+                }
+                $characteristicGroup = $this->hydrator->hydrate($characteristicGroup, $requestData);
                 $this->characteristicGroupValidator->validate($characteristicGroup);
+            } catch (NoSuchEntityException $e) {
+                $errorMessages[] = __('The CharacteristicGroup does not exist.');
             } catch (ValidatorException $e) {
                 $errorMessages = $e->getErrors();
             }

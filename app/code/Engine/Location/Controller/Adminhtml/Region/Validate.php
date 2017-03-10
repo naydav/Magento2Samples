@@ -5,12 +5,13 @@ use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\Data\RegionInterfaceFactory;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Engine\Location\Model\Region\RegionValidatorInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\EntityManager\HydratorInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -76,16 +77,17 @@ class Validate extends Action
             $regionId = !empty($requestData[RegionInterface::REGION_ID])
                 ? $requestData[RegionInterface::REGION_ID] : null;
 
-            if ($regionId) {
-                $region = $this->regionRepository->get($regionId);
-            } else {
-                /** @var RegionInterface $region */
-                $region = $this->regionFactory->create();
-            }
-            $region = $this->hydrator->hydrate($region, $requestData);
-
             try {
+                if ($regionId) {
+                    $region = $this->regionRepository->get($regionId);
+                } else {
+                    /** @var RegionInterface $region */
+                    $region = $this->regionFactory->create();
+                }
+                $region = $this->hydrator->hydrate($region, $requestData);
                 $this->regionValidator->validate($region);
+            } catch (NoSuchEntityException $e) {
+                $errorMessages[] = __('The Region does not exist.');
             } catch (ValidatorException $e) {
                 $errorMessages = $e->getErrors();
             }

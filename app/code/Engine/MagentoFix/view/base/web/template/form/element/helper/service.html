@@ -1,0 +1,17 @@
+<!--
+/**
+ * Add namespace for use_default values
+ * Substr is used for cut off 'data.' prefix
+ */
+-->
+<div class="admin__field-service">
+    <input type="checkbox"
+           class="admin__control-checkbox"
+           attr="
+                id: $data.uid + '_default',
+                name: $data.parentScope.substr(5) + '._use_default.' + $data.index,
+                'data-form-part': $data.ns
+           "
+           ko-checked="isUseDefault">
+    <label translate="'Use Default Value'" attr="for: $data.uid + '_default'" class="admin__field-label"></label>
+</div>

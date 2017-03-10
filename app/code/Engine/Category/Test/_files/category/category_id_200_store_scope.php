@@ -34,7 +34,6 @@ $categoryId = $categoryRepository->save($category);
 
 // save per store data
 require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
-$currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);
 
@@ -42,5 +41,3 @@ $category = $categoryRepository->get($categoryId);
 $category->setTitle($category->getTitle() . '-per-store');
 $category->setDescription($category->getDescription() . '-per-store');
 $categoryRepository->save($category);
-
-$storeManager->setCurrentStore($currentStore);

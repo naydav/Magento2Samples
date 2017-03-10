@@ -42,7 +42,7 @@ class MetaDataBuilder
         StoreDataConfigurationProviderInterface $storeDataConfigurationProvider,
         StoreManagerInterface $storeManager,
         StoreDataLoader $storeDataLoader,
-        $helperServiceTemplate = 'ui/form/element/helper/service'
+        $helperServiceTemplate = 'Engine_MagentoFix/form/element/helper/service'
     ) {
         $this->storeDataConfigurationProvider = $storeDataConfigurationProvider;
         $this->storeManager = $storeManager;

@@ -3,7 +3,7 @@ namespace Engine\Location\Model\Region\Validator;
 
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Model\Region\RegionValidatorInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Framework\EntityManager\EntityManager;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;

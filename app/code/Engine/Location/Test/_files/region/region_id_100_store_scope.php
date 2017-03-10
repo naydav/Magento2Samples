@@ -27,12 +27,9 @@ $regionId = $regionRepository->save($region);
 
 // save per store data
 require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
-$currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);
 
 $region = $regionRepository->get($regionId);
 $region->setTitle($region->getTitle() . '-per-store');
 $regionRepository->save($region);
-
-$storeManager->setCurrentStore($currentStore);

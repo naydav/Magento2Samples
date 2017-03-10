@@ -5,12 +5,13 @@ use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\Data\CityInterfaceFactory;
 use Engine\Location\Api\CityRepositoryInterface;
 use Engine\Location\Model\City\CityValidatorInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\EntityManager\HydratorInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -76,16 +77,17 @@ class Validate extends Action
             $cityId = !empty($requestData[CityInterface::CITY_ID])
                 ? $requestData[CityInterface::CITY_ID] : null;
 
-            if ($cityId) {
-                $city = $this->cityRepository->get($cityId);
-            } else {
-                /** @var CityInterface $city */
-                $city = $this->cityFactory->create();
-            }
-            $city = $this->hydrator->hydrate($city, $requestData);
-
             try {
+                if ($cityId) {
+                    $city = $this->cityRepository->get($cityId);
+                } else {
+                    /** @var CityInterface $city */
+                    $city = $this->cityFactory->create();
+                }
+                $city = $this->hydrator->hydrate($city, $requestData);
                 $this->cityValidator->validate($city);
+            } catch (NoSuchEntityException $e) {
+                $errorMessages[] = __('The City does not exist.');
             } catch (ValidatorException $e) {
                 $errorMessages = $e->getErrors();
             }

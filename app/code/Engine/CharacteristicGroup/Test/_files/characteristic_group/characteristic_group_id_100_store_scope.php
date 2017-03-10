@@ -28,7 +28,6 @@ $characteristicGroupId = $characteristicGroupRepository->save($characteristicGro
 
 // save per store data
 require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
-$currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);
 
@@ -36,5 +35,3 @@ $characteristicGroup = $characteristicGroupRepository->get($characteristicGroupI
 $characteristicGroup->setTitle($characteristicGroup->getTitle() . '-per-store');
 $characteristicGroup->setDescription($characteristicGroup->getDescription() . '-per-store');
 $characteristicGroupRepository->save($characteristicGroup);
-
-$storeManager->setCurrentStore($currentStore);

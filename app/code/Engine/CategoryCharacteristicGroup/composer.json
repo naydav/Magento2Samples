@@ -11,7 +11,7 @@
         "engine/category": "100.1.*",
         "engine/characteristic-group": "100.1.*",
         "engine/test": "100.1.*",
-        "engine/validation": "100.1.*"
+        "engine/magento-fix": "100.1.*"
     },
     "autoload": {
         "files": [

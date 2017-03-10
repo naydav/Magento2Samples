@@ -3,7 +3,7 @@ namespace Engine\CharacteristicGroup\Model\CharacteristicGroup\Validator;
 
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
 use Engine\CharacteristicGroup\Model\CharacteristicGroup\CharacteristicGroupValidatorInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Framework\Exception\LocalizedException;
 
 /**

@@ -69,15 +69,6 @@ class ValidateTest extends AbstractBackendController
                     CityInterface::TITLE => 'City-title',
                 ],
             ],
-            'on_create_with_preset_id' => [
-                [
-                    CityInterface::CITY_ID => 200,
-                    CityInterface::REGION_ID => 100,
-                    CityInterface::IS_ENABLED => true,
-                    CityInterface::POSITION => 100,
-                    CityInterface::TITLE => 'City-title',
-                ],
-            ],
             'on_update' => [
                 [
                     CityInterface::CITY_ID => 100,
@@ -99,42 +90,6 @@ class ValidateTest extends AbstractBackendController
     public function testFailedValidationOnCreate($field, $value, $errorMessage)
     {
         $data = [
-            CityInterface::REGION_ID => 100,
-            CityInterface::IS_ENABLED => true,
-            CityInterface::POSITION => 100,
-            CityInterface::TITLE => 'City-title',
-        ];
-        $data[$field] = $value;
-
-        $request = $this->getRequest();
-        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
-        $request->setMethod(Request::METHOD_POST);
-        $request->setPostValue([
-            'form_key' => $this->formKey->getFormKey(),
-            'general' => $data,
-        ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
-        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
-
-        $body = $this->getResponse()->getBody();
-        self::assertNotEmpty($body);
-
-        $jsonResponse = json_decode($body);
-        self::assertNotEmpty($jsonResponse);
-        self::assertEquals(1, $jsonResponse->error);
-        self::assertContains($errorMessage, $jsonResponse->messages);
-    }
-
-    /**
-     * @param string $field
-     * @param mixed $value
-     * @param string $errorMessage
-     * @dataProvider failedValidationDataProvider
-     */
-    public function testFailedValidationOnCreateWithPresetId($field, $value, $errorMessage)
-    {
-        $data = [
-            CityInterface::CITY_ID => 100,
             CityInterface::REGION_ID => 100,
             CityInterface::IS_ENABLED => true,
             CityInterface::POSITION => 100,
@@ -264,5 +219,29 @@ class ValidateTest extends AbstractBackendController
         self::assertNotEmpty($jsonResponse);
         self::assertEquals(1, $jsonResponse->error);
         self::assertContains('Please correct the data sent.', $jsonResponse->messages);
+    }
+
+    public function testValidateWithNotExistEntityId()
+    {
+        $request = $this->getRequest();
+        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
+        $request->setMethod(Request::METHOD_POST);
+        $request->setQueryValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => [
+                CityInterface::CITY_ID => -1,
+            ],
+        ]);
+
+        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
+
+        $body = $this->getResponse()->getBody();
+        self::assertNotEmpty($body);
+
+        $jsonResponse = json_decode($body);
+        self::assertNotEmpty($jsonResponse);
+        self::assertEquals(1, $jsonResponse->error);
+        self::assertContains('The City does not exist.', $jsonResponse->messages);
     }
 }

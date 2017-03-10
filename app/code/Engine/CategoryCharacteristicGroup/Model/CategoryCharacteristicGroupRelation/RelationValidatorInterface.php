@@ -2,7 +2,7 @@
 namespace Engine\CategoryCharacteristicGroup\Model\CategoryCharacteristicGroupRelation;
 
 use Engine\CategoryCharacteristicGroup\Api\Data\RelationInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 
 /**
  * Extension point for base validation

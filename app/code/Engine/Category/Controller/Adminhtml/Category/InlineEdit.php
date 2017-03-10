@@ -3,7 +3,7 @@ namespace Engine\Category\Controller\Adminhtml\Category;
 
 use Engine\Category\Api\CategoryRepositoryInterface;
 use Engine\Category\Api\Data\CategoryInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;

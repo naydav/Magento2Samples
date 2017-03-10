@@ -5,12 +5,13 @@ use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\Data\CategoryInterfaceFactory;
 use Engine\Category\Api\CategoryRepositoryInterface;
 use Engine\Category\Model\Category\CategoryValidatorInterface;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\EntityManager\HydratorInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -76,16 +77,17 @@ class Validate extends Action
             $categoryId = !empty($requestData[CategoryInterface::CATEGORY_ID])
                 ? $requestData[CategoryInterface::CATEGORY_ID] : null;
 
-            if ($categoryId) {
-                $category = $this->categoryRepository->get($categoryId);
-            } else {
-                /** @var CategoryInterface $category */
-                $category = $this->categoryFactory->create();
-            }
-            $category = $this->hydrator->hydrate($category, $requestData);
-
             try {
+                if ($categoryId) {
+                    $category = $this->categoryRepository->get($categoryId);
+                } else {
+                    /** @var CategoryInterface $category */
+                    $category = $this->categoryFactory->create();
+                }
+                $category = $this->hydrator->hydrate($category, $requestData);
                 $this->categoryValidator->validate($category);
+            } catch (NoSuchEntityException $e) {
+                $errorMessages[] = __('The Category does not exist.');
             } catch (ValidatorException $e) {
                 $errorMessages = $e->getErrors();
             }

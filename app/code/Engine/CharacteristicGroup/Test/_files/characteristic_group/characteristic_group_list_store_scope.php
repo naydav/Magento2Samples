@@ -55,7 +55,6 @@ foreach ($characteristicGroupsData as $characteristicGroupData) {
 
 // save per store data
 require '../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php';
-$currentStore = $storeManager->getStore()->getCode();
 $customStoreCode = 'test_store';
 $storeManager->setCurrentStore($customStoreCode);
 
@@ -70,4 +69,3 @@ foreach ($characteristicGroupIds as $key => $characteristicGroupId) {
     $characteristicGroup->setDescription('z-sort-' . $characteristicGroup->getDescription() . '-per-store');
     $characteristicGroupRepository->save($characteristicGroup);
 }
-$storeManager->setCurrentStore($currentStore);

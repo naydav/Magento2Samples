@@ -316,15 +316,10 @@ class InlineEditTest extends AbstractBackendController
     private function getCharacteristicGroupById($characteristicGroupId, $storeCode = null)
     {
         if (null !== $storeCode) {
-            $currentStore = $this->storeManager->getStore()->getCode();
             $this->storeManager->setCurrentStore($storeCode);
         }
 
         $characteristicGroup = $this->characteristicGroupRepository->get($characteristicGroupId);
-
-        if (null !== $storeCode) {
-            $this->storeManager->setCurrentStore($currentStore);
-        }
         return $characteristicGroup;
     }
 }

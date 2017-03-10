@@ -312,15 +312,10 @@ class InlineEditTest extends AbstractBackendController
     private function getRegionById($regionId, $storeCode = null)
     {
         if (null !== $storeCode) {
-            $currentStore = $this->storeManager->getStore()->getCode();
             $this->storeManager->setCurrentStore($storeCode);
         }
 
         $region = $this->regionRepository->get($regionId);
-
-        if (null !== $storeCode) {
-            $this->storeManager->setCurrentStore($currentStore);
-        }
         return $region;
     }
 }

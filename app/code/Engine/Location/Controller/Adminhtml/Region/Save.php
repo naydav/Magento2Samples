@@ -5,7 +5,7 @@ use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\Data\RegionInterfaceFactory;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Engine\Location\Model\RegionCityRelationProcessor;
-use Engine\Validation\Exception\ValidatorException;
+use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\EntityManager\HydratorInterface;
@@ -86,11 +86,11 @@ class Save extends Action
         $regionRequestData = $this->getRequest()->getParam('general');
         if ($this->getRequest()->isPost() && $regionRequestData) {
             try {
-                $useDefaults = $this->getRequest()->getParam('use_default', []);
-                if ($useDefaults) {
-                    foreach ($useDefaults as $field => $useDefaultState) {
+                if ($regionRequestData['_use_default']) {
+                    // UI component sends value even if field is disabled, so 'Use Config Settings' must be set to null
+                    foreach ($regionRequestData['_use_default'] as $field => $useDefaultState) {
                         if (1 === (int)$useDefaultState) {
-                            $regionRequestData[$field] = null;
+                            $requestData[$field] = null;
                         }
                     }
                 }
