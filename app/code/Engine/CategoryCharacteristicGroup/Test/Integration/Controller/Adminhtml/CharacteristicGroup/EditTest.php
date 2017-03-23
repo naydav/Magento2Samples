@@ -13,7 +13,6 @@ use Zend\Http\Response;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
- * @magentoDbIsolation enabled
  */
 class EditTest extends AbstractBackendController
 {
@@ -61,7 +60,7 @@ class EditTest extends AbstractBackendController
         $body = $this->getResponse()->getBody();
         self::assertNotEmpty($body);
 
-        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->provide());
+        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->get());
         AssertFormDynamicRows::assert(
             $body,
             $this->formName,
@@ -110,7 +109,7 @@ class EditTest extends AbstractBackendController
         $body = $this->getResponse()->getBody();
         self::assertNotEmpty($body);
 
-        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->provide());
+        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->get());
         AssertFormDynamicRows::assert(
             $body,
             $this->formName,

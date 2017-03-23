@@ -150,7 +150,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => CategoryInterface::PARENT_ID,
-                                    'value' => $rootCategoryIdProvider->provide(),
+                                    'value' => $rootCategoryIdProvider->get(),
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -193,7 +193,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => CategoryInterface::PARENT_ID,
-                                    'value' => $rootCategoryIdProvider->provide(),
+                                    'value' => $rootCategoryIdProvider->get(),
                                     'condition_type' => 'eq',
                                 ],
                             ],
@@ -325,7 +325,7 @@ class GetListTest extends WebapiAbstract
                             'filters' => [
                                 [
                                     'field' => CategoryInterface::PARENT_ID,
-                                    'value' => $rootCategoryIdProvider->provide(),
+                                    'value' => $rootCategoryIdProvider->get(),
                                     'condition_type' => 'eq',
                                 ],
                             ],

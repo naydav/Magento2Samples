@@ -70,7 +70,7 @@ class CategoryRelationsManagementTest extends AbstractBackendController
     public function testCreateWithGroupsAssignment()
     {
         $data = [
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey',
             CategoryInterface::TITLE => 'Category-title',
         ];

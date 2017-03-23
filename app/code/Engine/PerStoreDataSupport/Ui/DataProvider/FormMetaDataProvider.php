@@ -10,7 +10,7 @@ use Magento\Store\Model\StoreManagerInterface;
  * @author  naydav <valeriy.nayda@gmail.com>
  * @api
  */
-class MetaDataBuilder
+class FormMetaDataProvider
 {
     /**
      * @var StoreDataConfigurationProviderInterface
@@ -55,7 +55,7 @@ class MetaDataBuilder
      * @param int $entityId
      * @return array
      */
-    public function build($interfaceName, $entityId)
+    public function get($interfaceName, $entityId)
     {
         $storeId = $this->storeManager->getStore()->getId();
         $meta = [];
@@ -91,7 +91,7 @@ class MetaDataBuilder
         array $dataInGlobalScope,
         array $dataInCurrentScope = null
     ) {
-        $storeDataConfiguration = $this->storeDataConfigurationProvider->provide($interfaceName);
+        $storeDataConfiguration = $this->storeDataConfigurationProvider->get($interfaceName);
         $fields = $storeDataConfiguration->getFields();
         $meta = [];
 

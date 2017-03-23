@@ -5,7 +5,7 @@ use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Model\City\CitiesByRegionList;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\PerStoreDataSupport\Ui\DataProvider\MetaDataBuilder;
+use Engine\PerStoreDataSupport\Ui\DataProvider\FormMetaDataProvider;
 use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
@@ -32,9 +32,9 @@ class RegionDataProvider extends DataProvider
     private $storeManager;
 
     /**
-     * @var MetaDataBuilder
+     * @var FormMetaDataProvider
      */
-    private $metaDataBuilder;
+    private $formMetaDataProvider;
 
     /**
      * @var RegionRepositoryInterface
@@ -61,7 +61,7 @@ class RegionDataProvider extends DataProvider
      * @param FilterBuilder $filterBuilder
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
-     * @param MetaDataBuilder $metaDataBuilder
+     * @param FormMetaDataProvider $formMetaDataProvider
      * @param RegionRepositoryInterface $regionRepository
      * @param SearchResultFactory $searchResultFactory
      * @param CitiesByRegionList $citiesByRegionList
@@ -78,7 +78,7 @@ class RegionDataProvider extends DataProvider
         FilterBuilder $filterBuilder,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
-        MetaDataBuilder $metaDataBuilder,
+        FormMetaDataProvider $formMetaDataProvider,
         RegionRepositoryInterface $regionRepository,
         SearchResultFactory $searchResultFactory,
         CitiesByRegionList $citiesByRegionList,
@@ -98,7 +98,7 @@ class RegionDataProvider extends DataProvider
         );
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
-        $this->metaDataBuilder = $metaDataBuilder;
+        $this->formMetaDataProvider = $formMetaDataProvider;
         $this->regionRepository = $regionRepository;
         $this->searchResultFactory = $searchResultFactory;
         $this->citiesByRegionList = $citiesByRegionList;
@@ -139,7 +139,7 @@ class RegionDataProvider extends DataProvider
         if ('engine_location_region_form_data_source' === $this->name) {
             $regionId = $this->request->getParam(RegionInterface::REGION_ID);
             if (null !== $regionId) {
-                $fieldsMeta = $this->metaDataBuilder->build(
+                $fieldsMeta = $this->formMetaDataProvider->get(
                     RegionInterface::class,
                     $regionId
                 );

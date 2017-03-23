@@ -57,7 +57,7 @@ class MoveTest extends AbstractBackendController
         $rootCategoryIdProvider = $this->_objectManager->get(RootCategoryIdProviderInterface::class);
         /** @var CategoryRepositoryInterface $categoryRepository */
         $categoryRepository = $this->_objectManager->get(CategoryRepositoryInterface::class);
-        $this->rootCategory = $categoryRepository->get($rootCategoryIdProvider->provide());
+        $this->rootCategory = $categoryRepository->get($rootCategoryIdProvider->get());
     }
 
     /**

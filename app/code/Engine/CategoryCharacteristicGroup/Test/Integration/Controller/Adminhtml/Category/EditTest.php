@@ -11,7 +11,6 @@ use Zend\Http\Response;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
- * @magentoDbIsolation enabled
  */
 class EditTest extends AbstractBackendController
 {

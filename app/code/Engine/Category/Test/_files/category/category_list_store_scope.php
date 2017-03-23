@@ -21,7 +21,7 @@ $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProvi
 $categoriesData = [
     [
         CategoryInterface::CATEGORY_ID => 100,
-        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->get(),
         CategoryInterface::URL_KEY => 'Category-urlKey-100',
         CategoryInterface::IS_ANCHOR => true,
         CategoryInterface::IS_ENABLED => true,
@@ -30,7 +30,7 @@ $categoriesData = [
     ],
     [
         CategoryInterface::CATEGORY_ID => 200,
-        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->get(),
         CategoryInterface::URL_KEY => 'Category-urlKey-200',
         CategoryInterface::IS_ANCHOR => true,
         CategoryInterface::IS_ENABLED => true,
@@ -39,7 +39,7 @@ $categoriesData = [
     ],
     [
         CategoryInterface::CATEGORY_ID => 300,
-        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->get(),
         CategoryInterface::URL_KEY => 'Category-urlKey-300',
         CategoryInterface::IS_ANCHOR => false,
         CategoryInterface::IS_ENABLED => false,
@@ -48,7 +48,7 @@ $categoriesData = [
     ],
     [
         CategoryInterface::CATEGORY_ID => 400,
-        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+        CategoryInterface::PARENT_ID => $rootCategoryIdProvider->get(),
         CategoryInterface::URL_KEY => 'Category-urlKey-400',
         CategoryInterface::IS_ANCHOR => false,
         CategoryInterface::IS_ENABLED => false,

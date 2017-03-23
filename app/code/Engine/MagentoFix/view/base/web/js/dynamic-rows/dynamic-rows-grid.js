@@ -1,5 +1,8 @@
-// each => forEach
-
+/**
+ * Replace each => forEach
+ *
+ * @author  naydav <valeriy.nayda@gmail.com>
+ */
 define([
     'underscore',
     'Magento_Ui/js/dynamic-rows/dynamic-rows-grid'

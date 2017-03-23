@@ -74,7 +74,7 @@ class ValidateTest extends AbstractBackendController
         return [
             'on_create' => [
                 [
-                    CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+                    CategoryInterface::PARENT_ID => $rootCategoryIdProvider->get(),
                     CategoryInterface::URL_KEY => 'Category-urlKey',
                     CategoryInterface::IS_ANCHOR => false,
                     CategoryInterface::IS_ENABLED => false,
@@ -86,7 +86,7 @@ class ValidateTest extends AbstractBackendController
             'on_update' => [
                 [
                     CategoryInterface::CATEGORY_ID => 100,
-                    CategoryInterface::PARENT_ID => $rootCategoryIdProvider->provide(),
+                    CategoryInterface::PARENT_ID => $rootCategoryIdProvider->get(),
                     CategoryInterface::URL_KEY => 'Category-urlKey',
                     CategoryInterface::IS_ANCHOR => false,
                     CategoryInterface::IS_ENABLED => false,
@@ -108,7 +108,7 @@ class ValidateTest extends AbstractBackendController
     public function testFailedValidationOnCreate($field, $value, $errorMessage)
     {
         $data = [
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey',
             CategoryInterface::IS_ANCHOR => false,
             CategoryInterface::IS_ENABLED => false,
@@ -150,7 +150,7 @@ class ValidateTest extends AbstractBackendController
         $categoryId = 100;
         $data = [
             CategoryInterface::CATEGORY_ID => $categoryId,
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey',
             CategoryInterface::IS_ANCHOR => false,
             CategoryInterface::IS_ENABLED => false,
@@ -203,7 +203,7 @@ class ValidateTest extends AbstractBackendController
                 CategoryInterface::URL_KEY,
                 'Category-urlKey-200',
                 'Category with such url "Category-urlKey-200" already exist (Category title: Category-title-200, '
-                    . 'Category id: 200, Parent id: ' . $rootCategoryIdProvider->provide().  ').',
+                    . 'Category id: 200, Parent id: ' . $rootCategoryIdProvider->get().  ').',
             ],
             [
                 CategoryInterface::TITLE,
@@ -219,7 +219,7 @@ class ValidateTest extends AbstractBackendController
     public function testSetParentForRootCategory()
     {
         $data = [
-            CategoryInterface::CATEGORY_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::CATEGORY_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::PARENT_ID => 100,
             CategoryInterface::URL_KEY => 'Category-urlKey',
             CategoryInterface::IS_ANCHOR => false,

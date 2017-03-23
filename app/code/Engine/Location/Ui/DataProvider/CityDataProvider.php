@@ -3,7 +3,7 @@ namespace Engine\Location\Ui\DataProvider;
 
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
-use Engine\PerStoreDataSupport\Ui\DataProvider\MetaDataBuilder;
+use Engine\PerStoreDataSupport\Ui\DataProvider\FormMetaDataProvider;
 use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
@@ -30,9 +30,9 @@ class CityDataProvider extends DataProvider
     private $storeManager;
 
     /**
-     * @var MetaDataBuilder
+     * @var FormMetaDataProvider
      */
-    private $metaDataBuilder;
+    private $formMetaDataProvider;
 
     /**
      * @var CityRepositoryInterface
@@ -54,7 +54,7 @@ class CityDataProvider extends DataProvider
      * @param FilterBuilder $filterBuilder
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
-     * @param MetaDataBuilder $metaDataBuilder
+     * @param FormMetaDataProvider $formMetaDataProvider
      * @param CityRepositoryInterface $cityRepository
      * @param SearchResultFactory $searchResultFactory
      * @param array $meta
@@ -70,7 +70,7 @@ class CityDataProvider extends DataProvider
         FilterBuilder $filterBuilder,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
-        MetaDataBuilder $metaDataBuilder,
+        FormMetaDataProvider $formMetaDataProvider,
         CityRepositoryInterface $cityRepository,
         SearchResultFactory $searchResultFactory,
         array $meta = [],
@@ -89,7 +89,7 @@ class CityDataProvider extends DataProvider
         );
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
-        $this->metaDataBuilder = $metaDataBuilder;
+        $this->formMetaDataProvider = $formMetaDataProvider;
         $this->cityRepository = $cityRepository;
         $this->searchResultFactory = $searchResultFactory;
     }
@@ -129,7 +129,7 @@ class CityDataProvider extends DataProvider
         if ('engine_location_city_form_data_source' === $this->name) {
             $cityId = $this->request->getParam(CityInterface::CITY_ID);
             if (null !== $cityId) {
-                $fieldsMeta = $this->metaDataBuilder->build(
+                $fieldsMeta = $this->formMetaDataProvider->get(
                     CityInterface::class,
                     $cityId
                 );

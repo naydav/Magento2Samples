@@ -140,7 +140,7 @@ class MassStatusTest extends AbstractBackendController
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
         $searchCriteria = $searchCriteriaBuilder
-            ->addFilter(CategoryInterface::PARENT_ID, $this->rootCategoryIdProvider->provide())
+            ->addFilter(CategoryInterface::PARENT_ID, $this->rootCategoryIdProvider->get())
             ->addFilter(CategoryInterface::IS_ENABLED, true)
             ->create();
 

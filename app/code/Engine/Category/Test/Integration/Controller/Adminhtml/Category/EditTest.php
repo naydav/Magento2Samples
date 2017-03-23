@@ -66,7 +66,7 @@ class EditTest extends AbstractBackendController
             $this->formName,
             'general',
             CategoryInterface::PARENT_ID,
-            $this->rootCategoryIdProvider->provide()
+            $this->rootCategoryIdProvider->get()
         );
         AssertFormField::assert(
             $body,
@@ -147,7 +147,7 @@ class EditTest extends AbstractBackendController
     {
         $this->dispatch(
             self::REQUEST_URI . '/' . CategoryInterface::CATEGORY_ID . '/'
-            . $this->rootCategoryIdProvider->provide() . '/'
+            . $this->rootCategoryIdProvider->get() . '/'
         );
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
         $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);

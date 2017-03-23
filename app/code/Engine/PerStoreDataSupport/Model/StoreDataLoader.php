@@ -39,7 +39,7 @@ class StoreDataLoader
     public function load($interfaceName, $entityId, $storeId)
     {
         $connection = $this->resourceConnection->getConnection();
-        $storeDataConfiguration = $this->storeDataConfigurationProvider->provide($interfaceName);
+        $storeDataConfiguration = $this->storeDataConfigurationProvider->get($interfaceName);
         $storeDataTable = $connection->getTableName($storeDataConfiguration->getStoreDataTable());
         $referenceField = $storeDataConfiguration->getReferenceField();
         $fields = $storeDataConfiguration->getFields();

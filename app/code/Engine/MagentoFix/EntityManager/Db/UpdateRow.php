@@ -8,7 +8,9 @@ use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * If $preparedData is empty fix
+ * If $preparedData variable is empty fix
+ *
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class UpdateRow extends BaseUpdateRow
 {

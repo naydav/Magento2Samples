@@ -48,7 +48,7 @@ class StoreDataSelectProcessor implements StoreDataSelectProcessorInterface
     {
         $select = clone $select;
         $storeId = (int)$this->storeManager->getStore()->getId();
-        $storeDataConfiguration = $this->storeDataConfigurationProvider->provide($interfaceName);
+        $storeDataConfiguration = $this->storeDataConfigurationProvider->get($interfaceName);
         $storeDataTable = $this->resourceConnection->getConnection()->getTableName(
             $storeDataConfiguration->getStoreDataTable()
         );
@@ -94,7 +94,7 @@ class StoreDataSelectProcessor implements StoreDataSelectProcessorInterface
         $select = clone $select;
         $storeId = (int)$this->storeManager->getStore()->getId();
         $entityId = (int)$entityId;
-        $storeDataConfiguration = $this->storeDataConfigurationProvider->provide($interfaceName);
+        $storeDataConfiguration = $this->storeDataConfigurationProvider->get($interfaceName);
         $storeDataTable = $this->resourceConnection->getConnection()->getTableName(
             $storeDataConfiguration->getStoreDataTable()
         );

@@ -85,7 +85,7 @@ class Tree extends Template
     private function getJsTreeData()
     {
         if (null === $this->jsTreeData) {
-            $this->jsTreeData = $this->jsTreeDataProvider->provide();
+            $this->jsTreeData = $this->jsTreeDataProvider->get();
         }
         return $this->jsTreeData;
     }

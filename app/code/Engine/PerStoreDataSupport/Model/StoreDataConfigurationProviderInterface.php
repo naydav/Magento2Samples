@@ -14,5 +14,5 @@ interface StoreDataConfigurationProviderInterface
      * @return StoreDataConfiguration
      * @throws LocalizedException
      */
-    public function provide($interfaceName);
+    public function get($interfaceName);
 }

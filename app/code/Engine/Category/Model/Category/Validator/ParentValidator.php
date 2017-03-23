@@ -33,7 +33,7 @@ class ParentValidator implements CategoryValidatorInterface
         $errors = [];
         $value = $category->getParentId();
 
-        if ($this->rootCategoryIdProvider->provide() === (int)$category->getCategoryId()) {
+        if ($this->rootCategoryIdProvider->get() === (int)$category->getCategoryId()) {
             if (null !== $value) {
                 $errors[] = __('Root Category can\'t has parent.');
             }

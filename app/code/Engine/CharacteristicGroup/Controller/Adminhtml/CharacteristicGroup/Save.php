@@ -87,7 +87,7 @@ class Save extends Action
         if ($this->getRequest()->isPost() && $requestData) {
             try {
                 if (isset($requestData['_use_default'])) {
-                    // UI component sends value even if field is disabled, so 'Use Config Settings' must be set to null
+                    // UI component sends value even if field is disabled, so 'Use Default' values must be set to null
                     foreach ($requestData['_use_default'] as $field => $useDefaultState) {
                         if (1 === (int)$useDefaultState) {
                             $requestData[$field] = null;

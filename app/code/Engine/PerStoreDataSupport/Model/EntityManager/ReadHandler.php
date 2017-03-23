@@ -68,7 +68,7 @@ class ReadHandler implements ExtensionInterface
     public function execute($entity, $arguments = [])
     {
         $connection = $this->resourceConnection->getConnection();
-        $storeDataConfiguration = $this->storeDataConfigurationProvider->provide($this->interfaceName);
+        $storeDataConfiguration = $this->storeDataConfigurationProvider->get($this->interfaceName);
         $referenceField = $storeDataConfiguration->getReferenceField();
 
         $entityData = $this->hydrator->extract($entity);

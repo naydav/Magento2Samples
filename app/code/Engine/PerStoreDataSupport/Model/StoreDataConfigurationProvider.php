@@ -35,7 +35,7 @@ class StoreDataConfigurationProvider implements StoreDataConfigurationProviderIn
     /**
      * {@inheritdoc}
      */
-    public function provide($interfaceName)
+    public function get($interfaceName)
     {
         if (!isset(
             $this->configuration[$interfaceName],

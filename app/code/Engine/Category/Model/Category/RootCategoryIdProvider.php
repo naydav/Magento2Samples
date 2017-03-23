@@ -16,7 +16,7 @@ class RootCategoryIdProvider implements RootCategoryIdProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function provide()
+    public function get()
     {
         return self::ROOT_CATEGORY_D;
     }

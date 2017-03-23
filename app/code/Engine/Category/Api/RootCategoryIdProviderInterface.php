@@ -10,5 +10,5 @@ interface RootCategoryIdProviderInterface
     /**
      * @return int
      */
-    public function provide();
+    public function get();
 }

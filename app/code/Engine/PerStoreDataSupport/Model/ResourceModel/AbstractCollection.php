@@ -119,7 +119,7 @@ abstract class AbstractCollection extends BaseAbstarctCollection
      */
     private function processField($field)
     {
-        $storeDataConfiguration = $this->storeDataConfigurationProvider->provide($this->getInterfaceName());
+        $storeDataConfiguration = $this->storeDataConfigurationProvider->get($this->getInterfaceName());
         $perStoreFields = $storeDataConfiguration->getFields();
 
         if ($this->getIdFieldName() === $field) {

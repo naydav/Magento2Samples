@@ -5,7 +5,7 @@ use Engine\Characteristic\Api\CharacteristicRepositoryInterface;
 use Engine\Characteristic\Api\Data\CharacteristicInterface;
 use Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface;
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
-use Engine\PerStoreDataSupport\Ui\DataProvider\MetaDataBuilder;
+use Engine\PerStoreDataSupport\Ui\DataProvider\FormMetaDataProvider;
 use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
@@ -34,9 +34,9 @@ class CharacteristicGroupDataProvider extends DataProvider
     private $storeManager;
 
     /**
-     * @var MetaDataBuilder
+     * @var FormMetaDataProvider
      */
-    private $metaDataBuilder;
+    private $formMetaDataProvider;
 
     /**
      * @var CharacteristicGroupRepositoryInterface
@@ -68,7 +68,7 @@ class CharacteristicGroupDataProvider extends DataProvider
      * @param FilterBuilder $filterBuilder
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
-     * @param MetaDataBuilder $metaDataBuilder
+     * @param FormMetaDataProvider $formMetaDataProvider
      * @param CharacteristicGroupRepositoryInterface $characteristicGroupRepository
      * @param SearchResultFactory $searchResultFactory
      * @param CharacteristicRepositoryInterface $characteristicRepository
@@ -86,7 +86,7 @@ class CharacteristicGroupDataProvider extends DataProvider
         FilterBuilder $filterBuilder,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
-        MetaDataBuilder $metaDataBuilder,
+        FormMetaDataProvider $formMetaDataProvider,
         CharacteristicGroupRepositoryInterface $characteristicGroupRepository,
         SearchResultFactory $searchResultFactory,
         CharacteristicRepositoryInterface $characteristicRepository,
@@ -107,7 +107,7 @@ class CharacteristicGroupDataProvider extends DataProvider
         );
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
-        $this->metaDataBuilder = $metaDataBuilder;
+        $this->formMetaDataProvider = $formMetaDataProvider;
         $this->characteristicGroupRepository = $characteristicGroupRepository;
         $this->searchResultFactory = $searchResultFactory;
         $this->characteristicRepository = $characteristicRepository;
@@ -149,7 +149,7 @@ class CharacteristicGroupDataProvider extends DataProvider
         if ('engine_characteristic_group_form_data_source' === $this->name) {
             $characteristicGroupId = $this->request->getParam(CharacteristicGroupInterface::CHARACTERISTIC_GROUP_ID);
             if (null !== $characteristicGroupId) {
-                $fieldsMeta = $this->metaDataBuilder->build(
+                $fieldsMeta = $this->formMetaDataProvider->get(
                     CharacteristicGroupInterface::class,
                     $characteristicGroupId
                 );

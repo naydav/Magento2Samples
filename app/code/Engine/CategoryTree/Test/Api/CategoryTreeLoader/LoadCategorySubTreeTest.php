@@ -58,7 +58,7 @@ class LoadCategorySubTreeTest extends WebapiAbstract
             CategoryTreeInterface::TITLE => 'Category-title-1',
             CategoryTreeInterface::CATEGORY => [
                 CategoryInterface::CATEGORY_ID => 100,
-                CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+                CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
                 CategoryInterface::URL_KEY => 'Category-urlKey-100',
                 CategoryInterface::IS_ANCHOR => true,
                 CategoryInterface::IS_ENABLED => true,
@@ -140,7 +140,7 @@ class LoadCategorySubTreeTest extends WebapiAbstract
             CategoryTreeInterface::TITLE => 'Category-title-1',
             CategoryTreeInterface::CATEGORY => [
                 CategoryInterface::CATEGORY_ID => 100,
-                CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+                CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
                 CategoryInterface::URL_KEY => 'Category-urlKey-100',
                 CategoryInterface::IS_ANCHOR => true,
                 CategoryInterface::IS_ENABLED => true,

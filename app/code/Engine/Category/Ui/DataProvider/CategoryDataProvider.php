@@ -5,7 +5,7 @@ use Engine\Category\Api\CategoryRepositoryInterface;
 use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Engine\Category\Model\Category\Source\GroupedCategorySource;
-use Engine\PerStoreDataSupport\Ui\DataProvider\MetaDataBuilder;
+use Engine\PerStoreDataSupport\Ui\DataProvider\FormMetaDataProvider;
 use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
@@ -35,9 +35,9 @@ class CategoryDataProvider extends DataProvider
     private $storeManager;
 
     /**
-     * @var MetaDataBuilder
+     * @var FormMetaDataProvider
      */
-    private $metaDataBuilder;
+    private $formMetaDataProvider;
 
     /**
      * @var CategoryRepositoryInterface
@@ -69,7 +69,7 @@ class CategoryDataProvider extends DataProvider
      * @param FilterBuilder $filterBuilder
      * @param UrlInterface $urlBuilder
      * @param StoreManagerInterface $storeManager
-     * @param MetaDataBuilder $metaDataBuilder
+     * @param FormMetaDataProvider $formMetaDataProvider
      * @param CategoryRepositoryInterface $categoryRepository
      * @param SearchResultFactory $searchResultFactory
      * @param GroupedCategorySource $groupedCategorySource
@@ -87,7 +87,7 @@ class CategoryDataProvider extends DataProvider
         FilterBuilder $filterBuilder,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
-        MetaDataBuilder $metaDataBuilder,
+        FormMetaDataProvider $formMetaDataProvider,
         CategoryRepositoryInterface $categoryRepository,
         SearchResultFactory $searchResultFactory,
         GroupedCategorySource $groupedCategorySource,
@@ -108,7 +108,7 @@ class CategoryDataProvider extends DataProvider
         );
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
-        $this->metaDataBuilder = $metaDataBuilder;
+        $this->formMetaDataProvider = $formMetaDataProvider;
         $this->categoryRepository = $categoryRepository;
         $this->searchResultFactory = $searchResultFactory;
         $this->groupedCategorySource = $groupedCategorySource;
@@ -149,10 +149,10 @@ class CategoryDataProvider extends DataProvider
         $meta = parent::getMeta();
         if ('engine_category_form_data_source' === $this->name) {
             $categoryId = $this->request->getParam(CategoryInterface::CATEGORY_ID);
-            if ($this->rootCategoryIdProvider->provide() != $categoryId) {
+            if ($this->rootCategoryIdProvider->get() != $categoryId) {
                 $parentId = $this->request->getParam(
                     CategoryInterface::PARENT_ID,
-                    $this->rootCategoryIdProvider->provide()
+                    $this->rootCategoryIdProvider->get()
                 );
                 $meta['general']['children'][CategoryInterface::PARENT_ID]['arguments']['data'] = [
                     'options' => $this->groupedCategorySource->toOptionArray(),
@@ -163,7 +163,7 @@ class CategoryDataProvider extends DataProvider
                         'formElement' => Select::NAME,
                         'sortOrder' => 50,
                         'scopeLabel' => __('[GLOBAL]'),
-                        'component' => 'Magento_Ui/js/form/element/ui-select',
+                        'component' => 'Engine_MagentoFix/js/form/element/ui-select',
                         'elementTmpl' => 'ui/grid/filters/elements/ui-select',
                         'disableLabel' => true,
                         'filterOptions' => true,
@@ -176,7 +176,7 @@ class CategoryDataProvider extends DataProvider
                 ];
             }
             if (null !== $categoryId) {
-                $fieldsMeta = $this->metaDataBuilder->build(
+                $fieldsMeta = $this->formMetaDataProvider->get(
                     CategoryInterface::class,
                     $categoryId
                 );

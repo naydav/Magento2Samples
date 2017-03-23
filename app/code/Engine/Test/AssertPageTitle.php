@@ -14,6 +14,7 @@ class AssertPageTitle
      */
     public static function assert($html, $title, $regexSeparator = '~')
     {
+        $title = str_replace(['(', ')'], ['\(', '\)'], $title);
         \PHPUnit_Framework_Assert::assertSelectRegExp(
             'title',
             "{$regexSeparator}{$title}.*{$regexSeparator}",

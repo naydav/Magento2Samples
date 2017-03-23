@@ -3,7 +3,7 @@
  */
 
 define([
-    'Magento_Ui/js/form/element/ui-select',
+    'Engine_MagentoFix/js/form/element/ui-select',
     './abstract-element-processor'
 ], function (Element, AbstractElementProcessor) {
     'use strict';

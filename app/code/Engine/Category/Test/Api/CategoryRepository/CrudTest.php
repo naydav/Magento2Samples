@@ -36,7 +36,7 @@ class CrudTest extends WebapiAbstract
     public function testCreate()
     {
         $data = [
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey',
             CategoryInterface::IS_ANCHOR => true,
             CategoryInterface::IS_ENABLED => true,
@@ -156,7 +156,7 @@ class CrudTest extends WebapiAbstract
         $categoryId = 100;
         $storeCode = 'test_store';
         $data = [
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey-updated',
             CategoryInterface::IS_ANCHOR => true,
             CategoryInterface::IS_ENABLED => true,
@@ -217,7 +217,7 @@ class CrudTest extends WebapiAbstract
      */
     public function testDeleteRootCategoryById()
     {
-        $categoryId = $this->rootCategoryIdProvider->provide();
+        $categoryId = $this->rootCategoryIdProvider->get();
         $serviceInfo = [
             'rest' => [
                 'resourcePath' => self::RESOURCE_PATH . '/' . $categoryId,
@@ -250,7 +250,7 @@ class CrudTest extends WebapiAbstract
         $categoryId = 100;
         $expectedData = [
             CategoryInterface::CATEGORY_ID => $categoryId,
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey-100',
             CategoryInterface::IS_ANCHOR => true,
             CategoryInterface::IS_ENABLED => true,
@@ -271,7 +271,7 @@ class CrudTest extends WebapiAbstract
         $storeCode = 'test_store';
         $expectedData = [
             CategoryInterface::CATEGORY_ID => $categoryId,
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey-100',
             CategoryInterface::IS_ANCHOR => true,
             CategoryInterface::IS_ENABLED => true,

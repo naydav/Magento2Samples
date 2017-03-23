@@ -58,7 +58,7 @@ class ValidationTest extends AbstractBackendController
     public function testFailedValidationOnCreate($field, $value, $errorMessage)
     {
         $data = [
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey',
             CategoryInterface::IS_ANCHOR => true,
             CategoryInterface::IS_ENABLED => true,
@@ -95,7 +95,7 @@ class ValidationTest extends AbstractBackendController
         $categoryId = 100;
         $data = [
             CategoryInterface::CATEGORY_ID => $categoryId,
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey-updated',
             CategoryInterface::IS_ANCHOR => false,
             CategoryInterface::IS_ENABLED => false,
@@ -148,7 +148,7 @@ class ValidationTest extends AbstractBackendController
                 CategoryInterface::URL_KEY,
                 'Category-urlKey-200',
                 'Category with such url &quot;Category-urlKey-200&quot; already exist (Category title: '
-                . 'Category-title-200, Category id: 200, Parent id: ' . $rootCategoryIdProvider->provide() . ').',
+                . 'Category-title-200, Category id: 200, Parent id: ' . $rootCategoryIdProvider->get() . ').',
             ],
             [
                 CategoryInterface::TITLE,
@@ -164,7 +164,7 @@ class ValidationTest extends AbstractBackendController
     public function testSetParentForRootCategory()
     {
         $data = [
-            CategoryInterface::CATEGORY_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::CATEGORY_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::PARENT_ID => 100,
             CategoryInterface::URL_KEY => 'Category-urlKey-updated',
             CategoryInterface::IS_ANCHOR => false,

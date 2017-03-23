@@ -9,6 +9,8 @@ use Magento\Framework\Data\Collection\AbstractDb;
 
 /**
  * Apply sorting only if field direction is exist
+ *
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class SortingProcessor implements CollectionProcessorInterface
 {

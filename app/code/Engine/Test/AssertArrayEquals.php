@@ -16,7 +16,7 @@ class AssertArrayEquals
     public static function assert(array $expected, array $actual, array $keysToSkip = null)
     {
         if (null !== $keysToSkip) {
-            $actual = self::unsetExtensionAttributesKey($actual, $keysToSkip);
+            $actual = self::unsetKeys($actual, $keysToSkip);
         }
         \PHPUnit_Framework_Assert::assertEquals($expected, $actual);
     }
@@ -26,11 +26,11 @@ class AssertArrayEquals
      * @param array $keysToSkip
      * @return array
      */
-    private static function unsetExtensionAttributesKey(array &$array, array $keysToSkip)
+    private static function unsetKeys(array &$array, array $keysToSkip)
     {
         foreach ($array as $key => &$value) {
             if (is_array($value)) {
-                $value = self::unsetExtensionAttributesKey($value, $keysToSkip);
+                $value = self::unsetKeys($value, $keysToSkip);
             }
             if (in_array($key, $keysToSkip, true)) {
                 unset($array[$key]);

@@ -60,7 +60,7 @@ class InstallData implements InstallDataInterface
         /** @var CategoryInterface $category */
         $category = $this->categoryFactory->create();
         $category = $this->hydrator->hydrate($category, [
-            CategoryInterface::CATEGORY_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::CATEGORY_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::PARENT_ID => null,
             CategoryInterface::TITLE => 'Root',
             CategoryInterface::URL_KEY => 'root',

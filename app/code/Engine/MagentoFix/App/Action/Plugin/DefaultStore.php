@@ -8,6 +8,8 @@ use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * MAGETWO-62413: Using default storeview as current in DefaultStore plugin is applied on FrontControllerInterface
+ *
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class DefaultStore
 {

@@ -9,7 +9,6 @@ use Zend\Http\Response;
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
- * @magentoDbIsolation enabled
  */
 class NewActionTest extends AbstractBackendController
 {
@@ -23,7 +22,7 @@ class NewActionTest extends AbstractBackendController
      */
     private $formName = 'engine_characteristic_group_form';
 
-    public function testEdit()
+    public function testNew()
     {
         $this->dispatch(self::REQUEST_URI);
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());

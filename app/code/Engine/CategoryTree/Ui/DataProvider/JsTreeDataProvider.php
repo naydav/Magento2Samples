@@ -80,7 +80,7 @@ class JsTreeDataProvider implements JsTreeDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function provide($entityId = null, $withRoot = false)
+    public function get($entityId = null, $withRoot = false)
     {
         $treeData = $this->getTreeData($entityId, $withRoot);
 
@@ -169,7 +169,7 @@ class JsTreeDataProvider implements JsTreeDataProviderInterface
     {
         $jsComponentConfig = [
             $this->uiComponentName => [
-                JsTreeDataInterface::BASE_ROOT_ID => $this->rootCategoryIdProvider->provide(),
+                JsTreeDataInterface::BASE_ROOT_ID => $this->rootCategoryIdProvider->get(),
                 JsTreeDataInterface::MOVE_URL => $this->getMoveUrl(),
                 JsTreeDataInterface::TREE_OPTIONS => [
                     JsTreeDataInterface::TREE_OPTIONS_GRID => [

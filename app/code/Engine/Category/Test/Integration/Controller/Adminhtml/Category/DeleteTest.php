@@ -62,7 +62,7 @@ class DeleteTest extends AbstractBackendController
 
     public function testDeleteRootCategoryById()
     {
-        $categoryId = $this->rootCategoryIdProvider->provide();
+        $categoryId = $this->rootCategoryIdProvider->get();
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([

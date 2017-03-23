@@ -42,7 +42,7 @@ class ValidationTest extends WebapiAbstract
     public function testFailedValidationOnCreate($field, $value, array $expectedErrorObj)
     {
         $data = [
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey',
             CategoryInterface::IS_ANCHOR => true,
             CategoryInterface::IS_ENABLED => true,
@@ -91,7 +91,7 @@ class ValidationTest extends WebapiAbstract
     {
         $categoryId = 100;
         $data = [
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey-updated',
             CategoryInterface::IS_ANCHOR => false,
             CategoryInterface::IS_ENABLED => false,
@@ -176,7 +176,7 @@ class ValidationTest extends WebapiAbstract
                         'Category-urlKey-200',
                         'Category-title-200',
                         200,
-                        $rootCategoryIdProvider->provide(),
+                        $rootCategoryIdProvider->get(),
                     ],
                 ],
             ],
@@ -198,7 +198,7 @@ class ValidationTest extends WebapiAbstract
      */
     public function testSetParentForRootCategory()
     {
-        $categoryId = $this->rootCategoryIdProvider->provide();
+        $categoryId = $this->rootCategoryIdProvider->get();
         $data = [
             CategoryInterface::PARENT_ID => 100,
             CategoryInterface::URL_KEY => 'Category-urlKey-updated',

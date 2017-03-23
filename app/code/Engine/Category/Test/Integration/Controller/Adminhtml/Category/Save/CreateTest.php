@@ -74,7 +74,7 @@ class CreateTest extends AbstractBackendController
     public function testCreate()
     {
         $data = [
-            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+            CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
             CategoryInterface::URL_KEY => 'Category-urlKey',
             CategoryInterface::IS_ANCHOR => true,
             CategoryInterface::IS_ENABLED => true,
@@ -119,7 +119,7 @@ class CreateTest extends AbstractBackendController
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
             'general' => [
-                CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+                CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
                 CategoryInterface::URL_KEY => 'Category-urlKey',
                 CategoryInterface::IS_ANCHOR => true,
                 CategoryInterface::IS_ENABLED => true,
@@ -147,7 +147,7 @@ class CreateTest extends AbstractBackendController
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
             'general' => [
-                CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+                CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
                 CategoryInterface::URL_KEY => 'Category-urlKey',
                 CategoryInterface::IS_ANCHOR => true,
                 CategoryInterface::IS_ENABLED => true,
@@ -179,7 +179,7 @@ class CreateTest extends AbstractBackendController
         $request->setQueryValue([
             'form_key' => $this->formKey->getFormKey(),
             'general' => [
-                CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->provide(),
+                CategoryInterface::PARENT_ID => $this->rootCategoryIdProvider->get(),
                 CategoryInterface::URL_KEY => 'Category-urlKey',
                 CategoryInterface::IS_ANCHOR => true,
                 CategoryInterface::IS_ENABLED => true,

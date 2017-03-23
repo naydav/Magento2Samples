@@ -144,7 +144,7 @@ class MassDeleteTest extends AbstractBackendController
     {
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-        $searchCriteriaBuilder->addFilter(CategoryInterface::PARENT_ID, $this->rootCategoryIdProvider->provide());
+        $searchCriteriaBuilder->addFilter(CategoryInterface::PARENT_ID, $this->rootCategoryIdProvider->get());
         $searchCriteria = $searchCriteriaBuilder->create();
 
         $result = $this->categoryRepository->getList($searchCriteria);

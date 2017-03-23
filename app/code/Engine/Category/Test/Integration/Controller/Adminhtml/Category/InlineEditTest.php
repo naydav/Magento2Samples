@@ -328,7 +328,7 @@ class InlineEditTest extends AbstractBackendController
                 CategoryInterface::URL_KEY,
                 'Category-urlKey-200',
                 'Category with such url "Category-urlKey-200" already exist (Category title: Category-title-200, '
-                    . 'Category id: 200, Parent id: ' . $rootCategoryIdProvider->provide().  ').',
+                    . 'Category id: 200, Parent id: ' . $rootCategoryIdProvider->get().  ').',
             ],
             [
                 CategoryInterface::TITLE,

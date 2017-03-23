@@ -105,7 +105,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function deleteById($categoryId)
     {
-        if ($this->rootCategoryIdProvider->provide() === $categoryId) {
+        if ($this->rootCategoryIdProvider->get() === $categoryId) {
             throw new CouldNotDeleteException(__('Root Category can not be deleted.'));
         }
         $category = $this->get($categoryId);

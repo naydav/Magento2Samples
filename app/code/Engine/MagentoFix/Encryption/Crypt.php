@@ -3,7 +3,9 @@
 namespace Engine\MagentoFix\Encryption;
 
 /**
- * Class encapsulates cryptographic algorithm
+ * Adapt to php7.1
+ *
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class Crypt
 {

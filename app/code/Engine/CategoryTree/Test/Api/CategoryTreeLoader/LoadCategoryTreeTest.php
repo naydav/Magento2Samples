@@ -36,7 +36,7 @@ class LoadCategoryTreeTest extends WebapiAbstract
         $rootCategoryIdProvider = Bootstrap::getObjectManager()->get(RootCategoryIdProviderInterface::class);
         /** @var CategoryRepositoryInterface $categoryRepository */
         $categoryRepository = Bootstrap::getObjectManager()->get(CategoryRepositoryInterface::class);
-        $this->rootCategory = $categoryRepository->get($rootCategoryIdProvider->provide());
+        $this->rootCategory = $categoryRepository->get($rootCategoryIdProvider->get());
     }
 
     /**

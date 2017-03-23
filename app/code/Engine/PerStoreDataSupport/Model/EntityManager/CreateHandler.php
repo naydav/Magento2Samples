@@ -60,7 +60,7 @@ class CreateHandler implements ExtensionInterface
     public function execute($entity, $arguments = [])
     {
         $connection = $this->resourceConnection->getConnection();
-        $storeDataConfiguration = $this->storeDataConfigurationProvider->provide($this->interfaceName);
+        $storeDataConfiguration = $this->storeDataConfigurationProvider->get($this->interfaceName);
         $storeDataTable = $connection->getTableName($storeDataConfiguration->getStoreDataTable());
         $referenceField = $storeDataConfiguration->getReferenceField();
         $fields = $storeDataConfiguration->getFields();

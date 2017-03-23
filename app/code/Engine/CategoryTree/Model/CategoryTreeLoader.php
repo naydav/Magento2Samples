@@ -65,7 +65,7 @@ class CategoryTreeLoader implements CategoryTreeLoaderInterface
     public function getTree($categoryId = null, SearchCriteriaInterface $searchCriteria = null)
     {
         if (null === $categoryId) {
-            $categoryId = $this->rootCategoryIdProvider->provide();
+            $categoryId = $this->rootCategoryIdProvider->get();
         }
         $categories = $this->loadCategories($searchCriteria);
 

@@ -12,5 +12,5 @@ interface JsTreeDataProviderInterface
      * @param bool $withRoot
      * @return JsTreeDataInterface
      */
-    public function provide($entityId = null, $withRoot = false);
+    public function get($entityId = null, $withRoot = false);
 }

@@ -75,7 +75,7 @@
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="formElement" xsi:type="string">select</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</item>
+                    <item name="component" xsi:type="string">Engine_MagentoFix/js/form/element/ui-select</item>
                     <item name="elementTmpl" xsi:type="string">ui/grid/filters/elements/ui-select</item>
                     <item name="disableLabel" xsi:type="boolean">true</item>
                     <item name="filterOptions" xsi:type="boolean">true</item>

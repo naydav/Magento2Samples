@@ -69,7 +69,7 @@ class UpdateHandler implements ExtensionInterface
     {
         $storeId = $this->storeManager->getStore()->getId();
         $connection = $this->resourceConnection->getConnection();
-        $storeDataConfiguration = $this->storeDataConfigurationProvider->provide($this->interfaceName);
+        $storeDataConfiguration = $this->storeDataConfigurationProvider->get($this->interfaceName);
         $storeDataTable = $connection->getTableName($storeDataConfiguration->getStoreDataTable());
         $referenceField = $storeDataConfiguration->getReferenceField();
         $fields = $storeDataConfiguration->getFields();

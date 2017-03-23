@@ -70,7 +70,7 @@ class GroupedCategorySource implements OptionSourceInterface
                     }
                 }
                 $this->data = [
-                    $categoryById[$this->rootCategoryIdProvider->provide()]
+                    $categoryById[$this->rootCategoryIdProvider->get()]
                 ];
             }
         }

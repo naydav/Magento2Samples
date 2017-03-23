@@ -30,7 +30,7 @@ class RootCategoryCreatingTest extends \PHPUnit_Framework_TestCase
 
     public function testCreating()
     {
-        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->provide());
+        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->get());
 
         self::assertEquals('Root', $rootCategory->getTitle());
     }

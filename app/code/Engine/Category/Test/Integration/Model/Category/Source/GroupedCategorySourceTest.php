@@ -42,7 +42,7 @@ class GroupedCategorySourceTest extends \PHPUnit_Framework_TestCase
     public function testToOptionArray()
     {
         $options = $this->groupedCategorySource->toOptionArray();
-        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->provide());
+        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->get());
 
         $expectedData = [
             [
@@ -81,7 +81,7 @@ class GroupedCategorySourceTest extends \PHPUnit_Framework_TestCase
     public function testToOptionArrayIfCategoriesAreNotExist()
     {
         $options = $this->groupedCategorySource->toOptionArray();
-        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->provide());
+        $rootCategory = $this->categoryRepository->get($this->rootCategoryIdProvider->get());
         $expectedData = [
             [
                 'value' => $rootCategory->getCategoryId(),
