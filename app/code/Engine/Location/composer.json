@@ -12,7 +12,8 @@
         "magento/framework": "2.2.*",
         "engine/test": "100.1.*",
         "engine/per-store-data-support": "100.1.*",
-        "engine/magento-fix": "100.1.*"
+        "engine/magento-fix": "100.1.*",
+        "engine/ui": "100.1.*"
     },
     "autoload": {
         "files": [

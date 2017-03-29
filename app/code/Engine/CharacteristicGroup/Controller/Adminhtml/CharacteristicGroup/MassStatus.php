@@ -3,13 +3,12 @@ namespace Engine\CharacteristicGroup\Controller\Adminhtml\CharacteristicGroup;
 
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
 use Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface;
-use Engine\CharacteristicGroup\Model\CharacteristicGroup\ResourceModel\CharacteristicGroupCollectionFactory;
+use Engine\MagentoFix\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Ui\Component\MassAction\Filter;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -32,11 +31,6 @@ class MassStatus extends Action
     private $massActionFilter;
 
     /**
-     * @var CharacteristicGroupCollectionFactory
-     */
-    private $characteristicGroupCollectionFactory;
-
-    /**
      * @var HydratorInterface
      */
     private $hydrator;
@@ -45,20 +39,17 @@ class MassStatus extends Action
      * @param Context $context
      * @param CharacteristicGroupRepositoryInterface $characteristicGroupRepository
      * @param Filter $massActionFilter
-     * @param CharacteristicGroupCollectionFactory $characteristicGroupCollectionFactory
      * @param HydratorInterface $hydrator
      */
     public function __construct(
         Context $context,
         CharacteristicGroupRepositoryInterface $characteristicGroupRepository,
         Filter $massActionFilter,
-        CharacteristicGroupCollectionFactory $characteristicGroupCollectionFactory,
         HydratorInterface $hydrator
     ) {
         parent::__construct($context);
         $this->characteristicGroupRepository = $characteristicGroupRepository;
         $this->massActionFilter = $massActionFilter;
-        $this->characteristicGroupCollectionFactory = $characteristicGroupCollectionFactory;
         $this->hydrator = $hydrator;
     }
 
@@ -71,12 +62,9 @@ class MassStatus extends Action
             $isEnabled = (int)$this->getRequest()->getParam('is_enabled');
 
             $updatedItemsCount = 0;
-            $collection = $this->massActionFilter->getCollection($this->characteristicGroupCollectionFactory->create());
-            foreach ($collection as $characteristicGroup) {
+            foreach ($this->massActionFilter->getIds() as $id) {
                 try {
-                    $characteristicGroup = $this->characteristicGroupRepository->get(
-                        $characteristicGroup->getCharacteristicGroupId()
-                    );
+                    $characteristicGroup = $this->characteristicGroupRepository->get($id);
                     $characteristicGroup = $this->hydrator->hydrate($characteristicGroup, [
                         CharacteristicGroupInterface::IS_ENABLED => $isEnabled,
                     ]);

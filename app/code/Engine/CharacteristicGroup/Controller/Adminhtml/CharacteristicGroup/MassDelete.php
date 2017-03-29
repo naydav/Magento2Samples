@@ -3,12 +3,11 @@ namespace Engine\CharacteristicGroup\Controller\Adminhtml\CharacteristicGroup;
 
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
 use Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface;
-use Engine\CharacteristicGroup\Model\CharacteristicGroup\ResourceModel\CharacteristicGroupCollectionFactory;
+use Engine\MagentoFix\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
-use Magento\Ui\Component\MassAction\Filter;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -31,26 +30,18 @@ class MassDelete extends Action
     private $massActionFilter;
 
     /**
-     * @var CharacteristicGroupCollectionFactory
-     */
-    private $characteristicGroupCollectionFactory;
-
-    /**
      * @param Context $context
      * @param CharacteristicGroupRepositoryInterface $characteristicGroupRepository
      * @param Filter $massActionFilter
-     * @param CharacteristicGroupCollectionFactory $characteristicGroupCollectionFactory
      */
     public function __construct(
         Context $context,
         CharacteristicGroupRepositoryInterface $characteristicGroupRepository,
-        Filter $massActionFilter,
-        CharacteristicGroupCollectionFactory $characteristicGroupCollectionFactory
+        Filter $massActionFilter
     ) {
         parent::__construct($context);
         $this->characteristicGroupRepository = $characteristicGroupRepository;
         $this->massActionFilter = $massActionFilter;
-        $this->characteristicGroupCollectionFactory = $characteristicGroupCollectionFactory;
     }
 
     /**
@@ -60,14 +51,12 @@ class MassDelete extends Action
     {
         if ($this->getRequest()->isPost()) {
             $deletedItemsCount = 0;
-            $collection = $this->massActionFilter->getCollection($this->characteristicGroupCollectionFactory->create());
-            foreach ($collection as $characteristicGroup) {
+            foreach ($this->massActionFilter->getIds() as $id) {
                 try {
-                    /** @var CharacteristicGroupInterface $characteristicGroup */
-                    $this->characteristicGroupRepository->deleteById($characteristicGroup->getCharacteristicGroupId());
+                    $this->characteristicGroupRepository->deleteById($id);
                     $deletedItemsCount++;
                 } catch (CouldNotDeleteException $e) {
-                    $errorMessage = __('[ID: %1] ', $characteristicGroup->getCharacteristicGroupId())
+                    $errorMessage = __('[ID: %1] ', $id)
                         . $e->getMessage();
                     $this->messageManager->addErrorMessage($errorMessage);
                 }

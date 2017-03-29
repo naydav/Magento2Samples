@@ -90,7 +90,7 @@ class Save extends Action
                     // UI component sends value even if field is disabled, so 'Use Default' values must be set to null
                     foreach ($regionRequestData['_use_default'] as $field => $useDefaultState) {
                         if (1 === (int)$useDefaultState) {
-                            $requestData[$field] = null;
+                            $regionRequestData[$field] = null;
                         }
                     }
                 }

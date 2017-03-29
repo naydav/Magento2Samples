@@ -3,12 +3,11 @@ namespace Engine\Location\Controller\Adminhtml\City;
 
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
-use Engine\Location\Model\City\ResourceModel\CityCollectionFactory;
+use Engine\MagentoFix\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
-use Magento\Ui\Component\MassAction\Filter;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -31,26 +30,18 @@ class MassDelete extends Action
     private $massActionFilter;
 
     /**
-     * @var CityCollectionFactory
-     */
-    private $cityCollectionFactory;
-
-    /**
      * @param Context $context
      * @param CityRepositoryInterface $cityRepository
      * @param Filter $massActionFilter
-     * @param CityCollectionFactory $cityCollectionFactory
      */
     public function __construct(
         Context $context,
         CityRepositoryInterface $cityRepository,
-        Filter $massActionFilter,
-        CityCollectionFactory $cityCollectionFactory
+        Filter $massActionFilter
     ) {
         parent::__construct($context);
         $this->cityRepository = $cityRepository;
         $this->massActionFilter = $massActionFilter;
-        $this->cityCollectionFactory = $cityCollectionFactory;
     }
 
     /**
@@ -60,14 +51,12 @@ class MassDelete extends Action
     {
         if ($this->getRequest()->isPost()) {
             $deletedItemsCount = 0;
-            $collection = $this->massActionFilter->getCollection($this->cityCollectionFactory->create());
-            foreach ($collection as $city) {
+            foreach ($this->massActionFilter->getIds() as $id) {
                 try {
-                    /** @var CityInterface $city */
-                    $this->cityRepository->deleteById($city->getCityId());
+                    $this->cityRepository->deleteById($id);
                     $deletedItemsCount++;
                 } catch (CouldNotDeleteException $e) {
-                    $errorMessage = __('[ID: %1] ', $city->getCityId())
+                    $errorMessage = __('[ID: %1] ', $id)
                         . $e->getMessage();
                     $this->messageManager->addErrorMessage($errorMessage);
                 }

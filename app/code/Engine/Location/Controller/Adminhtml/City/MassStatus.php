@@ -3,13 +3,12 @@ namespace Engine\Location\Controller\Adminhtml\City;
 
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
-use Engine\Location\Model\City\ResourceModel\CityCollectionFactory;
+use Engine\MagentoFix\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Ui\Component\MassAction\Filter;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -32,11 +31,6 @@ class MassStatus extends Action
     private $massActionFilter;
 
     /**
-     * @var CityCollectionFactory
-     */
-    private $cityCollectionFactory;
-
-    /**
      * @var HydratorInterface
      */
     private $hydrator;
@@ -45,20 +39,17 @@ class MassStatus extends Action
      * @param Context $context
      * @param CityRepositoryInterface $cityRepository
      * @param Filter $massActionFilter
-     * @param CityCollectionFactory $cityCollectionFactory
      * @param HydratorInterface $hydrator
      */
     public function __construct(
         Context $context,
         CityRepositoryInterface $cityRepository,
         Filter $massActionFilter,
-        CityCollectionFactory $cityCollectionFactory,
         HydratorInterface $hydrator
     ) {
         parent::__construct($context);
         $this->cityRepository = $cityRepository;
         $this->massActionFilter = $massActionFilter;
-        $this->cityCollectionFactory = $cityCollectionFactory;
         $this->hydrator = $hydrator;
     }
 
@@ -71,12 +62,9 @@ class MassStatus extends Action
             $isEnabled = (int)$this->getRequest()->getParam('is_enabled');
 
             $updatedItemsCount = 0;
-            $collection = $this->massActionFilter->getCollection($this->cityCollectionFactory->create());
-            foreach ($collection as $city) {
+            foreach ($this->massActionFilter->getIds() as $id) {
                 try {
-                    $city = $this->cityRepository->get(
-                        $city->getCityId()
-                    );
+                    $city = $this->cityRepository->get($id);
                     $city = $this->hydrator->hydrate($city, [
                         CityInterface::IS_ENABLED => $isEnabled,
                     ]);

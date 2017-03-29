@@ -61,12 +61,11 @@ class EditTest extends AbstractBackendController
         AssertPageHeader::assert($body, __('Edit Category: %1', $title));
         AssertStoreSwitcher::assert($body);
 
-        AssertFormField::assert(
+        AssertFormFieldNotPresent::assert(
             $body,
             $this->formName,
             'general',
-            CategoryInterface::PARENT_ID,
-            $this->rootCategoryIdProvider->get()
+            CategoryInterface::PARENT_ID
         );
         AssertFormField::assert(
             $body,

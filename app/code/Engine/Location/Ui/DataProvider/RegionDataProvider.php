@@ -6,7 +6,7 @@ use Engine\Location\Model\City\CitiesByRegionList;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
 use Engine\PerStoreDataSupport\Ui\DataProvider\FormMetaDataProvider;
-use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
+use Engine\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
@@ -112,21 +112,26 @@ class RegionDataProvider extends DataProvider
         $configData = parent::getConfigData();
         $storeId = $this->storeManager->getStore()->getId();
 
-        $configData['submit_url'] = $this->urlBuilder->getUrl(
-            'engine_location/region/save',
-            [
+        if ('engine_location_region_form_data_source' === $this->name) {
+            $configData['submit_url'] = $this->urlBuilder->getUrl(
+                'engine_location/region/save',
+                [
+                    'store' => $storeId,
+                ]
+            );
+            $configData['validate_url'] = $this->urlBuilder->getUrl(
+                'engine_location/region/validate',
+                [
+                    'store' => $storeId,
+                ]
+            );
+        }
+
+        if ('engine_location_region_listing_data_source' === $this->name) {
+            $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
                 'store' => $storeId,
-            ]
-        );
-        $configData['validate_url'] = $this->urlBuilder->getUrl(
-            'engine_location/region/validate',
-            [
-                'store' => $storeId,
-            ]
-        );
-        $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
-            'store' => $storeId,
-        ]);
+            ]);
+        }
         return $configData;
     }
 

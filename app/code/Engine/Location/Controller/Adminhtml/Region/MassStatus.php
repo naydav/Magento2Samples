@@ -3,13 +3,12 @@ namespace Engine\Location\Controller\Adminhtml\Region;
 
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\Location\Model\Region\ResourceModel\RegionCollectionFactory;
+use Engine\MagentoFix\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Ui\Component\MassAction\Filter;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -32,11 +31,6 @@ class MassStatus extends Action
     private $massActionFilter;
 
     /**
-     * @var RegionCollectionFactory
-     */
-    private $regionCollectionFactory;
-
-    /**
      * @var HydratorInterface
      */
     private $hydrator;
@@ -45,20 +39,17 @@ class MassStatus extends Action
      * @param Context $context
      * @param RegionRepositoryInterface $regionRepository
      * @param Filter $massActionFilter
-     * @param RegionCollectionFactory $regionCollectionFactory
      * @param HydratorInterface $hydrator
      */
     public function __construct(
         Context $context,
         RegionRepositoryInterface $regionRepository,
         Filter $massActionFilter,
-        RegionCollectionFactory $regionCollectionFactory,
         HydratorInterface $hydrator
     ) {
         parent::__construct($context);
         $this->regionRepository = $regionRepository;
         $this->massActionFilter = $massActionFilter;
-        $this->regionCollectionFactory = $regionCollectionFactory;
         $this->hydrator = $hydrator;
     }
 
@@ -71,12 +62,9 @@ class MassStatus extends Action
             $isEnabled = (int)$this->getRequest()->getParam('is_enabled');
 
             $updatedItemsCount = 0;
-            $collection = $this->massActionFilter->getCollection($this->regionCollectionFactory->create());
-            foreach ($collection as $region) {
+            foreach ($this->massActionFilter->getIds() as $id) {
                 try {
-                    $region = $this->regionRepository->get(
-                        $region->getRegionId()
-                    );
+                    $region = $this->regionRepository->get($id);
                     $region = $this->hydrator->hydrate($region, [
                         RegionInterface::IS_ENABLED => $isEnabled,
                     ]);

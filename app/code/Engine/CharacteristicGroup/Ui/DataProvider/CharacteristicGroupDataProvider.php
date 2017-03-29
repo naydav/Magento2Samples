@@ -6,7 +6,7 @@ use Engine\Characteristic\Api\Data\CharacteristicInterface;
 use Engine\CharacteristicGroup\Api\CharacteristicGroupRepositoryInterface;
 use Engine\CharacteristicGroup\Api\Data\CharacteristicGroupInterface;
 use Engine\PerStoreDataSupport\Ui\DataProvider\FormMetaDataProvider;
-use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
+use Engine\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder as SearchSearchCriteriaBuilder;
@@ -122,21 +122,26 @@ class CharacteristicGroupDataProvider extends DataProvider
         $configData = parent::getConfigData();
         $storeId = $this->storeManager->getStore()->getId();
 
-        $configData['submit_url'] = $this->urlBuilder->getUrl(
-            'engine_characteristic_group/characteristicGroup/save',
-            [
+        if ('engine_characteristic_group_form_data_source' === $this->name) {
+            $configData['submit_url'] = $this->urlBuilder->getUrl(
+                'engine_characteristic_group/characteristicGroup/save',
+                [
+                    'store' => $storeId,
+                ]
+            );
+            $configData['validate_url'] = $this->urlBuilder->getUrl(
+                'engine_characteristic_group/characteristicGroup/validate',
+                [
+                    'store' => $storeId,
+                ]
+            );
+        }
+
+        if ('engine_characteristic_group_listing_data_source' === $this->name) {
+            $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
                 'store' => $storeId,
-            ]
-        );
-        $configData['validate_url'] = $this->urlBuilder->getUrl(
-            'engine_characteristic_group/characteristicGroup/validate',
-            [
-                'store' => $storeId,
-            ]
-        );
-        $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
-            'store' => $storeId,
-        ]);
+            ]);
+        }
         return $configData;
     }
 

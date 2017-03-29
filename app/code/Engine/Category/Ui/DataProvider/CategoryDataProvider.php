@@ -6,7 +6,7 @@ use Engine\Category\Api\Data\CategoryInterface;
 use Engine\Category\Api\RootCategoryIdProviderInterface;
 use Engine\Category\Model\Category\Source\GroupedCategorySource;
 use Engine\PerStoreDataSupport\Ui\DataProvider\FormMetaDataProvider;
-use Engine\PerStoreDataSupport\Ui\DataProvider\SearchResultFactory;
+use Engine\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
@@ -123,21 +123,26 @@ class CategoryDataProvider extends DataProvider
         $configData = parent::getConfigData();
         $storeId = $this->storeManager->getStore()->getId();
 
-        $configData['submit_url'] = $this->urlBuilder->getUrl(
-            'engine_category/category/save',
-            [
+        if ('engine_category_form_data_source' === $this->name) {
+            $configData['submit_url'] = $this->urlBuilder->getUrl(
+                'engine_category/category/save',
+                [
+                    'store' => $storeId,
+                ]
+            );
+            $configData['validate_url'] = $this->urlBuilder->getUrl(
+                'engine_category/category/validate',
+                [
+                    'store' => $storeId,
+                ]
+            );
+        }
+
+        if ('engine_category_listing_data_source' === $this->name) {
+            $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
                 'store' => $storeId,
-            ]
-        );
-        $configData['validate_url'] = $this->urlBuilder->getUrl(
-            'engine_category/category/validate',
-            [
-                'store' => $storeId,
-            ]
-        );
-        $configData['update_url'] = $this->urlBuilder->getUrl('mui/index/render', [
-            'store' => $storeId,
-        ]);
+            ]);
+        }
         return $configData;
     }
 
@@ -149,7 +154,7 @@ class CategoryDataProvider extends DataProvider
         $meta = parent::getMeta();
         if ('engine_category_form_data_source' === $this->name) {
             $categoryId = $this->request->getParam(CategoryInterface::CATEGORY_ID);
-            if ($this->rootCategoryIdProvider->get() != $categoryId) {
+            if (null === $categoryId) {
                 $parentId = $this->request->getParam(
                     CategoryInterface::PARENT_ID,
                     $this->rootCategoryIdProvider->get()
@@ -174,8 +179,7 @@ class CategoryDataProvider extends DataProvider
                         'value' => $parentId,
                     ],
                 ];
-            }
-            if (null !== $categoryId) {
+            } else {
                 $fieldsMeta = $this->formMetaDataProvider->get(
                     CategoryInterface::class,
                     $categoryId
