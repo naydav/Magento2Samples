@@ -65,6 +65,8 @@ Pay attention: Category module don't know about CategoryTree module
 * Simple Data Per Store support
 * Help module for managing data per store
 
-## Related Links
-* <a href="http://devdocs.magento.com/">Magento 2 Dev Docs</a>
-* <a href="https://github.com/magento/">Magento 2 github</a>
+### USEFUL LINKS
+* [Contributor's Guide](http://devdocs.magento.com/guides/v2.0/contributor-guide/contributing.html)
+* [Magento 2 Product Documentation](http://devdocs.magento.com/)
+* [Magento 2 Technical Guidelines](http://devdocs.magento.com/guides/v2.1/coding-standards/technical-guidelines/technical-guidelines.html)
+* [Backward Compatibility Development Guide](http://devdocs.magento.com/guides/v2.1/ext-best-practices/extension-coding/backwards-compatible-development/index.html)
