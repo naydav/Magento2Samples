@@ -1,18 +1,18 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
-use Engine\Backend\Test\AssertFormField;
+use Engine\Test\Backend\AssertFormField;
 use Engine\Test\AssertPageHeader;
 use Engine\Test\AssertPageTitle;
-use Engine\Backend\Test\AssertStoreSwitcher;
 use Engine\Location\Api\Data\CityInterface;
 use Magento\Framework\Message\MessageInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
- * @magentoAppArea adminhtml
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class NewActionTest extends AbstractBackendController
 {
@@ -37,7 +37,6 @@ class NewActionTest extends AbstractBackendController
 
         AssertPageTitle::assert($body, __('New City'));
         AssertPageHeader::assert($body, __('New City'));
-        AssertStoreSwitcher::assert($body, false);
 
         AssertFormField::assert(
             $body,
@@ -49,7 +48,7 @@ class NewActionTest extends AbstractBackendController
             $body,
             $this->formName,
             'general',
-            CityInterface::IS_ENABLED
+            CityInterface::ENABLED
         );
         AssertFormField::assert(
             $body,
@@ -61,7 +60,7 @@ class NewActionTest extends AbstractBackendController
             $body,
             $this->formName,
             'general',
-            CityInterface::TITLE
+            CityInterface::NAME
         );
     }
 }

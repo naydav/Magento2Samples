@@ -1,20 +1,22 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Controller\Adminhtml\City;
 
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\Data\CityInterfaceFactory;
 use Engine\Location\Api\CityRepositoryInterface;
-use Engine\Location\Model\City\CityValidatorInterface;
-use Engine\MagentoFix\Exception\ValidatorException;
+use Engine\Location\Model\City\Validator\CityValidatorInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\EntityManager\HydratorInterface;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class Validate extends Action
 {
@@ -34,9 +36,9 @@ class Validate extends Action
     private $cityRepository;
 
     /**
-     * @var HydratorInterface
+     * @var DataObjectHelper
      */
-    private $hydrator;
+    private $dataObjectHelper;
 
     /**
      * @var CityValidatorInterface
@@ -47,54 +49,81 @@ class Validate extends Action
      * @param Context $context
      * @param CityInterfaceFactory $cityFactory
      * @param CityRepositoryInterface $cityRepository
-     * @param HydratorInterface $hydrator
+     * @param DataObjectHelper $dataObjectHelper
      * @param CityValidatorInterface $cityValidator
      */
     public function __construct(
         Context $context,
         CityInterfaceFactory $cityFactory,
         CityRepositoryInterface $cityRepository,
-        HydratorInterface $hydrator,
+        DataObjectHelper $dataObjectHelper,
         CityValidatorInterface $cityValidator
     ) {
         parent::__construct($context);
         $this->cityFactory = $cityFactory;
         $this->cityRepository = $cityRepository;
-        $this->hydrator = $hydrator;
+        $this->dataObjectHelper = $dataObjectHelper;
         $this->cityValidator = $cityValidator;
     }
 
     /**
-     * @return Json
+     * @inheritdoc
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
-        $errorMessages = [];
         $request = $this->getRequest();
-        $requestData = $this->getRequest()->getParam('general');
+        $requestData = $request->getParams();
 
-        if ($request->isXmlHttpRequest() && $request->isPost() && $requestData) {
-            $cityId = !empty($requestData[CityInterface::CITY_ID])
-                ? $requestData[CityInterface::CITY_ID] : null;
-
-            try {
-                if ($cityId) {
-                    $city = $this->cityRepository->get($cityId);
-                } else {
-                    /** @var CityInterface $city */
-                    $city = $this->cityFactory->create();
-                }
-                $city = $this->hydrator->hydrate($city, $requestData);
-                $this->cityValidator->validate($city);
-            } catch (NoSuchEntityException $e) {
-                $errorMessages[] = __('The City does not exist.');
-            } catch (ValidatorException $e) {
-                $errorMessages = $e->getErrors();
-            }
-        } else {
-            $errorMessages[] = __('Please correct the data sent.');
+        if (false === $request->isXmlHttpRequest() || false === $request->isPost() || empty($requestData['general'])) {
+            return $this->createJsonResult([__('Please correct the data sent.')]);
         }
 
+        $cityId = isset($requestData['general'][CityInterface::CITY_ID])
+            ? (int)$requestData['general'][CityInterface::CITY_ID]
+            : null;
+
+        try {
+            $errorMessages = $this->processValidate($requestData, $cityId);
+        } catch (NoSuchEntityException $e) {
+            $errorMessages[] = __('The City does not exist.');
+        }
+        return $this->createJsonResult($errorMessages);
+    }
+
+    /**
+     * @param array $requestData
+     * @param int|null $cityId
+     * @return array
+     */
+    private function processValidate(array $requestData, int $cityId = null): array
+    {
+        if (null === $cityId) {
+            /** @var CityInterface $city */
+            $city = $this->cityFactory->create();
+        } else {
+            $city = $this->cityRepository->get($cityId);
+        }
+        $this->dataObjectHelper->populateWithArray($city, $requestData['general'], CityInterface::class);
+
+        // event is needed for populating entity with custom data from form
+        $this->_eventManager->dispatch(
+            'controller_action_location_city_save_entity_before',
+            [
+                'request' => $this->getRequest(),
+                'city' => $city,
+            ]
+        );
+        $validationResult = $this->cityValidator->validate($city);
+        $errorMessages = $validationResult->getErrors();
+        return $errorMessages;
+    }
+
+    /**
+     * @param array $errorMessages
+     * @return Json
+     */
+    private function createJsonResult(array $errorMessages): Json
+    {
         /** @var Json $resultJson */
         $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $resultJson->setData([

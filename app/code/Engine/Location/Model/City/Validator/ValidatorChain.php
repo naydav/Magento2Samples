@@ -1,28 +1,41 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Model\City\Validator;
 
 use Engine\Location\Api\Data\CityInterface;
-use Engine\Location\Model\City\CityValidatorInterface;
-use Engine\MagentoFix\Exception\ValidatorException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Validation\ValidationResult;
+use Magento\Framework\Validation\ValidationResultFactory;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * Chain of validators. Extension point for new validators via di configuration
+ *
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class ValidatorChain implements CityValidatorInterface
 {
+    /**
+     * @var ValidationResultFactory
+     */
+    private $validationResultFactory;
+
     /**
      * @var CityValidatorInterface[]
      */
     private $validators;
 
     /**
+     * @param ValidationResultFactory $validationResultFactory
      * @param CityValidatorInterface[] $validators
      * @throws LocalizedException
      */
     public function __construct(
-        array $validators
+        ValidationResultFactory $validationResultFactory,
+        array $validators = []
     ) {
+        $this->validationResultFactory = $validationResultFactory;
+
         foreach ($validators as $validator) {
             if (!$validator instanceof CityValidatorInterface) {
                 throw new LocalizedException(
@@ -34,22 +47,18 @@ class ValidatorChain implements CityValidatorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function validate(CityInterface $city)
+    public function validate(CityInterface $city): ValidationResult
     {
         $errors = [];
-
         foreach ($this->validators as $validator) {
-            try {
-                $validator->validate($city);
-            } catch (ValidatorException $e) {
-                $errors = array_merge($errors, $e->getErrors());
+            $validationResult = $validator->validate($city);
+
+            if (false === $validationResult->isValid()) {
+                $errors = array_merge($errors, $validationResult->getErrors());
             }
         }
-
-        if (count($errors)) {
-            throw new ValidatorException($errors);
-        }
+        return $this->validationResultFactory->create(['errors' => $errors]);
     }
 }

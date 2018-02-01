@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Controller\Adminhtml\City;
 
 use Engine\Location\Api\CityRepositoryInterface;
@@ -8,10 +10,11 @@ use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class Edit extends Action
 {
@@ -38,13 +41,13 @@ class Edit extends Action
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
         $cityId = $this->getRequest()->getParam(CityInterface::CITY_ID);
         try {
-            $city = $this->cityRepository->get($cityId);
+            $city = $this->cityRepository->get((int)$cityId);
 
             /** @var Page $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
@@ -52,12 +55,14 @@ class Edit extends Action
                 ->addBreadcrumb(__('Edit City'), __('Edit City'));
             $result->getConfig()
                 ->getTitle()
-                ->prepend(__('Edit City: %1', $city->getTitle()));
+                ->prepend(
+                    __('Edit City: %name', ['name' => $city->getName()])
+                );
         } catch (NoSuchEntityException $e) {
             /** @var Redirect $result */
             $result = $this->resultRedirectFactory->create();
             $this->messageManager->addErrorMessage(
-                __('City with id "%1" does not exist.', $cityId)
+                __('City with id "%id" does not exist.', ['id' => $cityId])
             );
             $result->setPath('*/*');
         }

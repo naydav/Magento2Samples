@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City\Save;
 
-use Engine\Location\Controller\Adminhtml\City\Save;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
 use Engine\Test\AssertArrayContains;
@@ -10,14 +11,14 @@ use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Message\MessageInterface;
-use Magento\Framework\Registry;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
+ * If test has not fixture then magentoDbIsolation will be disabled
  * @magentoDbIsolation enabled
  */
 class CreateTest extends AbstractBackendController
@@ -25,7 +26,7 @@ class CreateTest extends AbstractBackendController
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/engine-location/city/save/store/%s';
+    const REQUEST_URI = 'backend/engine-location/city/save';
 
     /**
      * @var FormKey
@@ -47,11 +48,6 @@ class CreateTest extends AbstractBackendController
      */
     private $searchCriteriaBuilderFactory;
 
-    /**
-     * @var Registry
-     */
-    private $registry;
-
     public function setUp()
     {
         parent::setUp();
@@ -61,19 +57,15 @@ class CreateTest extends AbstractBackendController
             CityRepositoryInterface::class
         );
         $this->searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
-        $this->registry = $this->_objectManager->get(Registry::class);
     }
 
-    /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
-     */
     public function testCreate()
     {
         $data = [
             CityInterface::REGION_ID => 100,
-            CityInterface::IS_ENABLED => true,
+            CityInterface::ENABLED => true,
             CityInterface::POSITION => 100,
-            CityInterface::TITLE => 'City-title',
+            CityInterface::NAME => 'City-name',
         ];
 
         $request = $this->getRequest();
@@ -91,18 +83,13 @@ class CreateTest extends AbstractBackendController
             MessageInterface::TYPE_SUCCESS
         );
 
-        $city = $this->getCityByTitle($data[CityInterface::TITLE]);
+        $city = $this->getCityByName($data[CityInterface::NAME]);
         self::assertNotEmpty($city);
         AssertArrayContains::assert($data, $this->hydrator->extract($city));
 
         $redirect = 'backend/engine-location/city/edit/city_id/'
             . $city->getCityId();
         $this->assertRedirect($this->stringContains($redirect));
-
-        self::assertEquals(
-            $city->getCityId(),
-            $this->registry->registry(Save::REGISTRY_CITY_ID_KEY)
-        );
     }
 
     public function testCreateAndRedirectToNew()
@@ -112,11 +99,14 @@ class CreateTest extends AbstractBackendController
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
             'general' => [
-                CityInterface::TITLE => 'City-title',
+                CityInterface::REGION_ID => 100,
+                CityInterface::ENABLED => true,
+                CityInterface::POSITION => 100,
+                CityInterface::NAME => 'City-name',
             ],
             'redirect_to_new' => 1,
         ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertRedirect($this->stringContains('backend/engine-location/city/new'));
@@ -134,10 +124,13 @@ class CreateTest extends AbstractBackendController
         $request->setPostValue([
             'form_key' => $this->formKey->getFormKey(),
             'general' => [
-                CityInterface::TITLE => 'City-title',
+                CityInterface::REGION_ID => 100,
+                CityInterface::ENABLED => true,
+                CityInterface::POSITION => 100,
+                CityInterface::NAME => 'City-name',
             ],
         ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertRedirect($this->stringContains('backend/engine-location/city'));
@@ -160,26 +153,28 @@ class CreateTest extends AbstractBackendController
         $request->setQueryValue([
             'form_key' => $this->formKey->getFormKey(),
             'general' => [
-                CityInterface::TITLE => 'City-title',
+                CityInterface::REGION_ID => 100,
+                CityInterface::ENABLED => true,
+                CityInterface::POSITION => 100,
+                CityInterface::NAME => 'City-name',
             ],
         ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages($this->contains('Wrong request.'), MessageInterface::TYPE_ERROR);
-        self::assertNull($this->registry->registry(Save::REGISTRY_CITY_ID_KEY));
     }
 
     /**
-     * @param string $title
+     * @param string $name
      * @return CityInterface
      */
-    private function getCityByTitle($title)
+    private function getCityByName(string $name): CityInterface
     {
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-        $searchCriteriaBuilder->addFilter(CityInterface::TITLE, $title);
+        $searchCriteriaBuilder->addFilter(CityInterface::NAME, $name);
         $searchCriteria = $searchCriteriaBuilder->create();
 
         $result = $this->cityRepository->getList($searchCriteria);

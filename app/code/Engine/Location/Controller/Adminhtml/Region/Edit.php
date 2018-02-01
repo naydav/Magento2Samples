@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Controller\Adminhtml\Region;
 
 use Engine\Location\Api\RegionRepositoryInterface;
@@ -8,10 +10,11 @@ use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class Edit extends Action
 {
@@ -38,13 +41,13 @@ class Edit extends Action
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
         $regionId = $this->getRequest()->getParam(RegionInterface::REGION_ID);
         try {
-            $region = $this->regionRepository->get($regionId);
+            $region = $this->regionRepository->get((int)$regionId);
 
             /** @var Page $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
@@ -52,12 +55,14 @@ class Edit extends Action
                 ->addBreadcrumb(__('Edit Region'), __('Edit Region'));
             $result->getConfig()
                 ->getTitle()
-                ->prepend(__('Edit Region: %1', $region->getTitle()));
+                ->prepend(
+                    __('Edit Region: %name', ['name' => $region->getName()])
+                );
         } catch (NoSuchEntityException $e) {
             /** @var Redirect $result */
             $result = $this->resultRedirectFactory->create();
             $this->messageManager->addErrorMessage(
-                __('Region with id "%1" does not exist.', $regionId)
+                __('Region with id "%id" does not exist.', ['id' => $regionId])
             );
             $result->setPath('*/*');
         }

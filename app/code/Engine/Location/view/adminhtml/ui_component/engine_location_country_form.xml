@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">engine_location_country_form.engine_location_country_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Country Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <dataScope>data</dataScope>
+        <namespace>engine_location_country_form</namespace>
+        <deps>
+            <dep>engine_location_country_form.engine_location_country_form_data_source</dep>
+        </deps>
+        <buttons>
+            <button name="back">
+                <url path="engine_location/country/index"/>
+                <class>back</class>
+                <label translate="true">Back</label>
+            </button>
+            <button name="reset">
+                <class>reset</class>
+                <label translate="true">Reset</label>
+            </button>
+            <button name="delete" class="Engine\Location\Ui\Component\Control\Country\DeleteButton"/>
+            <button name="save" class="Engine\Location\Ui\Component\Control\Country\SaveSplitButton"/>
+        </buttons>
+    </settings>
+    <dataSource name="engine_location_country_form_data_source" component="Magento_Ui/js/form/provider">
+        <settings>
+            <submitUrl path="engine_location/country/save"/>
+            <validateUrl path="engine_location/country/validate"/>
+        </settings>
+        <dataProvider class="Engine\Location\Ui\DataProvider\CountryDataProvider" name="engine_location_country_form_data_source">
+            <settings>
+                <requestFieldName>country_id</requestFieldName>
+                <primaryFieldName>country_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general" sortOrder="10">
+        <settings>
+            <label translate="true">General</label>
+            <collapsible>true</collapsible>
+            <opened>true</opened>
+            <dataScope>general</dataScope>
+        </settings>
+        <field name="name" formElement="input" sortOrder="100">
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                    <rule name="max_text_length" xsi:type="number">255</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">Name</label>
+                <scopeLabel>[GLOBAL]</scopeLabel>
+            </settings>
+        </field>
+        <field name="enabled" formElement="checkbox" sortOrder="200">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>boolean</dataType>
+                <label translate="true">Is Enabled</label>
+                <scopeLabel>[GLOBAL]</scopeLabel>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="number">0</map>
+                            <map name="true" xsi:type="number">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="position" formElement="input" sortOrder="300">
+            <settings>
+                <validation>
+                    <rule name="validate-integer" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">Position</label>
+                <scopeLabel>[GLOBAL]</scopeLabel>
+            </settings>
+        </field>
+    </fieldset>
+</form>

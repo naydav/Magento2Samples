@@ -1,56 +1,50 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\Region\Save;
 
-use Engine\Location\Controller\Adminhtml\Region\Save;
 use Engine\Location\Api\Data\RegionInterface;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Message\MessageInterface;
-use Magento\Framework\Registry;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
- * @magentoDbIsolation enabled
  */
 class ValidationTest extends AbstractBackendController
 {
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/engine-location/region/save/store/%s';
+    const REQUEST_URI = 'backend/engine-location/region/save';
 
     /**
      * @var FormKey
      */
     private $formKey;
 
-    /**
-     * @var Registry
-     */
-    private $registry;
-
     public function setUp()
     {
         parent::setUp();
         $this->formKey = $this->_objectManager->get(FormKey::class);
-        $this->registry = $this->_objectManager->get(Registry::class);
     }
 
     /**
      * @param string $field
-     * @param mixed $value
+     * @param string $value
      * @param string $errorMessage
      * @dataProvider failedValidationDataProvider
      */
-    public function testFailedValidationOnCreate($field, $value, $errorMessage)
+    public function testFailedValidationOnCreate(string $field, string $value, string $errorMessage)
     {
         $data = [
-            RegionInterface::IS_ENABLED => true,
+            RegionInterface::COUNTRY_ID => 100,
+            RegionInterface::ENABLED => true,
             RegionInterface::POSITION => 100,
-            RegionInterface::TITLE => 'Region-title',
+            RegionInterface::NAME => 'Region-name',
         ];
         $data[$field] = $value;
 
@@ -60,29 +54,29 @@ class ValidationTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertRedirect($this->stringContains('backend/engine-location/region'));
         $this->assertSessionMessages($this->contains($errorMessage), MessageInterface::TYPE_ERROR);
-        self::assertNull($this->registry->registry(Save::REGISTRY_REGION_ID_KEY));
     }
 
     /**
      * @param string $field
-     * @param mixed $value
+     * @param string $value
      * @param string $errorMessage
      * @dataProvider failedValidationDataProvider
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region.php
      */
-    public function testFailedValidationOnUpdate($field, $value, $errorMessage)
+    public function testFailedValidationOnUpdate(string $field, string $value, string $errorMessage)
     {
         $regionId = 100;
         $data = [
             RegionInterface::REGION_ID => $regionId,
-            RegionInterface::IS_ENABLED => false,
-            RegionInterface::POSITION => 200,
-            RegionInterface::TITLE => 'Region-title-updated',
+            RegionInterface::COUNTRY_ID => 100,
+            RegionInterface::ENABLED => false,
+            RegionInterface::POSITION => 100,
+            RegionInterface::NAME => 'Region-name-updated',
         ];
         $data[$field] = $value;
 
@@ -92,24 +86,23 @@ class ValidationTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertRedirect($this->stringContains('backend/engine-location/region'));
         $this->assertSessionMessages($this->contains($errorMessage), MessageInterface::TYPE_ERROR);
-        self::assertNull($this->registry->registry(Save::REGISTRY_REGION_ID_KEY));
     }
 
     /**
      * @return array
      */
-    public function failedValidationDataProvider()
+    public function failedValidationDataProvider(): array
     {
         return [
-            [
-                RegionInterface::TITLE,
+            'empty_name' => [
+                RegionInterface::NAME,
                 '',
-                '&quot;' . RegionInterface::TITLE . '&quot; can not be empty.',
+                '&quot;' . RegionInterface::NAME . '&quot; can not be empty.',
             ],
         ];
     }

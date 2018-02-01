@@ -1,28 +1,19 @@
 <?php
 namespace Engine\Location\Model\City\ResourceModel;
 
-use Engine\Location\Api\Data\CityInterface;
-use Engine\Location\Model\City\City;
-use Engine\PerStoreDataSupport\Model\ResourceModel\AbstractCollection;
+use Engine\Location\Model\City\City as CityModel;
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class CityCollection extends AbstractCollection
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function _construct()
     {
-        $this->_init(City::class, CityResource::class);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getInterfaceName()
-    {
-        return CityInterface::class;
+        $this->_init(CityModel::class, City::class);
     }
 }

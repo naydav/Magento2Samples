@@ -1,18 +1,19 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\Region;
 
-use Engine\Test\AssertArrayContains;
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
+use Engine\Test\AssertArrayContains;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\EntityManager\HydratorInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
  */
 class InlineEditTest extends AbstractBackendController
@@ -37,11 +38,6 @@ class InlineEditTest extends AbstractBackendController
      */
     private $regionRepository;
 
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
     public function setUp()
     {
         parent::setUp();
@@ -50,21 +46,20 @@ class InlineEditTest extends AbstractBackendController
         $this->regionRepository = $this->_objectManager->get(
             RegionRepositoryInterface::class
         );
-        $this->storeManager = $this->_objectManager->get(StoreManagerInterface::class);
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
-     * @magentoDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region.php
      */
-    public function testInlineEditInGlobalScope()
+    public function testInlineEdit()
     {
         $regionId = 100;
         $itemData = [
             RegionInterface::REGION_ID => $regionId,
-            RegionInterface::IS_ENABLED => false,
+            RegionInterface::COUNTRY_ID => 1000,
+            RegionInterface::ENABLED => false,
             RegionInterface::POSITION => 1000,
-            RegionInterface::TITLE => 'Region-title-inline-edit',
+            RegionInterface::NAME => 'Region-name-inline-edit',
         ];
 
         $request = $this->getRequest();
@@ -88,55 +83,8 @@ class InlineEditTest extends AbstractBackendController
         self::assertEquals(0, $jsonResponse->error);
         self::assertEmpty($jsonResponse->messages);
 
-        $region = $this->getRegionById($regionId, 'default');
+        $region = $this->regionRepository->get($regionId);
         AssertArrayContains::assert($itemData, $this->hydrator->extract($region));
-        $region = $this->getRegionById($regionId, 'test_store');
-        AssertArrayContains::assert($itemData, $this->hydrator->extract($region));
-    }
-
-    /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100_store_scope.php
-     */
-    public function testInlineEditInStoreScope()
-    {
-        $storeCode = 'test_store';
-        $regionId = 100;
-        $itemDataForTestStore = [
-            RegionInterface::REGION_ID => $regionId,
-            RegionInterface::IS_ENABLED => false,
-            RegionInterface::POSITION => 1000,
-            RegionInterface::TITLE => 'Region-title-inline-edit-per-store',
-        ];
-
-        $request = $this->getRequest();
-        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
-        $request->setMethod(Request::METHOD_POST);
-        $request->setPostValue([
-            'form_key' => $this->formKey->getFormKey(),
-            'items' => [
-                $itemDataForTestStore,
-            ],
-        ]);
-
-        $this->dispatch(self::REQUEST_URI . '/store/' . $storeCode . '/');
-        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
-
-        $body = $this->getResponse()->getBody();
-        self::assertNotEmpty($body);
-
-        $jsonResponse = json_decode($body);
-        self::assertNotEmpty($jsonResponse);
-        self::assertEquals(0, $jsonResponse->error);
-        self::assertEmpty($jsonResponse->messages);
-
-        $region = $this->getRegionById($regionId, 'default');
-        $itemDataForDefaultStore = array_merge($itemDataForTestStore, [
-            RegionInterface::TITLE => 'Region-title-100',
-        ]);
-        AssertArrayContains::assert($itemDataForDefaultStore, $this->hydrator->extract($region));
-
-        $region = $this->getRegionById($regionId, $storeCode);
-        AssertArrayContains::assert($itemDataForTestStore, $this->hydrator->extract($region));
     }
 
     public function testInlineEditWithNotExistEntityId()
@@ -193,7 +141,7 @@ class InlineEditTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region.php
      */
     public function testInlineEditNoAjaxRequest()
     {
@@ -204,7 +152,6 @@ class InlineEditTest extends AbstractBackendController
             'items' => [
                 [
                     RegionInterface::REGION_ID => 100,
-                    RegionInterface::IS_ENABLED => false,
                 ],
             ],
         ]);
@@ -222,7 +169,7 @@ class InlineEditTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region.php
      */
     public function testInlineEditWithWrongRequestMethod()
     {
@@ -234,7 +181,6 @@ class InlineEditTest extends AbstractBackendController
             'items' => [
                 [
                     RegionInterface::REGION_ID => 100,
-                    RegionInterface::IS_ENABLED => false,
                 ],
             ],
         ]);
@@ -253,19 +199,20 @@ class InlineEditTest extends AbstractBackendController
 
     /**
      * @param string $field
-     * @param mixed $value
+     * @param string $value
      * @param string $errorMessage
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_id_100.php
      * @dataProvider failedValidationDataProvider
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region.php
      */
-    public function testFailedValidation($field, $value, $errorMessage)
+    public function testFailedValidation(string $field, string $value, string $errorMessage)
     {
         $regionId = 100;
         $itemData = [
             RegionInterface::REGION_ID => $regionId,
-            RegionInterface::IS_ENABLED => false,
+            RegionInterface::COUNTRY_ID => 1000,
+            RegionInterface::ENABLED => false,
             RegionInterface::POSITION => 1000,
-            RegionInterface::TITLE => 'Region-title-inline-edit',
+            RegionInterface::NAME => 'Region-name-inline-edit',
         ];
         $itemData[$field] = $value;
 
@@ -293,29 +240,14 @@ class InlineEditTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function failedValidationDataProvider()
+    public function failedValidationDataProvider(): array
     {
         return [
-            [
-                RegionInterface::TITLE,
+            'empty_name' => [
+                RegionInterface::NAME,
                 '',
-                '"' . RegionInterface::TITLE . '" can not be empty.',
+                '[ID: 100] "' . RegionInterface::NAME . '" can not be empty.',
             ],
         ];
-    }
-
-    /**
-     * @param int $regionId
-     * @param string|null $storeCode
-     * @return RegionInterface
-     */
-    private function getRegionById($regionId, $storeCode = null)
-    {
-        if (null !== $storeCode) {
-            $this->storeManager->setCurrentStore($storeCode);
-        }
-
-        $region = $this->regionRepository->get($regionId);
-        return $region;
     }
 }

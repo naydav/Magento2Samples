@@ -1,26 +1,35 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Model\Region;
 
 use Engine\Location\Api\Data\RegionExtensionInterface;
 use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Model\Region\ResourceModel\RegionResource;
+use Engine\Location\Model\Region\ResourceModel\Region as RegionResourceModel;
 use Magento\Framework\Model\AbstractExtensibleModel;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @inheritdoc
  */
 class Region extends AbstractExtensibleModel implements RegionInterface
 {
+    /**
+     * Prefix of model events names
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'engine_location_region';
+
     /**
      * @return void
      */
     protected function _construct()
     {
-        $this->_init(RegionResource::class);
+        $this->_init(RegionResourceModel::class);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getRegionId()
     {
@@ -28,7 +37,7 @@ class Region extends AbstractExtensibleModel implements RegionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setRegionId($regionId)
     {
@@ -36,23 +45,39 @@ class Region extends AbstractExtensibleModel implements RegionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function getIsEnabled()
+    public function getCountryId()
     {
-        return $this->getData(self::IS_ENABLED);
+        return $this->getData(self::COUNTRY_ID);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function setIsEnabled($isEnabled)
+    public function setCountryId($countryId)
     {
-        $this->setData(self::IS_ENABLED, $isEnabled);
+        $this->setData(self::COUNTRY_ID, $countryId);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     */
+    public function isEnabled()
+    {
+        return $this->getData(self::ENABLED);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setEnabled($enabled)
+    {
+        $this->setData(self::ENABLED, $enabled);
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getPosition()
     {
@@ -60,7 +85,7 @@ class Region extends AbstractExtensibleModel implements RegionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setPosition($position)
     {
@@ -68,23 +93,23 @@ class Region extends AbstractExtensibleModel implements RegionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function getTitle()
+    public function getName()
     {
-        return $this->getData(self::TITLE);
+        return $this->getData(self::NAME);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function setTitle($title)
+    public function setName($name)
     {
-        $this->setData(self::TITLE, $title);
+        $this->setData(self::NAME, $name);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getExtensionAttributes()
     {
@@ -97,7 +122,7 @@ class Region extends AbstractExtensibleModel implements RegionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setExtensionAttributes(RegionExtensionInterface $extensionAttributes)
     {

@@ -1,11 +1,17 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Api\Data;
 
 use Magento\Framework\Api\SearchResultsInterface;
 
 /**
- * @author naydav <valeriy.nayda@gmail.com>
+ * Search results of Repository::getList method
+ *
+ * Used fully qualified namespaces in annotations for proper work of WebApi request parser
+ *
  * @api
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 interface CitySearchResultInterface extends SearchResultsInterface
 {
@@ -16,7 +22,7 @@ interface CitySearchResultInterface extends SearchResultsInterface
 
     /**
      * @param \Engine\Location\Api\Data\CityInterface[] $items
-     * @return $this
+     * @return void
      */
     public function setItems(array $items);
 }

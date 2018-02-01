@@ -1,16 +1,18 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Controller\Adminhtml\Region;
 
-use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\MagentoFix\Ui\Component\MassAction\Filter;
+use Engine\Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class MassDelete extends Action
 {
@@ -45,26 +47,31 @@ class MassDelete extends Action
     }
 
     /**
-     * @return ResultInterface
+     * @inheritdoc
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
-        if ($this->getRequest()->isPost()) {
-            $deletedItemsCount = 0;
-            foreach ($this->massActionFilter->getIds() as $id) {
-                try {
-                    $this->regionRepository->deleteById($id);
-                    $deletedItemsCount++;
-                } catch (CouldNotDeleteException $e) {
-                    $errorMessage = __('[ID: %1] ', $id)
-                        . $e->getMessage();
-                    $this->messageManager->addErrorMessage($errorMessage);
-                }
-            }
-            $this->messageManager->addSuccessMessage(__('You deleted %1 Region(s).', $deletedItemsCount));
-        } else {
+        if (false === $this->getRequest()->isPost()) {
             $this->messageManager->addErrorMessage(__('Wrong request.'));
+            return $this->resultRedirectFactory->create()->setPath('*/*');
         }
+
+        $deletedItemsCount = 0;
+        foreach ($this->massActionFilter->getIds() as $regionId) {
+            try {
+                $regionId = (int)$regionId;
+                $this->regionRepository->deleteById($regionId);
+                $deletedItemsCount++;
+            } catch (NoSuchEntityException $e) {
+                $errorMessage = __('[ID: %id] %message', ['id' => $regionId, 'message' => $e->getMessage()]);
+                $this->messageManager->addErrorMessage($errorMessage);
+            } catch (CouldNotDeleteException $e) {
+                $errorMessage = __('[ID: %id] %message', ['id' => $regionId, 'message' => $e->getMessage()]);
+                $this->messageManager->addErrorMessage($errorMessage);
+            }
+        }
+
+        $this->messageManager->addSuccessMessage(__('You deleted %count Region(s).', ['count' => $deletedItemsCount]));
         return $this->resultRedirectFactory->create()->setPath('*/*');
     }
 }

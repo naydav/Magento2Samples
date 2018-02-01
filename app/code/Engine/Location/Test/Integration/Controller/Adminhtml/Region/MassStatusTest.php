@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\Region;
 
 use Engine\Location\Api\Data\RegionInterface;
@@ -12,7 +14,7 @@ use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
  */
 class MassStatusTest extends AbstractBackendController
@@ -48,7 +50,7 @@ class MassStatusTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/regions.php
      */
     public function testMassStatus()
     {
@@ -75,7 +77,7 @@ class MassStatusTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/regions.php
      */
     public function testMassStatusWithWrongRequestMethod()
     {
@@ -98,7 +100,7 @@ class MassStatusTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/regions.php
      */
     public function testMassStatusWithNotExistEntityId()
     {
@@ -128,12 +130,12 @@ class MassStatusTest extends AbstractBackendController
     /**
      * @return int
      */
-    private function getEnabledRegionsCount()
+    private function getEnabledRegionsCount(): int
     {
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
         $searchCriteria = $searchCriteriaBuilder
-            ->addFilter(RegionInterface::IS_ENABLED, true)
+            ->addFilter(RegionInterface::ENABLED, true)
             ->create();
 
         $result = $this->regionRepository->getList($searchCriteria);

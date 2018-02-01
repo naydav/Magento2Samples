@@ -1,20 +1,22 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Controller\Adminhtml\Region;
 
 use Engine\Location\Api\Data\RegionInterface;
 use Engine\Location\Api\Data\RegionInterfaceFactory;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\Location\Model\Region\RegionValidatorInterface;
-use Engine\MagentoFix\Exception\ValidatorException;
+use Engine\Location\Model\Region\Validator\RegionValidatorInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\EntityManager\HydratorInterface;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class Validate extends Action
 {
@@ -34,9 +36,9 @@ class Validate extends Action
     private $regionRepository;
 
     /**
-     * @var HydratorInterface
+     * @var DataObjectHelper
      */
-    private $hydrator;
+    private $dataObjectHelper;
 
     /**
      * @var RegionValidatorInterface
@@ -47,54 +49,81 @@ class Validate extends Action
      * @param Context $context
      * @param RegionInterfaceFactory $regionFactory
      * @param RegionRepositoryInterface $regionRepository
-     * @param HydratorInterface $hydrator
+     * @param DataObjectHelper $dataObjectHelper
      * @param RegionValidatorInterface $regionValidator
      */
     public function __construct(
         Context $context,
         RegionInterfaceFactory $regionFactory,
         RegionRepositoryInterface $regionRepository,
-        HydratorInterface $hydrator,
+        DataObjectHelper $dataObjectHelper,
         RegionValidatorInterface $regionValidator
     ) {
         parent::__construct($context);
         $this->regionFactory = $regionFactory;
         $this->regionRepository = $regionRepository;
-        $this->hydrator = $hydrator;
+        $this->dataObjectHelper = $dataObjectHelper;
         $this->regionValidator = $regionValidator;
     }
 
     /**
-     * @return Json
+     * @inheritdoc
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
-        $errorMessages = [];
         $request = $this->getRequest();
-        $requestData = $this->getRequest()->getParam('general');
+        $requestData = $request->getParams();
 
-        if ($request->isXmlHttpRequest() && $request->isPost() && $requestData) {
-            $regionId = !empty($requestData[RegionInterface::REGION_ID])
-                ? $requestData[RegionInterface::REGION_ID] : null;
-
-            try {
-                if ($regionId) {
-                    $region = $this->regionRepository->get($regionId);
-                } else {
-                    /** @var RegionInterface $region */
-                    $region = $this->regionFactory->create();
-                }
-                $region = $this->hydrator->hydrate($region, $requestData);
-                $this->regionValidator->validate($region);
-            } catch (NoSuchEntityException $e) {
-                $errorMessages[] = __('The Region does not exist.');
-            } catch (ValidatorException $e) {
-                $errorMessages = $e->getErrors();
-            }
-        } else {
-            $errorMessages[] = __('Please correct the data sent.');
+        if (false === $request->isXmlHttpRequest() || false === $request->isPost() || empty($requestData['general'])) {
+            return $this->createJsonResult([__('Please correct the data sent.')]);
         }
 
+        $regionId = isset($requestData['general'][RegionInterface::REGION_ID])
+            ? (int)$requestData['general'][RegionInterface::REGION_ID]
+            : null;
+
+        try {
+            $errorMessages = $this->processValidate($requestData, $regionId);
+        } catch (NoSuchEntityException $e) {
+            $errorMessages[] = __('The Region does not exist.');
+        }
+        return $this->createJsonResult($errorMessages);
+    }
+
+    /**
+     * @param array $requestData
+     * @param int|null $regionId
+     * @return array
+     */
+    private function processValidate(array $requestData, int $regionId = null): array
+    {
+        if (null === $regionId) {
+            /** @var RegionInterface $region */
+            $region = $this->regionFactory->create();
+        } else {
+            $region = $this->regionRepository->get($regionId);
+        }
+        $this->dataObjectHelper->populateWithArray($region, $requestData['general'], RegionInterface::class);
+
+        // event is needed for populating entity with custom data from form
+        $this->_eventManager->dispatch(
+            'controller_action_location_region_save_entity_before',
+            [
+                'request' => $this->getRequest(),
+                'region' => $region,
+            ]
+        );
+        $validationResult = $this->regionValidator->validate($region);
+        $errorMessages = $validationResult->getErrors();
+        return $errorMessages;
+    }
+
+    /**
+     * @param array $errorMessages
+     * @return Json
+     */
+    private function createJsonResult(array $errorMessages): Json
+    {
         /** @var Json $resultJson */
         $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $resultJson->setData([

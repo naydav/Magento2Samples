@@ -1,8 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Test;
 
+use PHPUnit\Framework\Assert;
+
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * Check that actual data contains all values from expected data
+ * But actual data can have more values than expected data
  */
 class AssertArrayContains
 {
@@ -14,7 +19,7 @@ class AssertArrayContains
     public static function assert(array $expected, array $actual)
     {
         foreach ($expected as $key => $value) {
-            \PHPUnit_Framework_Assert::assertArrayHasKey(
+            Assert::assertArrayHasKey(
                 $key,
                 $actual,
                 "Expected value for key '{$key}' is missed"
@@ -22,7 +27,7 @@ class AssertArrayContains
             if (is_array($value)) {
                 self::assert($value, $actual[$key]);
             } else {
-                \PHPUnit_Framework_Assert::assertEquals(
+                Assert::assertEquals(
                     $value,
                     $actual[$key],
                     "Expected value for key '{$key}' doesn't match"

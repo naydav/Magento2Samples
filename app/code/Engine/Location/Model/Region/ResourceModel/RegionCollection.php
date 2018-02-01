@@ -1,28 +1,19 @@
 <?php
 namespace Engine\Location\Model\Region\ResourceModel;
 
-use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Model\Region\Region;
-use Engine\PerStoreDataSupport\Model\ResourceModel\AbstractCollection;
+use Engine\Location\Model\Region\Region as RegionModel;
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 class RegionCollection extends AbstractCollection
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function _construct()
     {
-        $this->_init(Region::class, RegionResource::class);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getInterfaceName()
-    {
-        return RegionInterface::class;
+        $this->_init(RegionModel::class, Region::class);
     }
 }

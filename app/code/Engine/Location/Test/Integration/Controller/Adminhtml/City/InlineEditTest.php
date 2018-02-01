@@ -1,18 +1,19 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
-use Engine\Test\AssertArrayContains;
 use Engine\Location\Api\Data\CityInterface;
 use Engine\Location\Api\CityRepositoryInterface;
+use Engine\Test\AssertArrayContains;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\EntityManager\HydratorInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
  */
 class InlineEditTest extends AbstractBackendController
@@ -37,11 +38,6 @@ class InlineEditTest extends AbstractBackendController
      */
     private $cityRepository;
 
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
     public function setUp()
     {
         parent::setUp();
@@ -50,21 +46,20 @@ class InlineEditTest extends AbstractBackendController
         $this->cityRepository = $this->_objectManager->get(
             CityRepositoryInterface::class
         );
-        $this->storeManager = $this->_objectManager->get(StoreManagerInterface::class);
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
-     * @magentoDataFixture ../../../../app/code/Engine/PerStoreDataSupport/Test/_files/store.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city.php
      */
-    public function testInlineEditInGlobalScope()
+    public function testInlineEdit()
     {
         $cityId = 100;
         $itemData = [
             CityInterface::CITY_ID => $cityId,
-            CityInterface::IS_ENABLED => false,
+            CityInterface::REGION_ID => 1000,
+            CityInterface::ENABLED => false,
             CityInterface::POSITION => 1000,
-            CityInterface::TITLE => 'City-title-inline-edit',
+            CityInterface::NAME => 'City-name-inline-edit',
         ];
 
         $request = $this->getRequest();
@@ -88,55 +83,8 @@ class InlineEditTest extends AbstractBackendController
         self::assertEquals(0, $jsonResponse->error);
         self::assertEmpty($jsonResponse->messages);
 
-        $city = $this->getCityById($cityId, 'default');
+        $city = $this->cityRepository->get($cityId);
         AssertArrayContains::assert($itemData, $this->hydrator->extract($city));
-        $city = $this->getCityById($cityId, 'test_store');
-        AssertArrayContains::assert($itemData, $this->hydrator->extract($city));
-    }
-
-    /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100_store_scope.php
-     */
-    public function testInlineEditInStoreScope()
-    {
-        $storeCode = 'test_store';
-        $cityId = 100;
-        $itemDataForTestStore = [
-            CityInterface::CITY_ID => $cityId,
-            CityInterface::IS_ENABLED => false,
-            CityInterface::POSITION => 1000,
-            CityInterface::TITLE => 'City-title-inline-edit-per-store',
-        ];
-
-        $request = $this->getRequest();
-        $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'XMLHttpRequest');
-        $request->setMethod(Request::METHOD_POST);
-        $request->setPostValue([
-            'form_key' => $this->formKey->getFormKey(),
-            'items' => [
-                $itemDataForTestStore,
-            ],
-        ]);
-
-        $this->dispatch(self::REQUEST_URI . '/store/' . $storeCode . '/');
-        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
-
-        $body = $this->getResponse()->getBody();
-        self::assertNotEmpty($body);
-
-        $jsonResponse = json_decode($body);
-        self::assertNotEmpty($jsonResponse);
-        self::assertEquals(0, $jsonResponse->error);
-        self::assertEmpty($jsonResponse->messages);
-
-        $city = $this->getCityById($cityId, 'default');
-        $itemDataForDefaultStore = array_merge($itemDataForTestStore, [
-            CityInterface::TITLE => 'City-title-100',
-        ]);
-        AssertArrayContains::assert($itemDataForDefaultStore, $this->hydrator->extract($city));
-
-        $city = $this->getCityById($cityId, $storeCode);
-        AssertArrayContains::assert($itemDataForTestStore, $this->hydrator->extract($city));
     }
 
     public function testInlineEditWithNotExistEntityId()
@@ -193,7 +141,7 @@ class InlineEditTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city.php
      */
     public function testInlineEditNoAjaxRequest()
     {
@@ -204,7 +152,6 @@ class InlineEditTest extends AbstractBackendController
             'items' => [
                 [
                     CityInterface::CITY_ID => 100,
-                    CityInterface::IS_ENABLED => false,
                 ],
             ],
         ]);
@@ -222,7 +169,7 @@ class InlineEditTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city.php
      */
     public function testInlineEditWithWrongRequestMethod()
     {
@@ -234,7 +181,6 @@ class InlineEditTest extends AbstractBackendController
             'items' => [
                 [
                     CityInterface::CITY_ID => 100,
-                    CityInterface::IS_ENABLED => false,
                 ],
             ],
         ]);
@@ -253,19 +199,20 @@ class InlineEditTest extends AbstractBackendController
 
     /**
      * @param string $field
-     * @param mixed $value
+     * @param string $value
      * @param string $errorMessage
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
      * @dataProvider failedValidationDataProvider
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city.php
      */
-    public function testFailedValidation($field, $value, $errorMessage)
+    public function testFailedValidation(string $field, string $value, string $errorMessage)
     {
         $cityId = 100;
         $itemData = [
             CityInterface::CITY_ID => $cityId,
-            CityInterface::IS_ENABLED => false,
+            CityInterface::REGION_ID => 1000,
+            CityInterface::ENABLED => false,
             CityInterface::POSITION => 1000,
-            CityInterface::TITLE => 'City-title-inline-edit',
+            CityInterface::NAME => 'City-name-inline-edit',
         ];
         $itemData[$field] = $value;
 
@@ -293,29 +240,14 @@ class InlineEditTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function failedValidationDataProvider()
+    public function failedValidationDataProvider(): array
     {
         return [
-            [
-                CityInterface::TITLE,
+            'empty_name' => [
+                CityInterface::NAME,
                 '',
-                '"' . CityInterface::TITLE . '" can not be empty.',
+                '[ID: 100] "' . CityInterface::NAME . '" can not be empty.',
             ],
         ];
-    }
-
-    /**
-     * @param int $cityId
-     * @param string|null $storeCode
-     * @return CityInterface
-     */
-    private function getCityById($cityId, $storeCode = null)
-    {
-        if (null !== $storeCode) {
-            $this->storeManager->setCurrentStore($storeCode);
-        }
-
-        $city = $this->cityRepository->get($cityId);
-        return $city;
     }
 }

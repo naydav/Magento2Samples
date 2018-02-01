@@ -1,11 +1,11 @@
 <?php
 namespace Engine\Location\Test\Integration\Backend;
 
-use Engine\Backend\Test\AssertMenuItem;
+use Engine\Test\Backend\AssertMenuItem;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
  */
 class MenuTest extends AbstractBackendController
@@ -26,6 +26,19 @@ class MenuTest extends AbstractBackendController
             $body,
             'engine-location-location',
             'Location'
+        );
+
+        AssertMenuItem::assert(
+            $body,
+            'engine-location-country-index',
+            'Country List',
+            'engine-location/country'
+        );
+        AssertMenuItem::assert(
+            $body,
+            'engine-location-country-new',
+            'Add Country',
+            'engine-location/country/new'
         );
 
         AssertMenuItem::assert(

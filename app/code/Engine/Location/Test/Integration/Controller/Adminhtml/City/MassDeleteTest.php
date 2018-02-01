@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
 use Engine\Location\Api\CityRepositoryInterface;
@@ -11,7 +13,7 @@ use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
  */
 class MassDeleteTest extends AbstractBackendController
@@ -47,10 +49,11 @@ class MassDeleteTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/cities.php
      */
     public function testMassDelete()
     {
+        $initialCitiesCount = $this->getCitiesCount();
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
@@ -72,14 +75,15 @@ class MassDeleteTest extends AbstractBackendController
             $this->contains('You deleted 3 City(s).'),
             MessageInterface::TYPE_SUCCESS
         );
-        self::assertEquals(1, $this->getCitiesCount());
+        self::assertEquals(($initialCitiesCount - 3), $this->getCitiesCount());
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/cities.php
      */
     public function testMassDeleteWithWrongRequestMethod()
     {
+        $initialCitiesCount = $this->getCitiesCount();
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_GET);
         $request->setQueryValue([
@@ -97,14 +101,15 @@ class MassDeleteTest extends AbstractBackendController
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages($this->contains('Wrong request.'), MessageInterface::TYPE_ERROR);
-        self::assertEquals(4, $this->getCitiesCount());
+        self::assertEquals($initialCitiesCount, $this->getCitiesCount());
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/cities.php
      */
     public function testMassDeleteWithNotExistEntityId()
     {
+        $initialCitiesCount = $this->getCitiesCount();
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
@@ -126,13 +131,13 @@ class MassDeleteTest extends AbstractBackendController
             $this->contains('You deleted 2 City(s).'),
             MessageInterface::TYPE_SUCCESS
         );
-        self::assertEquals(2, $this->getCitiesCount());
+        self::assertEquals(($initialCitiesCount - 2), $this->getCitiesCount());
     }
 
     /**
      * @return int
      */
-    private function getCitiesCount()
+    private function getCitiesCount(): int
     {
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();

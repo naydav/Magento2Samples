@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Country -->
+    <!-- Buttons configurations -->
+    <virtualType name="Engine\Location\Ui\Component\Control\Country\SaveSplitButton" type="Magento\Backend\Ui\Component\Control\SaveSplitButton">
+        <arguments>
+            <argument name="targetName" xsi:type="string">engine_location_country_form.engine_location_country_form</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\Location\Ui\Component\Control\Country\DeleteButton" type="Magento\Backend\Ui\Component\Control\DeleteButton">
+        <arguments>
+            <argument name="confirmationMessage" xsi:type="string" translate="true">Are you sure you want to delete this Country?</argument>
+            <argument name="idFieldName" xsi:type="const">Engine\Location\Api\Data\CountryInterface::COUNTRY_ID</argument>
+            <argument name="deleteRoutePath" xsi:type="string">engine_location/country/delete</argument>
+            <argument name="sortOrder" xsi:type="number">30</argument>
+        </arguments>
+    </virtualType>
+    <!-- Region -->
+    <!-- Buttons configurations -->
+    <virtualType name="Engine\Location\Ui\Component\Control\Region\SaveSplitButton" type="Magento\Backend\Ui\Component\Control\SaveSplitButton">
+        <arguments>
+            <argument name="targetName" xsi:type="string">engine_location_region_form.engine_location_region_form</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\Location\Ui\Component\Control\Region\DeleteButton" type="Magento\Backend\Ui\Component\Control\DeleteButton">
+        <arguments>
+            <argument name="confirmationMessage" xsi:type="string" translate="true">Are you sure you want to delete this Region?</argument>
+            <argument name="idFieldName" xsi:type="const">Engine\Location\Api\Data\RegionInterface::REGION_ID</argument>
+            <argument name="deleteRoutePath" xsi:type="string">engine_location/region/delete</argument>
+            <argument name="sortOrder" xsi:type="number">30</argument>
+        </arguments>
+    </virtualType>
+    <!-- City -->
+    <!-- Buttons configurations -->
+    <virtualType name="Engine\Location\Ui\Component\Control\City\SaveSplitButton" type="Magento\Backend\Ui\Component\Control\SaveSplitButton">
+        <arguments>
+            <argument name="targetName" xsi:type="string">engine_location_city_form.engine_location_city_form</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Engine\Location\Ui\Component\Control\City\DeleteButton" type="Magento\Backend\Ui\Component\Control\DeleteButton">
+        <arguments>
+            <argument name="confirmationMessage" xsi:type="string" translate="true">Are you sure you want to delete this City?</argument>
+            <argument name="idFieldName" xsi:type="const">Engine\Location\Api\Data\CityInterface::CITY_ID</argument>
+            <argument name="deleteRoutePath" xsi:type="string">engine_location/city/delete</argument>
+            <argument name="sortOrder" xsi:type="number">30</argument>
+        </arguments>
+    </virtualType>
+</config>

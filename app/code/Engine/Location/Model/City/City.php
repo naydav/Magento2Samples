@@ -1,26 +1,35 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Model\City;
 
 use Engine\Location\Api\Data\CityExtensionInterface;
 use Engine\Location\Api\Data\CityInterface;
-use Engine\Location\Model\City\ResourceModel\CityResource;
+use Engine\Location\Model\City\ResourceModel\City as CityResourceModel;
 use Magento\Framework\Model\AbstractExtensibleModel;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @inheritdoc
  */
 class City extends AbstractExtensibleModel implements CityInterface
 {
+    /**
+     * Prefix of model events names
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'engine_location_city';
+
     /**
      * @return void
      */
     protected function _construct()
     {
-        $this->_init(CityResource::class);
+        $this->_init(CityResourceModel::class);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getCityId()
     {
@@ -28,7 +37,7 @@ class City extends AbstractExtensibleModel implements CityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setCityId($cityId)
     {
@@ -36,7 +45,7 @@ class City extends AbstractExtensibleModel implements CityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getRegionId()
     {
@@ -44,7 +53,7 @@ class City extends AbstractExtensibleModel implements CityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setRegionId($regionId)
     {
@@ -52,23 +61,23 @@ class City extends AbstractExtensibleModel implements CityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function getIsEnabled()
+    public function isEnabled()
     {
-        return $this->getData(self::IS_ENABLED);
+        return $this->getData(self::ENABLED);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function setIsEnabled($isEnabled)
+    public function setEnabled($enabled)
     {
-        $this->setData(self::IS_ENABLED, $isEnabled);
+        $this->setData(self::ENABLED, $enabled);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getPosition()
     {
@@ -76,7 +85,7 @@ class City extends AbstractExtensibleModel implements CityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setPosition($position)
     {
@@ -84,23 +93,23 @@ class City extends AbstractExtensibleModel implements CityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function getTitle()
+    public function getName()
     {
-        return $this->getData(self::TITLE);
+        return $this->getData(self::NAME);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function setTitle($title)
+    public function setName($name)
     {
-        $this->setData(self::TITLE, $title);
+        $this->setData(self::NAME, $name);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getExtensionAttributes()
     {
@@ -113,7 +122,7 @@ class City extends AbstractExtensibleModel implements CityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setExtensionAttributes(CityExtensionInterface $extensionAttributes)
     {

@@ -6,8 +6,9 @@
             <resource id="Magento_Backend::admin">
                 <resource id="Engine_Backend::backend">
                     <resource id="Engine_Location::location" title="Location" translate="title" sortOrder="400">
-                        <resource id="Engine_Location::location_region" title="Region" translate="title" sortOrder="100"/>
-                        <resource id="Engine_Location::location_city" title="City" translate="title" sortOrder="200"/>
+                        <resource id="Engine_Location::location_country" title="Country" translate="title" sortOrder="100"/>
+                        <resource id="Engine_Location::location_region" title="Region" translate="title" sortOrder="200"/>
+                        <resource id="Engine_Location::location_city" title="City" translate="title" sortOrder="300"/>
                     </resource>
                 </resource>
             </resource>

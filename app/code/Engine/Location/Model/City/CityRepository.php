@@ -1,144 +1,85 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Model\City;
 
 use Engine\Location\Api\Data\CityInterface;
-use Engine\Location\Api\Data\CityInterfaceFactory;
 use Engine\Location\Api\Data\CitySearchResultInterface;
-use Engine\Location\Api\Data\CitySearchResultInterfaceFactory;
 use Engine\Location\Api\CityRepositoryInterface;
-use Engine\Location\Model\City\ResourceModel\CityCollection;
-use Engine\Location\Model\City\ResourceModel\CityCollectionFactory;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Framework\EntityManager\EntityManager;
-use Magento\Framework\Exception\CouldNotDeleteException;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @inheritdoc
  */
 class CityRepository implements CityRepositoryInterface
 {
     /**
-     * @var CityInterfaceFactory
+     * @var SaveCityInterface
      */
-    private $cityFactory;
+    private $saveCity;
 
     /**
-     * @var CityValidatorInterface
+     * @var GetCityInterface
      */
-    private $cityValidator;
+    private $getCity;
 
     /**
-     * @var CityCollectionFactory
+     * @var DeleteCityByIdInterface
      */
-    private $cityCollectionFactory;
+    private $deleteCityById;
 
     /**
-     * @var CollectionProcessorInterface
+     * @var GetCityListInterface
      */
-    private $collectionProcessor;
+    private $getCityList;
 
     /**
-     * @var CitySearchResultInterfaceFactory
-     */
-    private $citySearchResultFactory;
-
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * @param CityInterfaceFactory $cityFactory
-     * @param CityValidatorInterface $cityValidator
-     * @param CityCollectionFactory $cityCollectionFactory
-     * @param CollectionProcessorInterface $collectionProcessor
-     * @param CitySearchResultInterfaceFactory $citySearchResultFactory
-     * @param EntityManager $entityManager
+     * @param SaveCityInterface $saveCity
+     * @param GetCityInterface $getCity
+     * @param DeleteCityByIdInterface $deleteCityById
+     * @param GetCityListInterface $getCityList
      */
     public function __construct(
-        CityInterfaceFactory $cityFactory,
-        CityValidatorInterface $cityValidator,
-        CityCollectionFactory $cityCollectionFactory,
-        CollectionProcessorInterface $collectionProcessor,
-        CitySearchResultInterfaceFactory $citySearchResultFactory,
-        EntityManager $entityManager
+        SaveCityInterface $saveCity,
+        GetCityInterface $getCity,
+        DeleteCityByIdInterface $deleteCityById,
+        GetCityListInterface $getCityList
     ) {
-        $this->cityFactory = $cityFactory;
-        $this->cityValidator = $cityValidator;
-        $this->cityCollectionFactory = $cityCollectionFactory;
-        $this->collectionProcessor = $collectionProcessor;
-        $this->citySearchResultFactory = $citySearchResultFactory;
-        $this->entityManager = $entityManager;
+        $this->saveCity = $saveCity;
+        $this->getCity = $getCity;
+        $this->deleteCityById = $deleteCityById;
+        $this->getCityList = $getCityList;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function get($cityId)
+    public function save(CityInterface $city): int
     {
-        /** @var CityInterface $city */
-        $city = $this->cityFactory->create();
-
-        $this->entityManager->load($city, $cityId);
-        if (!$city->getCityId()) {
-            throw new NoSuchEntityException(
-                __('City with id "%1" does not exist.', $cityId)
-            );
-        }
-        return $city;
+        return $this->saveCity->execute($city);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function deleteById($cityId)
+    public function get(int $cityId): CityInterface
     {
-        $city = $this->get($cityId);
-        try {
-            $this->entityManager->delete($city);
-            return true;
-        } catch (\Exception $e) {
-            throw new CouldNotDeleteException(__($e->getMessage()));
-        }
+        return $this->getCity->execute($cityId);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function save(CityInterface $city)
+    public function deleteById(int $cityId)
     {
-        $this->cityValidator->validate($city);
-        try {
-            $this->entityManager->save($city);
-            return $city->getCityId();
-        } catch (\Exception $e) {
-            throw new CouldNotSaveException(__($e->getMessage()));
-        }
+        $this->deleteCityById->execute($cityId);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function getList(SearchCriteriaInterface $searchCriteria)
+    public function getList(SearchCriteriaInterface $searchCriteria = null): CitySearchResultInterface
     {
-        /** @var CityCollection $collection */
-        $collection = $this->cityCollectionFactory->create();
-        $this->collectionProcessor->process($searchCriteria, $collection);
-
-        $items = [];
-        foreach ($collection->getItems() as $item) {
-            /** @var CityInterface $item */
-            $items[] = $this->get($item->getCityId());
-        }
-
-        /** @var CitySearchResultInterface $searchResult */
-        $searchResult = $this->citySearchResultFactory->create();
-        $searchResult->setSearchCriteria($searchCriteria);
-        $searchResult->setItems($items);
-        $searchResult->setTotalCount($collection->getSize());
-        return $searchResult;
+        return $this->getCityList->execute($searchCriteria);
     }
 }

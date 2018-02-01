@@ -1,144 +1,85 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Model\Region;
 
 use Engine\Location\Api\Data\RegionInterface;
-use Engine\Location\Api\Data\RegionInterfaceFactory;
 use Engine\Location\Api\Data\RegionSearchResultInterface;
-use Engine\Location\Api\Data\RegionSearchResultInterfaceFactory;
 use Engine\Location\Api\RegionRepositoryInterface;
-use Engine\Location\Model\Region\ResourceModel\RegionCollection;
-use Engine\Location\Model\Region\ResourceModel\RegionCollectionFactory;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Framework\EntityManager\EntityManager;
-use Magento\Framework\Exception\CouldNotDeleteException;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @inheritdoc
  */
 class RegionRepository implements RegionRepositoryInterface
 {
     /**
-     * @var RegionInterfaceFactory
+     * @var SaveRegionInterface
      */
-    private $regionFactory;
+    private $saveRegion;
 
     /**
-     * @var RegionValidatorInterface
+     * @var GetRegionInterface
      */
-    private $regionValidator;
+    private $getRegion;
 
     /**
-     * @var RegionCollectionFactory
+     * @var DeleteRegionByIdInterface
      */
-    private $regionCollectionFactory;
+    private $deleteRegionById;
 
     /**
-     * @var CollectionProcessorInterface
+     * @var GetRegionListInterface
      */
-    private $collectionProcessor;
+    private $getRegionList;
 
     /**
-     * @var RegionSearchResultInterfaceFactory
-     */
-    private $regionSearchResultFactory;
-
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * @param RegionInterfaceFactory $regionFactory
-     * @param RegionValidatorInterface $regionValidator
-     * @param RegionCollectionFactory $regionCollectionFactory
-     * @param CollectionProcessorInterface $collectionProcessor
-     * @param RegionSearchResultInterfaceFactory $regionSearchResultFactory
-     * @param EntityManager $entityManager
+     * @param SaveRegionInterface $saveRegion
+     * @param GetRegionInterface $getRegion
+     * @param DeleteRegionByIdInterface $deleteRegionById
+     * @param GetRegionListInterface $getRegionList
      */
     public function __construct(
-        RegionInterfaceFactory $regionFactory,
-        RegionValidatorInterface $regionValidator,
-        RegionCollectionFactory $regionCollectionFactory,
-        CollectionProcessorInterface $collectionProcessor,
-        RegionSearchResultInterfaceFactory $regionSearchResultFactory,
-        EntityManager $entityManager
+        SaveRegionInterface $saveRegion,
+        GetRegionInterface $getRegion,
+        DeleteRegionByIdInterface $deleteRegionById,
+        GetRegionListInterface $getRegionList
     ) {
-        $this->regionFactory = $regionFactory;
-        $this->regionValidator = $regionValidator;
-        $this->regionCollectionFactory = $regionCollectionFactory;
-        $this->collectionProcessor = $collectionProcessor;
-        $this->regionSearchResultFactory = $regionSearchResultFactory;
-        $this->entityManager = $entityManager;
+        $this->saveRegion = $saveRegion;
+        $this->getRegion = $getRegion;
+        $this->deleteRegionById = $deleteRegionById;
+        $this->getRegionList = $getRegionList;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function get($regionId)
+    public function save(RegionInterface $region): int
     {
-        /** @var RegionInterface $region */
-        $region = $this->regionFactory->create();
-
-        $this->entityManager->load($region, $regionId);
-        if (!$region->getRegionId()) {
-            throw new NoSuchEntityException(
-                __('Region with id "%1" does not exist.', $regionId)
-            );
-        }
-        return $region;
+        return $this->saveRegion->execute($region);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function deleteById($regionId)
+    public function get(int $regionId): RegionInterface
     {
-        $region = $this->get($regionId);
-        try {
-            $this->entityManager->delete($region);
-            return true;
-        } catch (\Exception $e) {
-            throw new CouldNotDeleteException(__($e->getMessage()));
-        }
+        return $this->getRegion->execute($regionId);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function save(RegionInterface $region)
+    public function deleteById(int $regionId)
     {
-        $this->regionValidator->validate($region);
-        try {
-            $this->entityManager->save($region);
-            return $region->getRegionId();
-        } catch (\Exception $e) {
-            throw new CouldNotSaveException(__($e->getMessage()));
-        }
+        $this->deleteRegionById->execute($regionId);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function getList(SearchCriteriaInterface $searchCriteria)
+    public function getList(SearchCriteriaInterface $searchCriteria = null): RegionSearchResultInterface
     {
-        /** @var RegionCollection $collection */
-        $collection = $this->regionCollectionFactory->create();
-        $this->collectionProcessor->process($searchCriteria, $collection);
-
-        $items = [];
-        foreach ($collection->getItems() as $item) {
-            /** @var RegionInterface $item */
-            $items[] = $this->get($item->getRegionId());
-        }
-
-        /** @var RegionSearchResultInterface $searchResult */
-        $searchResult = $this->regionSearchResultFactory->create();
-        $searchResult->setSearchCriteria($searchCriteria);
-        $searchResult->setItems($items);
-        $searchResult->setTotalCount($collection->getSize());
-        return $searchResult;
+        return $this->getRegionList->execute($searchCriteria);
     }
 }

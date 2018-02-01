@@ -1,19 +1,16 @@
 {
-    "name": "engine/location",
+    "name": "engine/module-location",
     "description": "N/A",
     "type": "magento2-module",
     "version": "1.0.0",
     "license": "MIT",
     "require": {
-        "php": "~5.5.22|~5.6.0|~7.0.0~|7.1.1",
-        "magento/backend": "2.2.*",
-        "magento/ui": "2.2.*",
-        "magento/store": "2.2.*",
+        "php": "7.0.2|7.0.4|~7.0.6|~7.1.0",
         "magento/framework": "2.2.*",
-        "engine/test": "100.1.*",
-        "engine/per-store-data-support": "100.1.*",
-        "engine/magento-fix": "100.1.*",
-        "engine/ui": "100.1.*"
+        "magento/module-backend": "100.3.*",
+        "magento/module-ui": "100.3.*",
+        "engine/module-magento": "100.3.*",
+        "engine/module-test": "100.3.*"
     },
     "autoload": {
         "files": [

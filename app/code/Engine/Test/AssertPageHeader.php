@@ -1,5 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Test;
+
+use PHPUnit\Framework\DOMTestCase;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -13,6 +17,6 @@ class AssertPageHeader
      */
     public static function assert($html, $header)
     {
-        \PHPUnit_Framework_Assert::assertSelectEquals('h1', $header, 1, $html, 'Page header is wrong');
+        DOMTestCase::assertSelectEquals('h1', $header, 1, $html, 'Page header is wrong');
     }
 }

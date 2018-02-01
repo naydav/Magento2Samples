@@ -1,63 +1,94 @@
 <?xml version="1.0"?>
 
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- Country -->
+    <route url="/V1/engine-location/country" method="GET">
+        <service class="Engine\Location\Api\CountryRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Engine_Location::location_country"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-location/country/:countryId" method="GET">
+        <service class="Engine\Location\Api\CountryRepositoryInterface" method="get"/>
+        <resources>
+            <resource ref="Engine_Location::location_country"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-location/country" method="POST">
+        <service class="Engine\Location\Api\CountryRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Engine_Location::location_country"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-location/country/:countryId" method="PUT">
+        <service class="Engine\Location\Api\CountryRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Engine_Location::location_country"/>
+        </resources>
+    </route>
+    <route url="/V1/engine-location/country/:countryId" method="DELETE">
+        <service class="Engine\Location\Api\CountryRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="Engine_Location::location_country"/>
+        </resources>
+    </route>
     <!-- Region -->
-    <route url="/V1/engine-location/regions" method="GET">
+    <route url="/V1/engine-location/region" method="GET">
         <service class="Engine\Location\Api\RegionRepositoryInterface" method="getList"/>
         <resources>
             <resource ref="Engine_Location::location_region"/>
         </resources>
     </route>
-    <route url="/V1/engine-location/regions/:regionId" method="GET">
+    <route url="/V1/engine-location/region/:regionId" method="GET">
         <service class="Engine\Location\Api\RegionRepositoryInterface" method="get"/>
         <resources>
             <resource ref="Engine_Location::location_region"/>
         </resources>
     </route>
-    <route url="/V1/engine-location/regions" method="POST">
+    <route url="/V1/engine-location/region" method="POST">
         <service class="Engine\Location\Api\RegionRepositoryInterface" method="save"/>
         <resources>
             <resource ref="Engine_Location::location_region"/>
         </resources>
     </route>
-    <route url="/V1/engine-location/regions/:regionId" method="PUT">
+    <route url="/V1/engine-location/region/:regionId" method="PUT">
         <service class="Engine\Location\Api\RegionRepositoryInterface" method="save"/>
         <resources>
             <resource ref="Engine_Location::location_region"/>
         </resources>
     </route>
-    <route url="/V1/engine-location/regions/:regionId" method="DELETE">
+    <route url="/V1/engine-location/region/:regionId" method="DELETE">
         <service class="Engine\Location\Api\RegionRepositoryInterface" method="deleteById"/>
         <resources>
             <resource ref="Engine_Location::location_region"/>
         </resources>
     </route>
     <!-- City -->
-    <route url="/V1/engine-location/cities" method="GET">
+    <route url="/V1/engine-location/city" method="GET">
         <service class="Engine\Location\Api\CityRepositoryInterface" method="getList"/>
         <resources>
             <resource ref="Engine_Location::location_city"/>
         </resources>
     </route>
-    <route url="/V1/engine-location/cities/:cityId" method="GET">
+    <route url="/V1/engine-location/city/:cityId" method="GET">
         <service class="Engine\Location\Api\CityRepositoryInterface" method="get"/>
         <resources>
             <resource ref="Engine_Location::location_city"/>
         </resources>
     </route>
-    <route url="/V1/engine-location/cities" method="POST">
+    <route url="/V1/engine-location/city" method="POST">
         <service class="Engine\Location\Api\CityRepositoryInterface" method="save"/>
         <resources>
             <resource ref="Engine_Location::location_city"/>
         </resources>
     </route>
-    <route url="/V1/engine-location/cities/:cityId" method="PUT">
+    <route url="/V1/engine-location/city/:cityId" method="PUT">
         <service class="Engine\Location\Api\CityRepositoryInterface" method="save"/>
         <resources>
             <resource ref="Engine_Location::location_city"/>
         </resources>
     </route>
-    <route url="/V1/engine-location/cities/:cityId" method="DELETE">
+    <route url="/V1/engine-location/city/:cityId" method="DELETE">
         <service class="Engine\Location\Api\CityRepositoryInterface" method="deleteById"/>
         <resources>
             <resource ref="Engine_Location::location_city"/>

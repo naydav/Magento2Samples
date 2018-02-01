@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
 use Engine\Location\Api\Data\CityInterface;
@@ -8,7 +10,7 @@ use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
  */
 class ValidateTest extends AbstractBackendController
@@ -16,7 +18,7 @@ class ValidateTest extends AbstractBackendController
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/engine-location/city/validate/store/%s';
+    const REQUEST_URI = 'backend/engine-location/city/validate';
 
     /**
      * @var FormKey
@@ -32,7 +34,7 @@ class ValidateTest extends AbstractBackendController
     /**
      * @param array $data
      * @dataProvider successfulValidationDataProvider
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files//city.php
      */
     public function testSuccessfulValidation(array $data)
     {
@@ -43,7 +45,7 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -58,24 +60,24 @@ class ValidateTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function successfulValidationDataProvider()
+    public function successfulValidationDataProvider(): array
     {
         return [
             'on_create' => [
                 [
                     CityInterface::REGION_ID => 100,
-                    CityInterface::IS_ENABLED => true,
+                    CityInterface::ENABLED => true,
                     CityInterface::POSITION => 100,
-                    CityInterface::TITLE => 'City-title',
+                    CityInterface::NAME => 'City-name',
                 ],
             ],
             'on_update' => [
                 [
                     CityInterface::CITY_ID => 100,
-                    CityInterface::REGION_ID => 1000,
-                    CityInterface::IS_ENABLED => false,
-                    CityInterface::POSITION => 1000,
-                    CityInterface::TITLE => 'City-title-edit',
+                    CityInterface::REGION_ID => 200,
+                    CityInterface::ENABLED => false,
+                    CityInterface::POSITION => 200,
+                    CityInterface::NAME => 'City-name-edit',
                 ],
             ],
         ];
@@ -83,17 +85,17 @@ class ValidateTest extends AbstractBackendController
 
     /**
      * @param string $field
-     * @param mixed $value
+     * @param string $value
      * @param string $errorMessage
      * @dataProvider failedValidationDataProvider
      */
-    public function testFailedValidationOnCreate($field, $value, $errorMessage)
+    public function testFailedValidationOnCreate(string $field, string $value, string $errorMessage)
     {
         $data = [
             CityInterface::REGION_ID => 100,
-            CityInterface::IS_ENABLED => true,
+            CityInterface::ENABLED => true,
             CityInterface::POSITION => 100,
-            CityInterface::TITLE => 'City-title',
+            CityInterface::NAME => 'City-name',
         ];
         $data[$field] = $value;
 
@@ -104,7 +106,7 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -118,20 +120,20 @@ class ValidateTest extends AbstractBackendController
 
     /**
      * @param string $field
-     * @param mixed $value
+     * @param string $value
      * @param string $errorMessage
      * @dataProvider failedValidationDataProvider
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city.php
      */
-    public function testFailedValidationOnUpdate($field, $value, $errorMessage)
+    public function testFailedValidationOnUpdate(string $field, string $value, string $errorMessage)
     {
         $cityId = 100;
         $data = [
             CityInterface::CITY_ID => $cityId,
-            CityInterface::REGION_ID => 1000,
-            CityInterface::IS_ENABLED => false,
-            CityInterface::POSITION => 1000,
-            CityInterface::TITLE => 'City-title-edit',
+            CityInterface::REGION_ID => 200,
+            CityInterface::ENABLED => false,
+            CityInterface::POSITION => 200,
+            CityInterface::NAME => 'City-name-edit',
         ];
         $data[$field] = $value;
 
@@ -142,7 +144,7 @@ class ValidateTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -157,19 +159,19 @@ class ValidateTest extends AbstractBackendController
     /**
      * @return array
      */
-    public function failedValidationDataProvider()
+    public function failedValidationDataProvider(): array
     {
         return [
-            'empty_title' => [
-                CityInterface::TITLE,
+            'empty_name' => [
+                CityInterface::NAME,
                 '',
-                '"' . CityInterface::TITLE . '" can not be empty.',
+                '"' . CityInterface::NAME . '" can not be empty.',
             ],
         ];
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files//city.php
      */
     public function testValidateNoAjaxRequest()
     {
@@ -182,7 +184,7 @@ class ValidateTest extends AbstractBackendController
             ],
         ]);
 
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -195,7 +197,7 @@ class ValidateTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city.php
      */
     public function testValidateWithWrongRequestMethod()
     {
@@ -209,7 +211,7 @@ class ValidateTest extends AbstractBackendController
             ],
         ]);
 
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();
@@ -233,7 +235,7 @@ class ValidateTest extends AbstractBackendController
             ],
         ]);
 
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
         self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
 
         $body = $this->getResponse()->getBody();

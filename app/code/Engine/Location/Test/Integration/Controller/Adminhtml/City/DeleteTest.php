@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
 use Engine\Location\Api\Data\CityInterface;
@@ -9,7 +11,7 @@ use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
  */
 class DeleteTest extends AbstractBackendController
@@ -31,7 +33,7 @@ class DeleteTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city.php
      */
     public function testDelete()
     {
@@ -54,7 +56,7 @@ class DeleteTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city.php
      */
     public function testDeleteWithWrongRequestMethod()
     {

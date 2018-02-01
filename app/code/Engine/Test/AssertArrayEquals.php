@@ -1,5 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Test;
+
+use PHPUnit\Framework\Assert;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -18,7 +22,7 @@ class AssertArrayEquals
         if (null !== $keysToSkip) {
             $actual = self::unsetKeys($actual, $keysToSkip);
         }
-        \PHPUnit_Framework_Assert::assertEquals($expected, $actual);
+        Assert::assertEquals($expected, $actual);
     }
 
     /**

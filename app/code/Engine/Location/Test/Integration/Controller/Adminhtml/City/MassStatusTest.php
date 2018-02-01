@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City;
 
 use Engine\Location\Api\Data\CityInterface;
@@ -12,7 +14,7 @@ use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
  */
 class MassStatusTest extends AbstractBackendController
@@ -48,7 +50,7 @@ class MassStatusTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/cities.php
      */
     public function testMassStatus()
     {
@@ -75,7 +77,7 @@ class MassStatusTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/cities.php
      */
     public function testMassStatusWithWrongRequestMethod()
     {
@@ -98,7 +100,7 @@ class MassStatusTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/cities.php
      */
     public function testMassStatusWithNotExistEntityId()
     {
@@ -128,12 +130,12 @@ class MassStatusTest extends AbstractBackendController
     /**
      * @return int
      */
-    private function getEnabledCitiesCount()
+    private function getEnabledCitiesCount(): int
     {
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
         $searchCriteria = $searchCriteriaBuilder
-            ->addFilter(CityInterface::IS_ENABLED, true)
+            ->addFilter(CityInterface::ENABLED, true)
             ->create();
 
         $result = $this->cityRepository->getList($searchCriteria);

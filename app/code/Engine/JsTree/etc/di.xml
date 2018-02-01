@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Engine\JsTree\Ui\DataProvider\JsTreeDataInterface" type="Engine\JsTree\Ui\DataProvider\JsTreeData"/>
-    <preference for="Engine\JsTree\Ui\DataProvider\JsTreeDataBuilderInterface" type="Engine\JsTree\Ui\DataProvider\JsTreeDataBuilder"/>
-</config>

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\Region;
 
 use Engine\Location\Api\RegionRepositoryInterface;
@@ -11,7 +13,7 @@ use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
  */
 class MassDeleteTest extends AbstractBackendController
@@ -47,10 +49,11 @@ class MassDeleteTest extends AbstractBackendController
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/regions.php
      */
     public function testMassDelete()
     {
+        $initialRegionsCount = $this->getRegionsCount();
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
@@ -72,14 +75,15 @@ class MassDeleteTest extends AbstractBackendController
             $this->contains('You deleted 3 Region(s).'),
             MessageInterface::TYPE_SUCCESS
         );
-        self::assertEquals(1, $this->getRegionsCount());
+        self::assertEquals(($initialRegionsCount - 3), $this->getRegionsCount());
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/regions.php
      */
     public function testMassDeleteWithWrongRequestMethod()
     {
+        $initialRegionsCount = $this->getRegionsCount();
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_GET);
         $request->setQueryValue([
@@ -97,14 +101,15 @@ class MassDeleteTest extends AbstractBackendController
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertRedirect($this->stringContains('backend/engine-location/region'));
         $this->assertSessionMessages($this->contains('Wrong request.'), MessageInterface::TYPE_ERROR);
-        self::assertEquals(4, $this->getRegionsCount());
+        self::assertEquals($initialRegionsCount, $this->getRegionsCount());
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/region/region_list.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/regions.php
      */
     public function testMassDeleteWithNotExistEntityId()
     {
+        $initialRegionsCount = $this->getRegionsCount();
         $request = $this->getRequest();
         $request->setMethod(Request::METHOD_POST);
         $request->setPostValue([
@@ -126,13 +131,13 @@ class MassDeleteTest extends AbstractBackendController
             $this->contains('You deleted 2 Region(s).'),
             MessageInterface::TYPE_SUCCESS
         );
-        self::assertEquals(2, $this->getRegionsCount());
+        self::assertEquals(($initialRegionsCount - 2), $this->getRegionsCount());
     }
 
     /**
      * @return int
      */
-    private function getRegionsCount()
+    private function getRegionsCount(): int
     {
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();

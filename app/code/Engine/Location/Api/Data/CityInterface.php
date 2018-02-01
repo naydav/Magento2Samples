@@ -1,31 +1,35 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Api\Data;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
 
 /**
- * @author naydav <valeriy.nayda@gmail.com>
+ * Used fully qualified namespaces in annotations for proper work of WebApi request parser
+ *
  * @api
+ * @author naydav <valeriy.nayda@gmail.com>
  */
 interface CityInterface extends ExtensibleDataInterface
 {
     /**#@+
-     * Constants defined for keys of data array
+     * Constants defined for keys of data array. Identical to the name of the getter in snake case
      */
     const CITY_ID = 'city_id';
     const REGION_ID = 'region_id';
-    const IS_ENABLED = 'is_enabled';
+    const ENABLED = 'enabled';
     const POSITION = 'position';
-    const TITLE = 'title';
+    const NAME = 'name';
     /**#@-*/
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getCityId();
 
     /**
-     * @param int $cityId
+     * @param int|null $cityId
      * @return void
      */
     public function setCityId($cityId);
@@ -36,50 +40,48 @@ interface CityInterface extends ExtensibleDataInterface
     public function getRegionId();
 
     /**
-     * @param int|null $regionId int(on first position)|null(on second position) it is need for properly work of web api
+     * @param int|null $regionId
      * @return void
      */
     public function setRegionId($regionId);
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function getIsEnabled();
+    public function isEnabled();
 
     /**
-     * @param bool $isEnabled
+     * @param bool|null $enabled
      * @return void
      */
-    public function setIsEnabled($isEnabled);
+    public function setEnabled($enabled);
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getPosition();
 
     /**
-     * @param int $position
+     * @param int|null $position
      * @return void
      */
     public function setPosition($position);
 
     /**
-     * Per store value
-
-     * @return string
+     * @return string|null
      */
-    public function getTitle();
+    public function getName();
 
     /**
-     * Per store value
-
-     * @param string $title
+     * @param string|null $name
      * @return void
      */
-    public function setTitle($title);
+    public function setName($name);
 
     /**
-     * @return \Engine\Location\Api\Data\CityExtensionInterface
+     * Null for return is specified for proper work SOAP requests parser
+     *
+     * @return \Engine\Location\Api\Data\CityExtensionInterface|null
      */
     public function getExtensionAttributes();
 

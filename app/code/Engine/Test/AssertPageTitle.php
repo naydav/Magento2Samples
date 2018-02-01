@@ -1,5 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Test;
+
+use PHPUnit\Framework\DOMTestCase;
 
 /**
  * @author  naydav <valeriy.nayda@gmail.com>
@@ -15,7 +19,7 @@ class AssertPageTitle
     public static function assert($html, $title, $regexSeparator = '~')
     {
         $title = str_replace(['(', ')'], ['\(', '\)'], $title);
-        \PHPUnit_Framework_Assert::assertSelectRegExp(
+        DOMTestCase::assertSelectRegExp(
             'title',
             "{$regexSeparator}{$title}.*{$regexSeparator}",
             1,

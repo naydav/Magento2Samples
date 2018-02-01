@@ -1,57 +1,50 @@
 <?php
+declare(strict_types=1);
+
 namespace Engine\Location\Test\Integration\Controller\Adminhtml\City\Save;
 
-use Engine\Location\Controller\Adminhtml\City\Save;
 use Engine\Location\Api\Data\CityInterface;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Message\MessageInterface;
-use Magento\Framework\Registry;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use Zend\Http\Request;
 use Zend\Http\Response;
 
 /**
- * @author  naydav <valeriy.nayda@gmail.com>
+ * @author naydav <valeriy.nayda@gmail.com>
  * @magentoAppArea adminhtml
- * @magentoDbIsolation enabled
  */
 class ValidationTest extends AbstractBackendController
 {
     /**
      * Request uri
      */
-    const REQUEST_URI = 'backend/engine-location/city/save/store/%s';
+    const REQUEST_URI = 'backend/engine-location/city/save';
 
     /**
      * @var FormKey
      */
     private $formKey;
 
-    /**
-     * @var Registry
-     */
-    private $registry;
-
     public function setUp()
     {
         parent::setUp();
         $this->formKey = $this->_objectManager->get(FormKey::class);
-        $this->registry = $this->_objectManager->get(Registry::class);
     }
 
     /**
      * @param string $field
-     * @param mixed $value
+     * @param string $value
      * @param string $errorMessage
      * @dataProvider failedValidationDataProvider
      */
-    public function testFailedValidationOnCreate($field, $value, $errorMessage)
+    public function testFailedValidationOnCreate(string $field, string $value, string $errorMessage)
     {
         $data = [
             CityInterface::REGION_ID => 100,
-            CityInterface::IS_ENABLED => true,
+            CityInterface::ENABLED => true,
             CityInterface::POSITION => 100,
-            CityInterface::TITLE => 'City-title',
+            CityInterface::NAME => 'City-name',
         ];
         $data[$field] = $value;
 
@@ -61,30 +54,29 @@ class ValidationTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages($this->contains($errorMessage), MessageInterface::TYPE_ERROR);
-        self::assertNull($this->registry->registry(Save::REGISTRY_CITY_ID_KEY));
     }
 
     /**
      * @param string $field
-     * @param mixed $value
+     * @param string $value
      * @param string $errorMessage
      * @dataProvider failedValidationDataProvider
-     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city/city_id_100.php
+     * @magentoDataFixture ../../../../app/code/Engine/Location/Test/_files/city.php
      */
-    public function testFailedValidationOnUpdate($field, $value, $errorMessage)
+    public function testFailedValidationOnUpdate(string $field, string $value, string $errorMessage)
     {
         $cityId = 100;
         $data = [
             CityInterface::CITY_ID => $cityId,
             CityInterface::REGION_ID => 100,
-            CityInterface::IS_ENABLED => false,
-            CityInterface::POSITION => 200,
-            CityInterface::TITLE => 'City-title-updated',
+            CityInterface::ENABLED => false,
+            CityInterface::POSITION => 100,
+            CityInterface::NAME => 'City-name-updated',
         ];
         $data[$field] = $value;
 
@@ -94,24 +86,23 @@ class ValidationTest extends AbstractBackendController
             'form_key' => $this->formKey->getFormKey(),
             'general' => $data,
         ]);
-        $this->dispatch(sprintf(self::REQUEST_URI, 0));
+        $this->dispatch(self::REQUEST_URI);
 
         self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
         $this->assertRedirect($this->stringContains('backend/engine-location/city'));
         $this->assertSessionMessages($this->contains($errorMessage), MessageInterface::TYPE_ERROR);
-        self::assertNull($this->registry->registry(Save::REGISTRY_CITY_ID_KEY));
     }
 
     /**
      * @return array
      */
-    public function failedValidationDataProvider()
+    public function failedValidationDataProvider(): array
     {
         return [
-            [
-                CityInterface::TITLE,
+            'empty_name' => [
+                CityInterface::NAME,
                 '',
-                '&quot;' . CityInterface::TITLE . '&quot; can not be empty.',
+                '&quot;' . CityInterface::NAME . '&quot; can not be empty.',
             ],
         ];
     }
