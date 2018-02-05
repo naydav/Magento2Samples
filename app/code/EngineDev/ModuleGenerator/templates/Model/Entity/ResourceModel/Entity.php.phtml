@@ -1,0 +1,35 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\ResourceModel;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use Engine\Magento\Model\ResourceModel\PredefinedId;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+/**
+ * Implementation of basic operations for <?=$data['entity_display_name']?> entity for specific db layer
+ *
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class <?=$data['entity_class_name']?> extends AbstractDb
+{
+    /**
+     * Provides possibility of saving entity with predefined/pre-generated id
+     */
+    use PredefinedId;
+
+    /**#@+
+     * Constants related to specific db layer
+     */
+    const TABLE_NAME_<?=strtoupper($data['entity_name'])?> = '<?=$data['entity_table_name']?>';
+    /**#@-*/
+
+    /**
+     * @inheritdoc
+     */
+    protected function _construct()
+    {
+        $this->_init(self::TABLE_NAME_<?=strtoupper($data['entity_name'])?>, <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>);
+    }
+}

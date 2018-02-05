@@ -1,0 +1,209 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Test\Integration\Controller\Adminhtml\<?=$data['entity_class_name']?>\Save;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use Engine\Test\AssertArrayContains;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\EntityManager\HydratorInterface;
+use Magento\Framework\Message\MessageInterface;
+use Magento\TestFramework\TestCase\AbstractBackendController;
+use Zend\Http\Request;
+use Zend\Http\Response;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ * @magentoAppArea adminhtml
+ * If test has not fixture then magentoDbIsolation will be disabled
+ * @magentoDbIsolation enabled
+ */
+class CreateTest extends AbstractBackendController
+{
+    /**
+     * Request uri
+     */
+    const REQUEST_URI = 'backend/<?=$data['route_front_name']?>/<?=lcfirst($data['entity_class_name'])?>/save';
+
+    /**
+     * @var FormKey
+     */
+    private $formKey;
+
+    /**
+     * @var HydratorInterface
+     */
+    private $hydrator;
+
+    /**
+     * @var <?=$data['entity_class_name']?>RepositoryInterface
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Repository;
+
+    /**
+     * @var SearchCriteriaBuilderFactory
+     */
+    private $searchCriteriaBuilderFactory;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->formKey = $this->_objectManager->get(FormKey::class);
+        $this->hydrator = $this->_objectManager->get(HydratorInterface::class);
+        $this-><?=lcfirst($data['entity_class_name'])?>Repository = $this->_objectManager->get(
+            <?=$data['entity_class_name']?>RepositoryInterface::class
+        );
+        $this->searchCriteriaBuilderFactory = $this->_objectManager->get(SearchCriteriaBuilderFactory::class);
+    }
+
+    public function testCreate()
+    {
+        $data = [
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']) { continue; } ?>
+<?php if ('bool' === $field['type']):?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => true,
+<?php elseif ('string' === $field['type']): ?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>',
+<?php elseif ('int' === $field['type']): ?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 100,
+<?php endif;?>
+<?php endforeach; ?>
+        ];
+
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $data,
+        ]);
+        $this->dispatch(sprintf(self::REQUEST_URI, 0) . '/back/edit');
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
+        $this->assertSessionMessages(
+            $this->contains('The <?=$data['entity_display_name']?> has been saved.'),
+            MessageInterface::TYPE_SUCCESS
+        );
+
+        $<?=lcfirst($data['entity_class_name'])?> = $this->get<?=$data['entity_class_name']?>ByName($data[<?=$data['entity_class_name']?>Interface::NAME]);
+        self::assertNotEmpty($<?=lcfirst($data['entity_class_name'])?>);
+        AssertArrayContains::assert($data, $this->hydrator->extract($<?=lcfirst($data['entity_class_name'])?>));
+
+        $redirect = 'backend/<?=$data['route_front_name']?>/<?=lcfirst($data['entity_class_name'])?>/edit/<?=$data['entity_id_field']?>/'
+            . $<?=lcfirst($data['entity_class_name'])?>->get<?=ucfirst($data['entity_camelcase_id_field'])?>();
+        $this->assertRedirect($this->stringContains($redirect));
+    }
+
+    public function testCreateAndRedirectToNew()
+    {
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => [
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']) { continue; } ?>
+<?php if ('bool' === $field['type']):?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => true,
+<?php elseif ('string' === $field['type']): ?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>',
+<?php elseif ('int' === $field['type']): ?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 100,
+<?php endif;?>
+<?php endforeach; ?>
+            ],
+            'redirect_to_new' => 1,
+        ]);
+        $this->dispatch(self::REQUEST_URI);
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertRedirect($this->stringContains('backend/<?=$data['route_front_name']?>/<?=lcfirst($data['entity_class_name'])?>/new'));
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
+        $this->assertSessionMessages(
+            $this->contains('The <?=$data['entity_display_name']?> has been saved.'),
+            MessageInterface::TYPE_SUCCESS
+        );
+    }
+
+    public function testCreateAndClose()
+    {
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => [
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']) { continue; } ?>
+<?php if ('bool' === $field['type']): ?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => true,
+<?php elseif ('string' === $field['type']):?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>',
+<?php elseif ('int' === $field['type']): ?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 100,
+<?php endif;?>
+<?php endforeach; ?>
+            ],
+        ]);
+        $this->dispatch(self::REQUEST_URI);
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertRedirect($this->stringContains('backend/<?=$data['route_front_name']?>/<?=lcfirst($data['entity_class_name'])?>'));
+        $this->assertRedirect(
+            $this->matchesRegularExpression(
+                '~^((?!' . <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?> . '|new).)*$~'
+            )
+        );
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
+        $this->assertSessionMessages(
+            $this->contains('The <?=$data['entity_display_name']?> has been saved.'),
+            MessageInterface::TYPE_SUCCESS
+        );
+    }
+
+    public function testCreateWithWrongRequestMethod()
+    {
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_GET);
+        $request->setQueryValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => [
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']) { continue; } ?>
+<?php if ('bool' === $field['type']):?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => true,
+<?php elseif ('string' === $field['type']): ?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>',
+<?php elseif ('int' === $field['type']): ?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 100,
+<?php endif;?>
+<?php endforeach; ?>
+            ],
+        ]);
+        $this->dispatch(self::REQUEST_URI);
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertRedirect($this->stringContains('backend/<?=$data['route_front_name']?>/<?=lcfirst($data['entity_class_name'])?>'));
+        $this->assertSessionMessages($this->contains('Wrong request.'), MessageInterface::TYPE_ERROR);
+    }
+
+    /**
+     * @param string $name
+     * @return <?=$data['entity_class_name']?>Interface
+     */
+    private function get<?=$data['entity_class_name']?>ByName(string $name): <?=$data['entity_class_name']?>Interface
+    {
+        /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
+        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
+        $searchCriteriaBuilder->addFilter(<?=$data['entity_class_name']?>Interface::NAME, $name);
+        $searchCriteria = $searchCriteriaBuilder->create();
+
+        $result = $this-><?=lcfirst($data['entity_class_name'])?>Repository->getList($searchCriteria);
+        $items = $result->getItems();
+        $<?=lcfirst($data['entity_class_name'])?> = reset($items);
+        return $<?=lcfirst($data['entity_class_name'])?>;
+    }
+}

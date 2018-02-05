@@ -1,0 +1,71 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Controller\Adminhtml\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Backend\Model\View\Result\Page;
+use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class Edit extends Action
+{
+    /**
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = '<?=$data['acl_resource']?>::<?=$data['entity_acl_resource']?>';
+
+    /**
+     * @var <?=$data['entity_class_name']?>RepositoryInterface
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Repository;
+
+    /**
+     * @param Context $context
+     * @param <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository
+     */
+    public function __construct(
+        Context $context,
+        <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository
+    ) {
+        parent::__construct($context);
+        $this-><?=lcfirst($data['entity_class_name'])?>Repository = $<?=lcfirst($data['entity_class_name'])?>Repository;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function execute(): ResultInterface
+    {
+        $<?=$data['entity_camelcase_id_field']?> = $this->getRequest()->getParam(<?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>);
+        try {
+            $<?=lcfirst($data['entity_class_name'])?> = $this-><?=lcfirst($data['entity_class_name'])?>Repository->get((int)$<?=$data['entity_camelcase_id_field']?>);
+
+            /** @var Page $result */
+            $result = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
+            $result->setActiveMenu('<?=$data['acl_resource']?>::<?=$data['entity_acl_resource']?>')
+                ->addBreadcrumb(__('Edit <?=$data['entity_display_name']?>'), __('Edit <?=$data['entity_display_name']?>'));
+            $result->getConfig()
+                ->getTitle()
+                ->prepend(
+                    __('Edit <?=$data['entity_display_name']?>: %name', ['name' => $<?=lcfirst($data['entity_class_name'])?>->getName()])
+                );
+        } catch (NoSuchEntityException $e) {
+            /** @var Redirect $result */
+            $result = $this->resultRedirectFactory->create();
+            $this->messageManager->addErrorMessage(
+                __('<?=$data['entity_display_name']?> with id "%id" does not exist.', ['id' => $<?=$data['entity_camelcase_id_field']?>])
+            );
+            $result->setPath('*/*');
+        }
+        return $result;
+    }
+}

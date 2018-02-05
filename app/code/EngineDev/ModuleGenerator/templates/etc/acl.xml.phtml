@@ -1,0 +1,17 @@
+<?='<?xml version="1.0"?>'?><?="\n"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="<?='urn'?>:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Engine_Backend::backend">
+                    <resource id="<?=$data['module']?>::<?=strtolower($data['name'])?>" title="<?=$data['display_name']?>" translate="title" sortOrder="<?=$data['sort_order']?>">
+<?php foreach ($data['entities'] as $key => $entityData): ?>
+                        <resource id="<?=$data['acl_resource']?>::<?=$entityData['entity_acl_resource']?>" title="<?=$entityData['entity_display_name']?>" translate="title" sortOrder="<?=($key + 1) * 100?>"/>
+<?php endforeach; ?>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

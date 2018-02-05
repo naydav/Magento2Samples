@@ -1,0 +1,103 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Controller\Adminhtml\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use Engine\Magento\Ui\Component\MassAction\Filter;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\Api\DataObjectHelper;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Validation\ValidationException;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class MassStatus extends Action
+{
+    /**
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = '<?=$data['acl_resource']?>::<?=$data['entity_acl_resource']?>';
+
+    /**
+     * @var DataObjectHelper
+     */
+    private $dataObjectHelper;
+
+    /**
+     * @var <?=$data['entity_class_name']?>RepositoryInterface
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Repository;
+
+    /**
+     * @var Filter
+     */
+    private $massActionFilter;
+
+    /**
+     * @param Context $context
+     * @param DataObjectHelper $dataObjectHelper
+     * @param <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository
+     * @param Filter $massActionFilter
+     */
+    public function __construct(
+        Context $context,
+        DataObjectHelper $dataObjectHelper,
+        <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository,
+        Filter $massActionFilter
+    ) {
+        parent::__construct($context);
+        $this->dataObjectHelper = $dataObjectHelper;
+        $this-><?=lcfirst($data['entity_class_name'])?>Repository = $<?=lcfirst($data['entity_class_name'])?>Repository;
+        $this->massActionFilter = $massActionFilter;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function execute(): ResultInterface
+    {
+        if (false === $this->getRequest()->isPost()) {
+            $this->messageManager->addErrorMessage(__('Wrong request.'));
+            return $this->resultRedirectFactory->create()->setPath('*/*');
+        }
+
+        $enabled = (int)$this->getRequest()->getParam(<?=$data['entity_class_name']?>Interface::ENABLED);
+
+        $updatedItemsCount = 0;
+        foreach ($this->massActionFilter->getIds() as $<?=$data['entity_camelcase_id_field']?>) {
+            try {
+                $<?=$data['entity_camelcase_id_field']?> = (int)$<?=$data['entity_camelcase_id_field']?>;
+                $<?=lcfirst($data['entity_class_name'])?> = $this-><?=lcfirst($data['entity_class_name'])?>Repository->get($<?=$data['entity_camelcase_id_field']?>);
+                $<?=lcfirst($data['entity_class_name'])?>->setEnabled($enabled);
+                $this-><?=lcfirst($data['entity_class_name'])?>Repository->save($<?=lcfirst($data['entity_class_name'])?>);
+                $updatedItemsCount++;
+            } catch (NoSuchEntityException $e) {
+                $errorMessages[] = __(
+                    '[ID: %id] The <?=$data['entity_display_name']?> does not exist.',
+                    ['id' => $<?=$data['entity_camelcase_id_field']?>]
+                );
+            } catch (ValidationException $e) {
+                foreach ($e->getErrors() as $localizedError) {
+                    $errorMessages[] = __('[ID: %id] %message', [
+                        'id' => $<?=$data['entity_camelcase_id_field']?>,
+                        'message' => $localizedError->getMessage(),
+                    ]);
+                }
+            } catch (CouldNotSaveException $e) {
+                $errorMessage = __('[ID: %id] %message', ['id' => $<?=$data['entity_camelcase_id_field']?>, 'message' => $e->getMessage()]);
+                $this->messageManager->addErrorMessage($errorMessage);
+            }
+        }
+
+        $this->messageManager->addSuccessMessage(__('You updated %count <?=$data['entity_display_name']?>(s).', [
+            'count' => $updatedItemsCount,
+        ]));
+        return $this->resultRedirectFactory->create()->setPath('*/*');
+    }
+}

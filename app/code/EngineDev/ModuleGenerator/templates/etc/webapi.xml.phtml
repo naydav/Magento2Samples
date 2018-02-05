@@ -1,0 +1,37 @@
+<?='<?xml version="1.0"?>'?><?="\n"?>
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="<?='urn'?>:magento:module:Magento_Webapi:etc/webapi.xsd">
+<?php foreach ($data['entities'] as $key => $entityData): ?>
+    <!-- <?=$entityData['entity_display_name']?> -->
+    <route url="/V1/<?=$data['route_front_name']?>/<?=$entityData['entity_webapi_front_name']?>" method="GET">
+        <service class="<?=$data['namespace']?>\Api\<?=$entityData['entity_class_name']?>RepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="<?=$data['acl_resource']?>::<?=$entityData['entity_acl_resource']?>"/>
+        </resources>
+    </route>
+    <route url="/V1/<?=$data['route_front_name']?>/<?=$entityData['entity_webapi_front_name']?>/:<?=$entityData['entity_camelcase_id_field']?>" method="GET">
+        <service class="<?=$data['namespace']?>\Api\<?=$entityData['entity_class_name']?>RepositoryInterface" method="get"/>
+        <resources>
+            <resource ref="<?=$data['acl_resource']?>::<?=$entityData['entity_acl_resource']?>"/>
+        </resources>
+    </route>
+    <route url="/V1/<?=$data['route_front_name']?>/<?=$entityData['entity_webapi_front_name']?>" method="POST">
+        <service class="<?=$data['namespace']?>\Api\<?=$entityData['entity_class_name']?>RepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="<?=$data['acl_resource']?>::<?=$entityData['entity_acl_resource']?>"/>
+        </resources>
+    </route>
+    <route url="/V1/<?=$data['route_front_name']?>/<?=$entityData['entity_webapi_front_name']?>/:<?=$entityData['entity_camelcase_id_field']?>" method="PUT">
+        <service class="<?=$data['namespace']?>\Api\<?=$entityData['entity_class_name']?>RepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="<?=$data['acl_resource']?>::<?=$entityData['entity_acl_resource']?>"/>
+        </resources>
+    </route>
+    <route url="/V1/<?=$data['route_front_name']?>/<?=$entityData['entity_webapi_front_name']?>/:<?=$entityData['entity_camelcase_id_field']?>" method="DELETE">
+        <service class="<?=$data['namespace']?>\Api\<?=$entityData['entity_class_name']?>RepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="<?=$data['acl_resource']?>::<?=$entityData['entity_acl_resource']?>"/>
+        </resources>
+    </route>
+<?php endforeach; ?>
+</routes>

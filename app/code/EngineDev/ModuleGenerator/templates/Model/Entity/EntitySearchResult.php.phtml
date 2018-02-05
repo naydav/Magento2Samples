@@ -1,0 +1,14 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>SearchResultInterface;
+use Magento\Framework\Api\SearchResults;
+
+/**
+ * @inheritdoc
+ */
+class <?=$data['entity_class_name']?>SearchResult extends SearchResults implements <?=$data['entity_class_name']?>SearchResultInterface
+{
+}

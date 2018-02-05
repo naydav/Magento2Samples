@@ -1,0 +1,108 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Controller\Adminhtml\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\Api\DataObjectHelper;
+use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Validation\ValidationException;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class InlineEdit extends Action
+{
+    /**
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = '<?=$data['acl_resource']?>::<?=$data['entity_acl_resource']?>';
+
+    /**
+     * @var DataObjectHelper
+     */
+    private $dataObjectHelper;
+
+    /**
+     * @var <?=$data['entity_class_name']?>RepositoryInterface
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Repository;
+
+    /**
+     * @param Context $context
+     * @param DataObjectHelper $dataObjectHelper
+     * @param <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository
+     */
+    public function __construct(
+        Context $context,
+        DataObjectHelper $dataObjectHelper,
+        <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository
+    ) {
+        parent::__construct($context);
+        $this->dataObjectHelper = $dataObjectHelper;
+        $this-><?=lcfirst($data['entity_class_name'])?>Repository = $<?=lcfirst($data['entity_class_name'])?>Repository;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function execute(): ResultInterface
+    {
+        $request = $this->getRequest();
+        $requestData = $request->getParam('items', []);
+
+        if (false === $request->isXmlHttpRequest() || false === $request->isPost() || empty($requestData)) {
+            return $this->createJsonResult([__('Please correct the data sent.')]);
+        }
+
+        $errorMessages = [];
+        foreach ($requestData as $itemData) {
+            try {
+                $<?=$data['entity_camelcase_id_field']?> = (int)$itemData[<?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>];
+                $<?=lcfirst($data['entity_class_name'])?> = $this-><?=lcfirst($data['entity_class_name'])?>Repository->get($<?=$data['entity_camelcase_id_field']?>);
+                $this->dataObjectHelper->populateWithArray($<?=lcfirst($data['entity_class_name'])?>, $itemData, <?=$data['entity_class_name']?>Interface::class);
+                $this-><?=lcfirst($data['entity_class_name'])?>Repository->save($<?=lcfirst($data['entity_class_name'])?>);
+            } catch (NoSuchEntityException $e) {
+                $errorMessages[] = __(
+                    '[ID: %id] The <?=$data['entity_display_name']?> does not exist.',
+                    ['id' => $<?=$data['entity_camelcase_id_field']?>]
+                );
+            } catch (ValidationException $e) {
+                foreach ($e->getErrors() as $localizedError) {
+                    $errorMessages[] = __('[ID: %id] %message', [
+                        'id' => $<?=$data['entity_camelcase_id_field']?>,
+                        'message' => $localizedError->getMessage(),
+                    ]);
+                }
+            } catch (CouldNotSaveException $e) {
+                $errorMessages[] = __('[ID: %id] %message', [
+                    'id' => $<?=$data['entity_camelcase_id_field']?>,
+                    'message' => $e->getMessage(),
+                ]);
+            }
+        }
+        return $this->createJsonResult($errorMessages);
+    }
+
+    /**
+     * @param array $errorMessages
+     * @return Json
+     */
+    private function createJsonResult(array $errorMessages): Json
+    {
+        /** @var Json $resultJson */
+        $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $resultJson->setData([
+            'messages' => $errorMessages,
+            'error' => count($errorMessages),
+        ]);
+        return $resultJson;
+    }
+}

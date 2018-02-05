@@ -1,0 +1,23 @@
+{
+    "name": "<?=strtolower($data['namespace_prefix'])?>/module-<?=str_replace('_', '-', $data['name'])?>",
+    "description": "N/A",
+    "type": "magento2-module",
+    "version": "<?=$data['version']?>",
+    "license": "MIT",
+    "require": {
+        "php": "7.0.2|7.0.4|~7.0.6|~7.1.0",
+        "magento/framework": "2.2.*",
+        "magento/module-backend": "100.3.*",
+        "magento/module-ui": "100.3.*",
+        "engine/module-magento": "100.3.*",
+        "engine/module-test": "100.3.*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "<?=$data['namespace_prefix']?>\\<?=$data['name_camelcase']?>\\": ""
+        }
+    }
+}

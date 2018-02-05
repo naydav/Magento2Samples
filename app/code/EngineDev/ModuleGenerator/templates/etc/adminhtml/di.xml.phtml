@@ -1,0 +1,21 @@
+<?='<?xml version="1.0"?>'?><?="\n"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+<?php foreach ($data['entities'] as $key => $entityData): ?>
+    <!-- <?=$entityData['entity_class_name']?> -->
+    <!-- Buttons configurations -->
+    <virtualType name="<?=$data['namespace']?>\Ui\Component\Control\<?=$entityData['entity_class_name']?>\SaveSplitButton" type="Magento\Backend\Ui\Component\Control\SaveSplitButton">
+        <arguments>
+            <argument name="targetName" xsi:type="string"><?=$entityData['entity_ui_name']?>_form.<?=$entityData['entity_ui_name']?>_form</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="<?=$data['namespace']?>\Ui\Component\Control\<?=$entityData['entity_class_name']?>\DeleteButton" type="Magento\Backend\Ui\Component\Control\DeleteButton">
+        <arguments>
+            <argument name="confirmationMessage" xsi:type="string" translate="true">Are you sure you want to delete this <?=$entityData['entity_display_name']?>?</argument>
+            <argument name="idFieldName" xsi:type="const"><?=$data['namespace']?>\Api\Data\<?=$entityData['entity_class_name']?>Interface::<?=strtoupper($entityData['entity_id_field'])?></argument>
+            <argument name="deleteRoutePath" xsi:type="string"><?=$data['route_id']?>/<?=lcfirst($entityData['entity_class_name'])?>/delete</argument>
+            <argument name="sortOrder" xsi:type="number">30</argument>
+        </arguments>
+    </virtualType>
+<?php endforeach; ?>
+</config>

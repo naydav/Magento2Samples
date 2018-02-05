@@ -1,0 +1,78 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>SearchResultInterface;
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>SearchResultInterfaceFactory;
+use <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\ResourceModel\<?=$data['entity_class_name']?>Collection;
+use <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\ResourceModel\<?=$data['entity_class_name']?>CollectionFactory;
+use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchCriteriaInterface;
+
+/**
+ * @inheritdoc
+ */
+class Get<?=$data['entity_class_name']?>List implements Get<?=$data['entity_class_name']?>ListInterface
+{
+    /**
+     * @var CollectionProcessorInterface
+     */
+    private $collectionProcessor;
+
+    /**
+     * @var <?=$data['entity_class_name']?>CollectionFactory
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>CollectionFactory;
+
+    /**
+     * @var <?=$data['entity_class_name']?>SearchResultInterfaceFactory
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>SearchResultFactory;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
+     * @param CollectionProcessorInterface $collectionProcessor
+     * @param <?=$data['entity_class_name']?>CollectionFactory $<?=lcfirst($data['entity_class_name'])?>CollectionFactory
+     * @param <?=$data['entity_class_name']?>SearchResultInterfaceFactory $<?=lcfirst($data['entity_class_name'])?>SearchResultFactory
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     */
+    public function __construct(
+        CollectionProcessorInterface $collectionProcessor,
+        <?=$data['entity_class_name']?>CollectionFactory $<?=lcfirst($data['entity_class_name'])?>CollectionFactory,
+        <?=$data['entity_class_name']?>SearchResultInterfaceFactory $<?=lcfirst($data['entity_class_name'])?>SearchResultFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder
+    ) {
+        $this->collectionProcessor = $collectionProcessor;
+        $this-><?=lcfirst($data['entity_class_name'])?>CollectionFactory = $<?=lcfirst($data['entity_class_name'])?>CollectionFactory;
+        $this-><?=lcfirst($data['entity_class_name'])?>SearchResultFactory = $<?=lcfirst($data['entity_class_name'])?>SearchResultFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function execute(SearchCriteriaInterface $searchCriteria = null): <?=$data['entity_class_name']?>SearchResultInterface
+    {
+        /** @var <?=$data['entity_class_name']?>Collection $collection */
+        $collection = $this-><?=lcfirst($data['entity_class_name'])?>CollectionFactory->create();
+
+        if (null === $searchCriteria) {
+            $searchCriteria = $this->searchCriteriaBuilder->create();
+        } else {
+            $this->collectionProcessor->process($searchCriteria, $collection);
+        }
+
+        /** @var <?=$data['entity_class_name']?>SearchResultInterface $searchResult */
+        $searchResult = $this-><?=lcfirst($data['entity_class_name'])?>SearchResultFactory->create();
+        $searchResult->setItems($collection->getItems());
+        $searchResult->setTotalCount($collection->getSize());
+        $searchResult->setSearchCriteria($searchCriteria);
+        return $searchResult;
+    }
+}

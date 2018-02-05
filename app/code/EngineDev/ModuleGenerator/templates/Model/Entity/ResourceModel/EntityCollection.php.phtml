@@ -1,0 +1,19 @@
+<?="<?php\n"?>
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\ResourceModel;
+
+use <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\<?=$data['entity_class_name']?> as <?=$data['entity_class_name']?>Model;
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class <?=$data['entity_class_name']?>Collection extends AbstractCollection
+{
+    /**
+     * @inheritdoc
+     */
+    protected function _construct()
+    {
+        $this->_init(<?=$data['entity_class_name']?>Model::class, <?=$data['entity_class_name']?>::class);
+    }
+}

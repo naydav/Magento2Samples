@@ -1,0 +1,182 @@
+<?='<?xml version="1.0"?>'?><?="\n"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string"><?=$data['entity_ui_name']?>_listing.<?=$data['entity_ui_name']?>_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="add">
+                <url path="<?=$data['route_id']?>/<?=lcfirst($data['entity_class_name'])?>/new"/>
+                <class>primary</class>
+                <label translate="true">Add New <?=$data['entity_display_name']?></label>
+            </button>
+        </buttons>
+        <spinner><?=$data['entity_name']?>_columns</spinner>
+        <deps>
+            <dep><?=$data['entity_ui_name']?>_listing.<?=$data['entity_ui_name']?>_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="<?=$data['entity_ui_name']?>_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string"><?=$data['entity_id_field']?></param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource><?=$data['acl_resource']?>::<?=$data['entity_acl_resource']?></aclResource>
+        <dataProvider class="<?=$data['namespace']?>\Ui\DataProvider\<?=$data['entity_class_name']?>DataProvider" name="<?=$data['entity_ui_name']?>_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName><?=$data['entity_id_field']?></primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="name"/>
+        <filters name="listing_filters">
+            <settings>
+                <templates>
+                    <filters>
+                        <select>
+                            <param name="template" xsi:type="string">ui/grid/filters/elements/ui-select</param>
+                            <param name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</param>
+                        </select>
+                    </filters>
+                </templates>
+            </settings>
+        </filters>
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
+            <action name="is_enabled">
+                <settings>
+                    <type>is_enabled</type>
+                    <label translate="true">Change status</label>
+                    <actions>
+                        <action name="0">
+                            <type>enable</type>
+                            <label translate="true">Enable</label>
+                            <url path="<?=$data['route_id']?>/<?=lcfirst($data['entity_class_name'])?>/massStatus">
+                                <param name="is_enabled">1</param>
+                            </url>
+                        </action>
+                        <action name="1">
+                            <type>disable</type>
+                            <label translate="true">Disable</label>
+                            <url path="<?=$data['route_id']?>/<?=lcfirst($data['entity_class_name'])?>/massStatus">
+                                <param name="is_enabled">0</param>
+                            </url>
+                        </action>
+                    </actions>
+                </settings>
+            </action>
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you wan't to delete selected items?</message>
+                        <title translate="true">Delete items</title>
+                    </confirm>
+                    <url path="<?=$data['route_id']?>/<?=lcfirst($data['entity_class_name'])?>/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="<?=$data['entity_name']?>_columns">
+        <settings>
+            <editorConfig>
+                <param name="clientConfig" xsi:type="array">
+                    <item name="saveUrl" xsi:type="url" path="<?=$data['route_id']?>/<?=lcfirst($data['entity_class_name'])?>/inlineEdit"/>
+                    <item name="validateBeforeSave" xsi:type="boolean">false</item>
+                </param>
+                <param name="indexField" xsi:type="string"><?=$data['entity_id_field']?></param>
+                <param name="enabled" xsi:type="boolean">true</param>
+                <param name="selectProvider" xsi:type="string"><?=$data['entity_ui_name']?>_listing.<?=$data['entity_ui_name']?>_listing.<?=$data['entity_name']?>_columns.ids</param>
+            </editorConfig>
+            <childDefaults>
+                <param name="fieldAction" xsi:type="array">
+                    <item name="provider" xsi:type="string"><?=$data['entity_ui_name']?>_listing.<?=$data['entity_ui_name']?>_listing.<?=$data['entity_name']?>_columns_editor</item>
+                    <item name="target" xsi:type="string">startEdit</item>
+                    <item name="params" xsi:type="array">
+                        <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+                        <item name="1" xsi:type="boolean">true</item>
+                    </item>
+                </param>
+            </childDefaults>
+        </settings>
+        <selectionsColumn name="ids" sortOrder="10">
+            <settings>
+                <indexField><?=$data['entity_id_field']?></indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="<?=$data['entity_id_field']?>" sortOrder="20">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+<?php if (!empty($data['entity_fields'])):
+        usort($data['entity_fields'], function ($a, $b) {
+            return isset($a['form_position'], $b['form_position']) ? strcmp($a['form_position'], $b['form_position']) : 0;
+        });
+        ?><?php $position = 2 /* first is id */; foreach ($data['entity_fields'] as $field):
+        if ($field['name'] === $data['entity_id_field']) { continue; } ?>
+        <column name="<?=$field['name']?>"<?php if ('bool' === $field['type']):?> component="Magento_Ui/js/grid/columns/select"<?php endif;?> sortOrder="<?=$position * 100?>">
+            <settings>
+                <label translate="true"><?=$field['display_name']?></label>
+<?php if ('bool' === $field['type']):?>
+                <filter>select</filter>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <dataType>select</dataType>
+                <editor>
+                    <editorType>select</editorType>
+                </editor>
+<?php else:?>
+                <filter>text</filter>
+                <dataType>text</dataType>
+                <editor>
+                    <editorType>text</editorType>
+<?php if ('string' === $field['type'] || 'number' === $field['type'] || 'int' === $field['type']):?>
+                    <validation>
+<?php if (!empty($field['required'])): ?>
+                        <rule name="required-entry" xsi:type="boolean">true</rule>
+<?php endif; ?>
+<?php if (!empty($field['length']) && 'string' === $field['type']): ?>
+                        <rule name="max_text_length" xsi:type="number"><?=$field['length']?></rule>
+<?php endif; ?>
+<?php if (!empty($field['length']) && ('number' === $field['type'] || 'int' === $field['type'])): ?>
+                        <rule name="less-than-equals-to" xsi:type="number"><?=str_repeat(9, $field['length'])?></rule>
+<?php endif; ?>
+<?php if ('number' === $field['type']):?>
+                        <rule name="validate-number" xsi:type="boolean">true</rule>
+<?php endif; ?>
+<?php if ('int' === $field['type']):?>
+                        <rule name="validate-integer" xsi:type="boolean">true</rule>
+<?php endif; ?>
+                    </validation>
+<?php endif;?>
+                </editor>
+<?php endif;?>
+            </settings>
+        </column>
+<?php $position++; endforeach; ?><?php endif; ?>
+        <actionsColumn name="actions" class="Magento\Backend\Ui\Component\Listing\Column\EditAction" sortOrder="<?=$position * 100?>">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="editUrlPath" xsi:type="string"><?=$data['route_id']?>/<?=lcfirst($data['entity_class_name'])?>/edit</item>
+                </item>
+            </argument>
+            <settings>
+                <indexField><?=$data['entity_id_field']?></indexField>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

@@ -1,0 +1,360 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="engineDevModuleGenerator" xsi:type="object">EngineDev\ModuleGenerator\Console\Command\GenerateModuleCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="EngineDev\ModuleGenerator\Model\ModuleGenerator">
+        <arguments>
+            <argument name="generatorsData" xsi:type="array">
+                <!-- Api -->
+                <item name="api_data_entity_interface" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Api/Data/EntityInterface.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Api/Data</item>
+                    <item name="destination_file" xsi:type="string">%entity_class_name%Interface.php</item>
+                </item>
+                <item name="api_data_entity_search_result_interface" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Api/Data/EntitySearchResultInterface.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Api/Data</item>
+                    <item name="destination_file" xsi:type="string">%entity_class_name%SearchResultInterface.php</item>
+                </item>
+                <item name="api_entity_repository_interface" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Api/EntityRepositoryInterface.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Api</item>
+                    <item name="destination_file" xsi:type="string">%entity_class_name%RepositoryInterface.php</item>
+                </item>
+                <!-- Controllers -->
+                <item name="controller_adminhtml_entity_delete" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Controller/Adminhtml/Entity/Delete.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Delete.php</item>
+                </item>
+                <item name="controller_adminhtml_entity_edit" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Controller/Adminhtml/Entity/Edit.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Edit.php</item>
+                </item>
+                <item name="controller_adminhtml_entity_index" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Controller/Adminhtml/Entity/Index.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Index.php</item>
+                </item>
+                <item name="controller_adminhtml_entity_inline_edit" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Controller/Adminhtml/Entity/InlineEdit.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">InlineEdit.php</item>
+                </item>
+                <item name="controller_adminhtml_entity_mass_delete" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Controller/Adminhtml/Entity/MassDelete.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">MassDelete.php</item>
+                </item>
+                <item name="controller_adminhtml_entity_mass_status" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Controller/Adminhtml/Entity/MassStatus.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">MassStatus.php</item>
+                </item>
+                <item name="controller_adminhtml_entity_new" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Controller/Adminhtml/Entity/NewAction.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">NewAction.php</item>
+                </item>
+                <item name="controller_adminhtml_entity_validate" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Controller/Adminhtml/Entity/Validate.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Validate.php</item>
+                </item>
+                <item name="controller_adminhtml_entity_save" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Controller/Adminhtml/Entity/Save.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Save.php</item>
+                </item>
+                <!-- Model -->
+                <item name="model_entity_resourcemodel_entitycollection" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/ResourceModel/EntityCollection.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%/ResourceModel</item>
+                    <item name="destination_file" xsi:type="string">%entity_class_name%Collection.php</item>
+                </item>
+                <item name="model_entity_resourcemodel_entity" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/ResourceModel/Entity.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%/ResourceModel</item>
+                    <item name="destination_file" xsi:type="string">%entity_class_name%.php</item>
+                </item>
+                <item name="model_entity_entity" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/Entity.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">%entity_class_name%.php</item>
+                </item>
+                <item name="model_entity_validator_validatorchain" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/Validator/ValidatorChain.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%/Validator</item>
+                    <item name="destination_file" xsi:type="string">ValidatorChain.php</item>
+                </item>
+                <item name="model_entity_validator_name_validator" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/Validator/NameValidator.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%/Validator</item>
+                    <item name="destination_file" xsi:type="string">NameValidator.php</item>
+                </item>
+                <item name="model_entity_validator_entityvalidatorinterface" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/Validator/EntityValidatorInterface.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%/Validator</item>
+                    <item name="destination_file" xsi:type="string">%entity_class_name%ValidatorInterface.php</item>
+                </item>
+                <item name="model_entity_entityrepository" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/EntityRepository.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">%entity_class_name%Repository.php</item>
+                </item>
+                <item name="model_entity_searchresult" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/EntitySearchResult.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">%entity_class_name%SearchResult.php</item>
+                </item>
+                <!-- SPI Commands -->
+                <item name="model_entity_deletebyid" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/DeleteEntityById.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Delete%entity_class_name%ById.php</item>
+                </item>
+                <item name="model_entity_deletebyidinterface" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/DeleteEntityByIdInterface.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Delete%entity_class_name%ByIdInterface.php</item>
+                </item>
+                <item name="model_entity_get" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/GetEntity.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Get%entity_class_name%.php</item>
+                </item>
+                <item name="model_entity_getinterface" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/GetEntityInterface.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Get%entity_class_name%Interface.php</item>
+                </item>
+                <item name="model_entity_getlist" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/GetEntityList.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Get%entity_class_name%List.php</item>
+                </item>
+                <item name="model_entity_getlistinterface" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/GetEntityListInterface.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Get%entity_class_name%ListInterface.php</item>
+                </item>
+                <item name="model_entity_save" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/SaveEntity.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Save%entity_class_name%.php</item>
+                </item>
+                <item name="model_entity_saveinterface" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Model/Entity/SaveEntityInterface.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Model/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">Save%entity_class_name%Interface.php</item>
+                </item>
+                <!-- Setup -->
+                <item name="setup_installschema" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Setup/InstallSchema.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Setup</item>
+                    <item name="destination_file" xsi:type="string">InstallSchema.php</item>
+                </item>
+                <item name="setup_operation_createentitytable" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Setup/Operation/CreateEntityTable.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Setup/Operation</item>
+                    <item name="destination_file" xsi:type="string">Create%entity_class_name%Table.php</item>
+                </item>
+                <!-- Test Api -->
+                <item name="test_api_entityrepository_createtest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Api/EntityRepository/CreateTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Api/%entity_class_name%Repository</item>
+                    <item name="destination_file" xsi:type="string">CreateTest.php</item>
+                </item>
+                <item name="test_api_entityrepository_getlisttest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Api/EntityRepository/GetListTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Api/%entity_class_name%Repository</item>
+                    <item name="destination_file" xsi:type="string">GetListTest.php</item>
+                </item>
+                <item name="test_api_entityrepository_gettest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Api/EntityRepository/GetTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Api/%entity_class_name%Repository</item>
+                    <item name="destination_file" xsi:type="string">GetTest.php</item>
+                </item>
+                <item name="test_api_entityrepository_updatetest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Api/EntityRepository/UpdateTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Api/%entity_class_name%Repository</item>
+                    <item name="destination_file" xsi:type="string">UpdateTest.php</item>
+                </item>
+                <item name="test_api_entityrepository_validationtest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Api/EntityRepository/ValidationTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Api/%entity_class_name%Repository</item>
+                    <item name="destination_file" xsi:type="string">ValidationTest.php</item>
+                </item>
+                <!-- Test Integration -->
+                <item name="test_integration_backend_menutest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Backend/MenuTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Backend</item>
+                    <item name="destination_file" xsi:type="string">MenuTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_save_createtest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/Save/CreateTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%/Save</item>
+                    <item name="destination_file" xsi:type="string">CreateTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_save_updatetest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/Save/UpdateTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%/Save</item>
+                    <item name="destination_file" xsi:type="string">UpdateTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_save_validationtest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/Save/ValidationTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%/Save</item>
+                    <item name="destination_file" xsi:type="string">ValidationTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_deletetest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/DeleteTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">DeleteTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_edittest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/EditTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">EditTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_indextest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/IndexTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">IndexTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_inlineedittest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/InlineEditTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">InlineEditTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_massdeletetest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/MassDeleteTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">MassDeleteTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_massstatustest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/MassStatusTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">MassStatusTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_newactiontest" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/NewActionTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">NewActionTest.php</item>
+                </item>
+                <item name="test_integration_controller_adminhtml_entity_validate" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/Integration/Controller/Adminhtml/Entity/ValidateTest.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/Integration/Controller/Adminhtml/%entity_class_name%</item>
+                    <item name="destination_file" xsi:type="string">ValidateTest.php</item>
+                </item>
+                <!-- Test fixtures -->
+                <item name="test_fixture_entity" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/_files/entity.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/_files</item>
+                    <item name="destination_file" xsi:type="string">%entity_name_lower%.php</item>
+                </item>
+                <item name="test_fixture_entity_rollback" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/_files/entity_rollback.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/_files</item>
+                    <item name="destination_file" xsi:type="string">%entity_name_lower%_rollback.php</item>
+                </item>
+                <item name="test_fixture_entities" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/_files/entities.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/_files</item>
+                    <item name="destination_file" xsi:type="string">%entities_name_lower%.php</item>
+                </item>
+                <item name="test_fixture_entities_rollback" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Test/_files/entities_rollback.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Test/_files</item>
+                    <item name="destination_file" xsi:type="string">%entities_name_lower%_rollback.php</item>
+                </item>
+                <!-- Ui -->
+                <item name="test_ui_dataprovider_entitydataprovider" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/Ui/DataProvider/EntityDataProvider.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">Ui/DataProvider</item>
+                    <item name="destination_file" xsi:type="string">%entity_class_name%DataProvider.php</item>
+                </item>
+                <!-- etc -->
+                <item name="etc_adminhtml_menu" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/etc/adminhtml/menu.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">etc/adminhtml</item>
+                    <item name="destination_file" xsi:type="string">menu.xml</item>
+                </item>
+                <item name="etc_adminhtml_routes" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/etc/adminhtml/routes.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">etc/adminhtml</item>
+                    <item name="destination_file" xsi:type="string">routes.xml</item>
+                </item>
+                <item name="etc_adminhtml_di" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/etc/adminhtml/di.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">etc/adminhtml</item>
+                    <item name="destination_file" xsi:type="string">di.xml</item>
+                </item>
+                <item name="etc_acl" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/etc/acl.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">etc</item>
+                    <item name="destination_file" xsi:type="string">acl.xml</item>
+                </item>
+                <item name="etc_di" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/etc/di.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">etc</item>
+                    <item name="destination_file" xsi:type="string">di.xml</item>
+                </item>
+                <item name="etc_module" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/etc/module.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">etc</item>
+                    <item name="destination_file" xsi:type="string">module.xml</item>
+                </item>
+                <item name="etc_webapi" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/etc/webapi.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">etc</item>
+                    <item name="destination_file" xsi:type="string">webapi.xml</item>
+                </item>
+                <!-- view layout -->
+                <item name="view_adminhtml_layout_edit" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/view/adminhtml/layout/engine_module_controller_edit.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">view/adminhtml/layout</item>
+                    <item name="destination_file" xsi:type="string">engine_%module_name_lower%_%entity_class_name_lower%_edit.xml</item>
+                </item>
+                <item name="view_adminhtml_layout_index" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/view/adminhtml/layout/engine_module_controller_index.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">view/adminhtml/layout</item>
+                    <item name="destination_file" xsi:type="string">engine_%module_name_lower%_%entity_class_name_lower%_index.xml</item>
+                </item>
+                <item name="view_adminhtml_layout_new" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/view/adminhtml/layout/engine_module_controller_new.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">view/adminhtml/layout</item>
+                    <item name="destination_file" xsi:type="string">engine_%module_name_lower%_%entity_class_name_lower%_new.xml</item>
+                </item>
+                <!-- view ui component -->
+                <item name="view_adminhtml_ui_component_form" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/view/adminhtml/ui_component/engine_entity_form.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">view/adminhtml/ui_component</item>
+                    <item name="destination_file" xsi:type="string">%entity_ui_name%_form.xml</item>
+                </item>
+                <item name="view_adminhtml_ui_component_listing" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/view/adminhtml/ui_component/engine_entity_listing.xml.phtml</item>
+                    <item name="destination_dir" xsi:type="string">view/adminhtml/ui_component</item>
+                    <item name="destination_file" xsi:type="string">%entity_ui_name%_listing.xml</item>
+                </item>
+                <!-- root -->
+                <item name="composer" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/composer.json.phtml</item>
+                    <item name="destination_dir" xsi:type="string">.</item>
+                    <item name="destination_file" xsi:type="string">composer.json</item>
+                </item>
+                <item name="registration" xsi:type="array">
+                    <item name="template" xsi:type="string">EngineDev/ModuleGenerator/templates/registration.php.phtml</item>
+                    <item name="destination_dir" xsi:type="string">.</item>
+                    <item name="destination_file" xsi:type="string">registration.php</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,89 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Test\Api\<?=$data['entity_class_name']?>Repository;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use Magento\Framework\Webapi\Rest\Request;
+use Magento\TestFramework\Assert\AssertArrayContains;
+use Magento\TestFramework\TestCase\WebapiAbstract;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class UpdateTest extends WebapiAbstract
+{
+    /**#@+
+     * Service constants
+     */
+    const RESOURCE_PATH = '/V1/<?=$data['route_front_name']?>/<?=$data['entity_webapi_front_name']?>';
+    const SERVICE_NAME = '<?=lcfirst($data['name_camelcase'])?><?=$data['entity_class_name']?>RepositoryV1';
+    /**#@-*/
+
+    /**
+     * @magentoApiDataFixture ../../../../app/code/<?=$data['namespace_prefix']?>/<?=$data['name_camelcase']?>/Test/_files/<?=$data['entity_name']?>.php
+     */
+    public function testUpdate()
+    {
+        $<?=$data['entity_camelcase_id_field']?> = 100;
+        $data = [
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']) { continue; } ?>
+<?php if ('bool' === $field['type']):?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => false,
+<?php elseif ('string' === $field['type']):?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>-updated',
+<?php elseif ('int' === $field['type']):?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 200,
+<?php endif;?>
+<?php endforeach; ?>
+        ];
+        $serviceInfo = [
+            'rest' => [
+                'resourcePath' => self::RESOURCE_PATH . '/' . $<?=$data['entity_camelcase_id_field']?>,
+                'httpMethod' => Request::HTTP_METHOD_PUT,
+            ],
+            'soap' => [
+                'service' => self::SERVICE_NAME,
+                'operation' => self::SERVICE_NAME . 'Save',
+            ],
+        ];
+        if (TESTS_WEB_API_ADAPTER == self::ADAPTER_REST) {
+            $this->_webApiCall($serviceInfo, ['<?=lcfirst($data['entity_class_name'])?>' => $data]);
+        } else {
+            $soapData = $data;
+            $soapData['<?=$data['entity_camelcase_id_field']?>'] = $<?=$data['entity_camelcase_id_field']?>;
+            $this->_webApiCall($serviceInfo, ['<?=lcfirst($data['entity_class_name'])?>' => $soapData]);
+        }
+
+        AssertArrayContains::assert(
+            $data,
+            $this->get<?=$data['entity_class_name']?>DataById($<?=$data['entity_camelcase_id_field']?>)
+        );
+    }
+
+    /**
+     * @param int $<?=$data['entity_camelcase_id_field']?><?="\n"?>
+     * @return array
+     */
+    private function get<?=$data['entity_class_name']?>DataById(int $<?=$data['entity_camelcase_id_field']?>): array
+    {
+        $serviceInfo = [
+            'rest' => [
+                'resourcePath' => self::RESOURCE_PATH . '/' . $<?=$data['entity_camelcase_id_field']?>,
+                'httpMethod' => Request::HTTP_METHOD_GET,
+            ],
+            'soap' => [
+                'service' => self::SERVICE_NAME,
+                'operation' => self::SERVICE_NAME . 'Get',
+            ],
+        ];
+        $response = (TESTS_WEB_API_ADAPTER == self::ADAPTER_REST)
+            ? $this->_webApiCall($serviceInfo)
+            : $this->_webApiCall($serviceInfo, ['<?=$data['entity_camelcase_id_field']?>' => $<?=$data['entity_camelcase_id_field']?>]);
+
+        self::assertArrayHasKey(<?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>, $response);
+        self::assertEquals($<?=$data['entity_camelcase_id_field']?>, $response[<?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>]);
+        return $response;
+    }
+}

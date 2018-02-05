@@ -1,0 +1,105 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Test\Api\<?=$data['entity_class_name']?>Repository;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use Magento\Framework\Webapi\Exception;
+use Magento\Framework\Webapi\Rest\Request;
+use Magento\TestFramework\Assert\AssertArrayContains;
+use Magento\TestFramework\TestCase\WebapiAbstract;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class GetTest extends WebapiAbstract
+{
+    /**#@+
+     * Service constants
+     */
+    const RESOURCE_PATH = '/V1/<?=$data['route_front_name']?>/<?=$data['entity_webapi_front_name']?>';
+    const SERVICE_NAME = '<?=lcfirst($data['name_camelcase'])?><?=$data['entity_class_name']?>RepositoryV1';
+    /**#@-*/
+
+    /**
+     * @magentoApiDataFixture ../../../../app/code/<?=$data['namespace_prefix']?>/<?=$data['name_camelcase']?>/Test/_files/<?=$data['entity_name']?>.php
+     */
+    public function testGet()
+    {
+        $<?=$data['entity_camelcase_id_field']?> = 100;
+        $expectedData = [
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']) { continue; } ?>
+<?php if ('bool' === $field['type']):?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => true,
+<?php elseif ('string' === $field['type']):?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>-100',
+<?php elseif ('int' === $field['type']):?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 100,
+<?php endif;?>
+<?php endforeach; ?>
+        ];
+        $<?=lcfirst($data['entity_class_name'])?> = $this->get<?=$data['entity_class_name']?>ById($<?=$data['entity_camelcase_id_field']?>);
+        AssertArrayContains::assert($expectedData, $<?=lcfirst($data['entity_class_name'])?>);
+    }
+
+    public function testGetNoSuchEntityException()
+    {
+        $notExistingId = -1;
+        $serviceInfo = [
+            'rest' => [
+                'resourcePath' => self::RESOURCE_PATH . '/' . $notExistingId,
+                'httpMethod' => Request::HTTP_METHOD_GET,
+            ],
+            'soap' => [
+                'service' => self::SERVICE_NAME,
+                'operation' => self::SERVICE_NAME . 'Get',
+            ],
+        ];
+
+        $expectedMessage = '<?=$data['entity_class_name']?> with id "%id" does not exist.';
+        try {
+            (TESTS_WEB_API_ADAPTER == self::ADAPTER_REST)
+                ? $this->_webApiCall($serviceInfo)
+                : $this->_webApiCall($serviceInfo, ['<?=$data['entity_camelcase_id_field']?>' => $notExistingId]);
+            $this->fail('Expected throwing exception');
+        } catch (\Exception $e) {
+            if (TESTS_WEB_API_ADAPTER == self::ADAPTER_REST) {
+                $errorData = $this->processRestExceptionResult($e);
+                self::assertEquals($expectedMessage, $errorData['message']);
+                self::assertEquals($notExistingId, $errorData['parameters']['id']);
+                self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode());
+            } elseif (TESTS_WEB_API_ADAPTER == self::ADAPTER_SOAP) {
+                $this->assertInstanceOf('SoapFault', $e);
+                $this->checkSoapFault($e, $expectedMessage, 'env:Sender', ['id' => $notExistingId]);
+            } else {
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * @param int $<?=$data['entity_camelcase_id_field']?><?="\n"?>
+     * @return array
+     */
+    private function get<?=$data['entity_class_name']?>ById(int $<?=$data['entity_camelcase_id_field']?>): array
+    {
+        $serviceInfo = [
+            'rest' => [
+                'resourcePath' => self::RESOURCE_PATH . '/' . $<?=$data['entity_camelcase_id_field']?>,
+                'httpMethod' => Request::HTTP_METHOD_GET,
+            ],
+            'soap' => [
+                'service' => self::SERVICE_NAME,
+                'operation' => self::SERVICE_NAME . 'Get',
+            ],
+        ];
+        $response = (TESTS_WEB_API_ADAPTER == self::ADAPTER_REST)
+            ? $this->_webApiCall($serviceInfo)
+            : $this->_webApiCall($serviceInfo, ['<?=$data['entity_camelcase_id_field']?>' => $<?=$data['entity_camelcase_id_field']?>]);
+
+        self::assertArrayHasKey(<?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>, $response);
+        self::assertEquals($<?=$data['entity_camelcase_id_field']?>, $response[<?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>]);
+        return $response;
+    }
+}

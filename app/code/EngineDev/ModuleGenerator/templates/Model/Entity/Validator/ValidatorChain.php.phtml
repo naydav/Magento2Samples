@@ -1,0 +1,64 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\Validator;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Validation\ValidationResult;
+use Magento\Framework\Validation\ValidationResultFactory;
+
+/**
+ * Chain of validators. Extension point for new validators via di configuration
+ *
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class ValidatorChain implements <?=$data['entity_class_name']?>ValidatorInterface
+{
+    /**
+     * @var ValidationResultFactory
+     */
+    private $validationResultFactory;
+
+    /**
+     * @var <?=$data['entity_class_name']?>ValidatorInterface[]
+     */
+    private $validators;
+
+    /**
+     * @param ValidationResultFactory $validationResultFactory
+     * @param <?=$data['entity_class_name']?>ValidatorInterface[] $validators
+     * @throws LocalizedException
+     */
+    public function __construct(
+        ValidationResultFactory $validationResultFactory,
+        array $validators = []
+    ) {
+        $this->validationResultFactory = $validationResultFactory;
+
+        foreach ($validators as $validator) {
+            if (!$validator instanceof <?=$data['entity_class_name']?>ValidatorInterface) {
+                throw new LocalizedException(
+                    __('<?=$data['entity_display_name']?> Validator must implement <?=$data['entity_class_name']?>ValidatorInterface.')
+                );
+            }
+        }
+        $this->validators = $validators;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function validate(<?=$data['entity_class_name']?>Interface $<?=lcfirst($data['entity_class_name'])?>): ValidationResult
+    {
+        $errors = [];
+        foreach ($this->validators as $validator) {
+            $validationResult = $validator->validate($<?=lcfirst($data['entity_class_name'])?>);
+
+            if (false === $validationResult->isValid()) {
+                $errors = array_merge($errors, $validationResult->getErrors());
+            }
+        }
+        return $this->validationResultFactory->create(['errors' => $errors]);
+    }
+}

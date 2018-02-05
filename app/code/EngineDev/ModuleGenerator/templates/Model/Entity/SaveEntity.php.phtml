@@ -1,0 +1,66 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\ResourceModel\<?=$data['entity_class_name']?> as <?=$data['entity_class_name']?>ResourceModel;
+use <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\Validator\<?=$data['entity_class_name']?>ValidatorInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Validation\ValidationException;
+use Psr\Log\LoggerInterface;
+
+/**
+ * @inheritdoc
+ */
+class Save<?=$data['entity_class_name']?> implements Save<?=$data['entity_class_name']?>Interface
+{
+    /**
+     * @var <?=$data['entity_class_name']?>ValidatorInterface
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Validator;
+
+    /**
+     * @var <?=$data['entity_class_name']?>ResourceModel
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Resource;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @param <?=$data['entity_class_name']?>ValidatorInterface $<?=lcfirst($data['entity_class_name'])?>Validator
+     * @param <?=$data['entity_class_name']?>ResourceModel $<?=lcfirst($data['entity_class_name'])?>Resource
+     * @param LoggerInterface $logger
+     */
+    public function __construct(
+        <?=$data['entity_class_name']?>ValidatorInterface $<?=lcfirst($data['entity_class_name'])?>Validator,
+        <?=$data['entity_class_name']?>ResourceModel $<?=lcfirst($data['entity_class_name'])?>Resource,
+        LoggerInterface $logger
+    ) {
+        $this-><?=lcfirst($data['entity_class_name'])?>Validator = $<?=lcfirst($data['entity_class_name'])?>Validator;
+        $this-><?=lcfirst($data['entity_class_name'])?>Resource = $<?=lcfirst($data['entity_class_name'])?>Resource;
+        $this->logger = $logger;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function execute(<?=$data['entity_class_name']?>Interface $<?=lcfirst($data['entity_class_name'])?>): int
+    {
+        $validationResult = $this-><?=lcfirst($data['entity_class_name'])?>Validator->validate($<?=lcfirst($data['entity_class_name'])?>);
+        if (!$validationResult->isValid()) {
+            throw new ValidationException(__('Validation Failed'), null, 0, $validationResult);
+        }
+
+        try {
+            $this-><?=lcfirst($data['entity_class_name'])?>Resource->save($<?=lcfirst($data['entity_class_name'])?>);
+            return (int)$<?=lcfirst($data['entity_class_name'])?>->get<?=ucfirst($data['entity_camelcase_id_field'])?>();
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new CouldNotSaveException(__('Could not save <?=$data['entity_class_name']?>'), $e);
+        }
+    }
+}

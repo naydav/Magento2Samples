@@ -1,0 +1,31 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Validation\ValidationException;
+
+/**
+ * Save <?=$data['entity_class_name']?> data command (Service Provider Interface - SPI)
+ *
+ * Separate command interface to which Repository proxies initial Save call, could be considered as SPI - Interfaces
+ * that you should extend and implement to customize current behaviour, but NOT expected to be used (called) in the code
+ * of business logic directly
+ *
+ * @see \<?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface
+ * @api
+ */
+interface Save<?=$data['entity_class_name']?>Interface
+{
+    /**
+     * Save <?=$data['entity_class_name']?> data
+     *
+     * @param <?=$data['entity_class_name']?>Interface $<?=lcfirst($data['entity_class_name'])?><?="\n"?>
+     * @return int
+     * @throws ValidationException
+     * @throws CouldNotSaveException
+     */
+    public function execute(<?=$data['entity_class_name']?>Interface $<?=lcfirst($data['entity_class_name'])?>): int;
+}

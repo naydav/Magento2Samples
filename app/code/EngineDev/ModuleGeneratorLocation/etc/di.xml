@@ -1,0 +1,427 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="EngineDev\ModuleGenerator\Model\ModuleGenerator">
+        <arguments>
+            <argument name="modulesData" xsi:type="array">
+                <item name="Engine_Location" xsi:type="array">
+                    <item name="module" xsi:type="string">Engine_Location</item>
+                    <item name="namespace" xsi:type="string">Engine\Location</item>
+                    <item name="namespace_prefix" xsi:type="string">Engine</item>
+                    <item name="name" xsi:type="string">location</item>
+                    <item name="name_camelcase" xsi:type="string">Location</item>
+                    <item name="version" xsi:type="string">1.0.0</item>
+                    <item name="route_id" xsi:type="string">engine_location</item>
+                    <item name="route_front_name" xsi:type="string">engine-location</item>
+                    <item name="display_name" xsi:type="string">Location</item>
+                    <item name="sort_order" xsi:type="string">400</item>
+                    <item name="acl_resource" xsi:type="string">Engine_Location</item>
+                    <item name="entities" xsi:type="array">
+                        <item name="0" xsi:type="array">
+                            <item name="entity_name" xsi:type="string">country</item>
+                            <item name="entities_name" xsi:type="string">countries</item>
+                            <item name="entities_name_camelcase" xsi:type="string">countries</item>
+                            <item name="entity_display_name" xsi:type="string">Country</item>
+                            <item name="entities_display_name" xsi:type="string">Countries</item>
+                            <item name="entity_ui_name" xsi:type="string">engine_location_country</item>
+                            <item name="entity_webapi_front_name" xsi:type="string">country</item>
+                            <item name="entity_acl_resource" xsi:type="string">location_country</item>
+                            <item name="entity_class_name" xsi:type="string">Country</item>
+                            <item name="entity_table_name" xsi:type="string">engine_location_country</item>
+                            <item name="entity_id_field" xsi:type="string">country_id</item>
+                            <item name="entity_camelcase_id_field" xsi:type="string">countryId</item>
+                            <item name="entity_fields" xsi:type="array">
+                                <item name="0" xsi:type="array">
+                                    <item name="name" xsi:type="string">country_id</item>
+                                    <item name="camelcase" xsi:type="string">countryId</item>
+                                    <item name="type" xsi:type="string">int</item>
+                                    <item name="display_name" xsi:type="string">Country Id</item>
+                                </item>
+                                <item name="100" xsi:type="array">
+                                    <item name="name" xsi:type="string">enabled</item>
+                                    <item name="camelcase" xsi:type="string">enabled</item>
+                                    <item name="type" xsi:type="string">bool</item>
+                                    <item name="display_name" xsi:type="string">Is Enabled</item>
+                                    <item name="scope" xsi:type="string">global</item>
+                                    <item name="form_position" xsi:type="string">2</item>
+                                    <item name="default" xsi:type="string">1</item>
+                                    <item name="form_element" xsi:type="string">checkbox</item>
+                                </item>
+                                <item name="200" xsi:type="array">
+                                    <item name="name" xsi:type="string">position</item>
+                                    <item name="camelcase" xsi:type="string">position</item>
+                                    <item name="type" xsi:type="string">int</item>
+                                    <item name="display_name" xsi:type="string">Position</item>
+                                    <item name="scope" xsi:type="string">global</item>
+                                    <item name="form_position" xsi:type="string">3</item>
+                                    <item name="db_size" xsi:type="number">3</item>
+                                    <item name="nullable" xsi:type="boolean">false</item>
+                                    <item name="default" xsi:type="number">0</item>
+                                </item>
+                                <item name="300" xsi:type="array">
+                                    <item name="name" xsi:type="string">name</item>
+                                    <item name="camelcase" xsi:type="string">name</item>
+                                    <item name="type" xsi:type="string">string</item>
+                                    <item name="display_name" xsi:type="string">Name</item>
+                                    <item name="length" xsi:type="string">255</item>
+                                    <item name="nullable" xsi:type="boolean">false</item>
+                                    <item name="scope" xsi:type="string">store</item>
+                                    <item name="form_position" xsi:type="string">1</item>
+                                    <item name="required" xsi:type="boolean">true</item>
+                                </item>
+                            </item>
+                            <item name="entity_generators" xsi:type="array">
+                                <!-- Api -->
+                                <item name="api_data_entity_interface" xsi:type="string">api_data_entity_interface</item>
+                                <item name="api_data_entity_search_result_interface" xsi:type="string">api_data_entity_search_result_interface</item>
+                                <item name="api_entity_repository_interface" xsi:type="string">api_entity_repository_interface</item>
+                                <!-- Controllers -->
+                                <item name="controller_adminhtml_entity_delete" xsi:type="string">controller_adminhtml_entity_delete</item>
+                                <item name="controller_adminhtml_entity_edit" xsi:type="string">controller_adminhtml_entity_edit</item>
+                                <item name="controller_adminhtml_entity_index" xsi:type="string">controller_adminhtml_entity_index</item>
+                                <item name="controller_adminhtml_entity_inline_edit" xsi:type="string">controller_adminhtml_entity_inline_edit</item>
+                                <item name="controller_adminhtml_entity_mass_delete" xsi:type="string">controller_adminhtml_entity_mass_delete</item>
+                                <item name="controller_adminhtml_entity_mass_status" xsi:type="string">controller_adminhtml_entity_mass_status</item>
+                                <item name="controller_adminhtml_entity_new" xsi:type="string">controller_adminhtml_entity_new</item>
+                                <item name="controller_adminhtml_entity_save" xsi:type="string">controller_adminhtml_entity_save</item>
+                                <item name="controller_adminhtml_entity_validate" xsi:type="string">controller_adminhtml_entity_validate</item>
+                                <!-- Model -->
+                                <item name="model_entity_resourcemodel_entitycollection" xsi:type="string">model_entity_resourcemodel_entitycollection</item>
+                                <item name="model_entity_resourcemodel_entity" xsi:type="string">model_entity_resourcemodel_entity</item>
+                                <item name="model_entity_entity" xsi:type="string">model_entity_entity</item>
+                                <item name="model_entity_validator_validatorchain" xsi:type="string">model_entity_validator_validatorchain</item>
+                                <item name="model_entity_validator_name_validator" xsi:type="string">model_entity_validator_name_validator</item>
+                                <item name="model_entity_validator_entityvalidatorinterface" xsi:type="string">model_entity_validator_entityvalidatorinterface</item>
+                                <item name="model_entity_entityrepository" xsi:type="string">model_entity_entityrepository</item>
+                                <item name="model_entity_searchresult" xsi:type="string">model_entity_searchresult</item>
+                                <!-- SPI Commands -->
+                                <item name="model_entity_deletebyid" xsi:type="string">model_entity_deletebyid</item>
+                                <item name="model_entity_deletebyidinterface" xsi:type="string">model_entity_deletebyidinterface</item>
+                                <item name="model_entity_get" xsi:type="string">model_entity_get</item>
+                                <item name="model_entity_getinterface" xsi:type="string">model_entity_getinterface</item>
+                                <item name="model_entity_getlist" xsi:type="string">model_entity_getlist</item>
+                                <item name="model_entity_getlistinterface" xsi:type="string">model_entity_getlistinterface</item>
+                                <item name="model_entity_save" xsi:type="string">model_entity_save</item>
+                                <item name="model_entity_saveinterface" xsi:type="string">model_entity_saveinterface</item>
+                                <!-- Setup -->
+                                <item name="setup_operation_createentitytable" xsi:type="string">setup_operation_createentitytable</item>
+                                <!-- Test Api -->
+                                <item name="test_api_entityrepository_createtest" xsi:type="string">test_api_entityrepository_createtest</item>
+                                <item name="test_api_entityrepository_gettest" xsi:type="string">test_api_entityrepository_gettest</item>
+                                <item name="test_api_entityrepository_getlisttest" xsi:type="string">test_api_entityrepository_getlisttest</item>
+                                <item name="test_api_entityrepository_updatetest" xsi:type="string">test_api_entityrepository_updatetest</item>
+                                <item name="test_api_entityrepository_validationtest" xsi:type="string">test_api_entityrepository_validationtest</item>
+                                <!-- Test Integration -->
+                                <item name="test_integration_controller_adminhtml_entity_save_createtest" xsi:type="string">test_integration_controller_adminhtml_entity_save_createtest</item>
+                                <item name="test_integration_controller_adminhtml_entity_save_updatetest" xsi:type="string">test_integration_controller_adminhtml_entity_save_updatetest</item>
+                                <item name="test_integration_controller_adminhtml_entity_save_validationtest" xsi:type="string">test_integration_controller_adminhtml_entity_save_validationtest</item>
+                                <item name="test_integration_controller_adminhtml_entity_deletetest" xsi:type="string">test_integration_controller_adminhtml_entity_deletetest</item>
+                                <item name="test_integration_controller_adminhtml_entity_edittest" xsi:type="string">test_integration_controller_adminhtml_entity_edittest</item>
+                                <item name="test_integration_controller_adminhtml_entity_indextest" xsi:type="string">test_integration_controller_adminhtml_entity_indextest</item>
+                                <item name="test_integration_controller_adminhtml_entity_inlineedittest" xsi:type="string">test_integration_controller_adminhtml_entity_inlineedittest</item>
+                                <item name="test_integration_controller_adminhtml_entity_massdeletetest" xsi:type="string">test_integration_controller_adminhtml_entity_massdeletetest</item>
+                                <item name="test_integration_controller_adminhtml_entity_massstatustest" xsi:type="string">test_integration_controller_adminhtml_entity_massstatustest</item>
+                                <item name="test_integration_controller_adminhtml_entity_newactiontest" xsi:type="string">test_integration_controller_adminhtml_entity_newactiontest</item>
+                                <item name="test_integration_controller_adminhtml_entity_validate" xsi:type="string">test_integration_controller_adminhtml_entity_validate</item>
+                                <!-- Test fixtures -->
+                                <item name="test_fixture_entity" xsi:type="string">test_fixture_entity</item>
+                                <item name="test_fixture_entity_rollback" xsi:type="string">test_fixture_entity_rollback</item>
+                                <item name="test_fixture_entities" xsi:type="string">test_fixture_entities</item>
+                                <item name="test_fixture_entities_rollback" xsi:type="string">test_fixture_entities_rollback</item>
+                                <!-- Ui -->
+                                <item name="test_ui_dataprovider_entitydataprovider" xsi:type="string">test_ui_dataprovider_entitydataprovider</item>
+                                <!-- view layout -->
+                                <item name="view_adminhtml_layout_edit" xsi:type="string">view_adminhtml_layout_edit</item>
+                                <item name="view_adminhtml_layout_index" xsi:type="string">view_adminhtml_layout_index</item>
+                                <item name="view_adminhtml_layout_new" xsi:type="string">view_adminhtml_layout_new</item>
+                                <!-- view ui component -->
+                                <item name="view_adminhtml_ui_component_form" xsi:type="string">view_adminhtml_ui_component_form</item>
+                                <item name="view_adminhtml_ui_component_listing" xsi:type="string">view_adminhtml_ui_component_listing</item>
+                            </item>
+                        </item>
+                        <item name="1" xsi:type="array">
+                            <item name="entity_name" xsi:type="string">region</item>
+                            <item name="entities_name" xsi:type="string">regions</item>
+                            <item name="entities_name_camelcase" xsi:type="string">regions</item>
+                            <item name="entity_display_name" xsi:type="string">Region</item>
+                            <item name="entities_display_name" xsi:type="string">Regions</item>
+                            <item name="entity_ui_name" xsi:type="string">engine_location_region</item>
+                            <item name="entity_webapi_front_name" xsi:type="string">region</item>
+                            <item name="entity_acl_resource" xsi:type="string">location_region</item>
+                            <item name="entity_class_name" xsi:type="string">Region</item>
+                            <item name="entity_table_name" xsi:type="string">engine_location_region</item>
+                            <item name="entity_id_field" xsi:type="string">region_id</item>
+                            <item name="entity_camelcase_id_field" xsi:type="string">regionId</item>
+                            <item name="entity_fields" xsi:type="array">
+                                <item name="0" xsi:type="array">
+                                    <item name="name" xsi:type="string">region_id</item>
+                                    <item name="camelcase" xsi:type="string">regionId</item>
+                                    <item name="type" xsi:type="string">int</item>
+                                    <item name="display_name" xsi:type="string">Region Id</item>
+                                </item>
+                                <item name="100" xsi:type="array">
+                                    <item name="name" xsi:type="string">country_id</item>
+                                    <item name="camelcase" xsi:type="string">countryId</item>
+                                    <item name="type" xsi:type="string">int</item>
+                                    <item name="display_name" xsi:type="string">Country</item>
+                                    <item name="nullable" xsi:type="boolean">false</item>
+                                    <item name="scope" xsi:type="string">global</item>
+                                    <item name="form_position" xsi:type="string">2</item>
+                                    <item name="db_type" xsi:type="string">Table::TYPE_INTEGER</item>
+                                </item>
+                                <item name="200" xsi:type="array">
+                                    <item name="name" xsi:type="string">enabled</item>
+                                    <item name="camelcase" xsi:type="string">enabled</item>
+                                    <item name="type" xsi:type="string">bool</item>
+                                    <item name="display_name" xsi:type="string">Is Enabled</item>
+                                    <item name="scope" xsi:type="string">global</item>
+                                    <item name="form_position" xsi:type="string">3</item>
+                                    <item name="default" xsi:type="string">1</item>
+                                    <item name="form_element" xsi:type="string">checkbox</item>
+                                </item>
+                                <item name="300" xsi:type="array">
+                                    <item name="name" xsi:type="string">position</item>
+                                    <item name="camelcase" xsi:type="string">position</item>
+                                    <item name="type" xsi:type="string">int</item>
+                                    <item name="display_name" xsi:type="string">Position</item>
+                                    <item name="scope" xsi:type="string">global</item>
+                                    <item name="form_position" xsi:type="string">4</item>
+                                    <item name="db_size" xsi:type="number">3</item>
+                                    <item name="nullable" xsi:type="boolean">false</item>
+                                    <item name="default" xsi:type="number">0</item>
+                                </item>
+                                <item name="400" xsi:type="array">
+                                    <item name="name" xsi:type="string">name</item>
+                                    <item name="camelcase" xsi:type="string">name</item>
+                                    <item name="type" xsi:type="string">string</item>
+                                    <item name="display_name" xsi:type="string">Name</item>
+                                    <item name="length" xsi:type="string">255</item>
+                                    <item name="nullable" xsi:type="boolean">false</item>
+                                    <item name="scope" xsi:type="string">store</item>
+                                    <item name="form_position" xsi:type="string">1</item>
+                                    <item name="required" xsi:type="boolean">true</item>
+                                </item>
+                            </item>
+                            <item name="entity_generators" xsi:type="array">
+                                <!-- Api -->
+                                <item name="api_data_entity_interface" xsi:type="string">api_data_entity_interface</item>
+                                <item name="api_data_entity_search_result_interface" xsi:type="string">api_data_entity_search_result_interface</item>
+                                <item name="api_entity_repository_interface" xsi:type="string">api_entity_repository_interface</item>
+                                <!-- Controllers -->
+                                <item name="controller_adminhtml_entity_delete" xsi:type="string">controller_adminhtml_entity_delete</item>
+                                <item name="controller_adminhtml_entity_edit" xsi:type="string">controller_adminhtml_entity_edit</item>
+                                <item name="controller_adminhtml_entity_index" xsi:type="string">controller_adminhtml_entity_index</item>
+                                <item name="controller_adminhtml_entity_inline_edit" xsi:type="string">controller_adminhtml_entity_inline_edit</item>
+                                <item name="controller_adminhtml_entity_mass_delete" xsi:type="string">controller_adminhtml_entity_mass_delete</item>
+                                <item name="controller_adminhtml_entity_mass_status" xsi:type="string">controller_adminhtml_entity_mass_status</item>
+                                <item name="controller_adminhtml_entity_new" xsi:type="string">controller_adminhtml_entity_new</item>
+                                <item name="controller_adminhtml_entity_save" xsi:type="string">controller_adminhtml_entity_save</item>
+                                <item name="controller_adminhtml_entity_validate" xsi:type="string">controller_adminhtml_entity_validate</item>
+                                <!-- Model -->
+                                <item name="model_entity_resourcemodel_entitycollection" xsi:type="string">model_entity_resourcemodel_entitycollection</item>
+                                <item name="model_entity_resourcemodel_entity" xsi:type="string">model_entity_resourcemodel_entity</item>
+                                <item name="model_entity_entity" xsi:type="string">model_entity_entity</item>
+                                <item name="model_entity_validator_validatorchain" xsi:type="string">model_entity_validator_validatorchain</item>
+                                <item name="model_entity_validator_name_validator" xsi:type="string">model_entity_validator_name_validator</item>
+                                <item name="model_entity_validator_entityvalidatorinterface" xsi:type="string">model_entity_validator_entityvalidatorinterface</item>
+                                <item name="model_entity_entityrepository" xsi:type="string">model_entity_entityrepository</item>
+                                <item name="model_entity_searchresult" xsi:type="string">model_entity_searchresult</item>
+                                <!-- SPI Commands -->
+                                <item name="model_entity_deletebyid" xsi:type="string">model_entity_deletebyid</item>
+                                <item name="model_entity_deletebyidinterface" xsi:type="string">model_entity_deletebyidinterface</item>
+                                <item name="model_entity_get" xsi:type="string">model_entity_get</item>
+                                <item name="model_entity_getinterface" xsi:type="string">model_entity_getinterface</item>
+                                <item name="model_entity_getlist" xsi:type="string">model_entity_getlist</item>
+                                <item name="model_entity_getlistinterface" xsi:type="string">model_entity_getlistinterface</item>
+                                <item name="model_entity_save" xsi:type="string">model_entity_save</item>
+                                <item name="model_entity_saveinterface" xsi:type="string">model_entity_saveinterface</item>
+                                <!-- Setup -->
+                                <item name="setup_operation_createentitytable" xsi:type="string">setup_operation_createentitytable</item>
+                                <!-- Test Api -->
+                                <item name="test_api_entityrepository_createtest" xsi:type="string">test_api_entityrepository_createtest</item>
+                                <item name="test_api_entityrepository_gettest" xsi:type="string">test_api_entityrepository_gettest</item>
+                                <item name="test_api_entityrepository_getlisttest" xsi:type="string">test_api_entityrepository_getlisttest</item>
+                                <item name="test_api_entityrepository_updatetest" xsi:type="string">test_api_entityrepository_updatetest</item>
+                                <item name="test_api_entityrepository_validationtest" xsi:type="string">test_api_entityrepository_validationtest</item>
+                                <!-- Test Integration -->
+                                <item name="test_integration_controller_adminhtml_entity_save_createtest" xsi:type="string">test_integration_controller_adminhtml_entity_save_createtest</item>
+                                <item name="test_integration_controller_adminhtml_entity_save_updatetest" xsi:type="string">test_integration_controller_adminhtml_entity_save_updatetest</item>
+                                <item name="test_integration_controller_adminhtml_entity_save_validationtest" xsi:type="string">test_integration_controller_adminhtml_entity_save_validationtest</item>
+                                <item name="test_integration_controller_adminhtml_entity_deletetest" xsi:type="string">test_integration_controller_adminhtml_entity_deletetest</item>
+                                <item name="test_integration_controller_adminhtml_entity_edittest" xsi:type="string">test_integration_controller_adminhtml_entity_edittest</item>
+                                <item name="test_integration_controller_adminhtml_entity_indextest" xsi:type="string">test_integration_controller_adminhtml_entity_indextest</item>
+                                <item name="test_integration_controller_adminhtml_entity_inlineedittest" xsi:type="string">test_integration_controller_adminhtml_entity_inlineedittest</item>
+                                <item name="test_integration_controller_adminhtml_entity_massdeletetest" xsi:type="string">test_integration_controller_adminhtml_entity_massdeletetest</item>
+                                <item name="test_integration_controller_adminhtml_entity_massstatustest" xsi:type="string">test_integration_controller_adminhtml_entity_massstatustest</item>
+                                <item name="test_integration_controller_adminhtml_entity_newactiontest" xsi:type="string">test_integration_controller_adminhtml_entity_newactiontest</item>
+                                <item name="test_integration_controller_adminhtml_entity_validate" xsi:type="string">test_integration_controller_adminhtml_entity_validate</item>
+                                <!-- Test fixtures -->
+                                <item name="test_fixture_entity" xsi:type="string">test_fixture_entity</item>
+                                <item name="test_fixture_entity_rollback" xsi:type="string">test_fixture_entity_rollback</item>
+                                <item name="test_fixture_entities" xsi:type="string">test_fixture_entities</item>
+                                <item name="test_fixture_entities_rollback" xsi:type="string">test_fixture_entities_rollback</item>
+                                <!-- Ui -->
+                                <item name="test_ui_dataprovider_entitydataprovider" xsi:type="string">test_ui_dataprovider_entitydataprovider</item>
+                                <!-- view layout -->
+                                <item name="view_adminhtml_layout_edit" xsi:type="string">view_adminhtml_layout_edit</item>
+                                <item name="view_adminhtml_layout_index" xsi:type="string">view_adminhtml_layout_index</item>
+                                <item name="view_adminhtml_layout_new" xsi:type="string">view_adminhtml_layout_new</item>
+                                <!-- view ui component -->
+                                <item name="view_adminhtml_ui_component_form" xsi:type="string">view_adminhtml_ui_component_form</item>
+                                <item name="view_adminhtml_ui_component_listing" xsi:type="string">view_adminhtml_ui_component_listing</item>
+                            </item>
+                        </item>
+                        <item name="2" xsi:type="array">
+                            <item name="entity_name" xsi:type="string">city</item>
+                            <item name="entities_name" xsi:type="string">cities</item>
+                            <item name="entities_name_camelcase" xsi:type="string">cities</item>
+                            <item name="entity_display_name" xsi:type="string">City</item>
+                            <item name="entities_display_name" xsi:type="string">Cities</item>
+                            <item name="entity_ui_name" xsi:type="string">engine_location_city</item>
+                            <item name="entity_webapi_front_name" xsi:type="string">city</item>
+                            <item name="entity_acl_resource" xsi:type="string">location_city</item>
+                            <item name="entity_class_name" xsi:type="string">City</item>
+                            <item name="entity_table_name" xsi:type="string">engine_location_city</item>
+                            <item name="entity_id_field" xsi:type="string">city_id</item>
+                            <item name="entity_camelcase_id_field" xsi:type="string">cityId</item>
+                            <item name="entity_fields" xsi:type="array">
+                                <item name="0" xsi:type="array">
+                                    <item name="name" xsi:type="string">city_id</item>
+                                    <item name="camelcase" xsi:type="string">cityId</item>
+                                    <item name="type" xsi:type="string">int</item>
+                                </item>
+                                <item name="100" xsi:type="array">
+                                    <item name="name" xsi:type="string">region_id</item>
+                                    <item name="camelcase" xsi:type="string">regionId</item>
+                                    <item name="type" xsi:type="string">int</item>
+                                    <item name="display_name" xsi:type="string">Region</item>
+                                    <item name="nullable" xsi:type="boolean">false</item>
+                                    <item name="scope" xsi:type="string">global</item>
+                                    <item name="form_position" xsi:type="string">2</item>
+                                    <item name="db_type" xsi:type="string">Table::TYPE_INTEGER</item>
+                                </item>
+                                <item name="200" xsi:type="array">
+                                    <item name="name" xsi:type="string">enabled</item>
+                                    <item name="camelcase" xsi:type="string">enabled</item>
+                                    <item name="type" xsi:type="string">bool</item>
+                                    <item name="display_name" xsi:type="string">Is Enabled</item>
+                                    <item name="scope" xsi:type="string">global</item>
+                                    <item name="form_position" xsi:type="string">3</item>
+                                    <item name="default" xsi:type="string">1</item>
+                                    <item name="form_element" xsi:type="string">checkbox</item>
+                                </item>
+                                <item name="300" xsi:type="array">
+                                    <item name="name" xsi:type="string">position</item>
+                                    <item name="camelcase" xsi:type="string">position</item>
+                                    <item name="type" xsi:type="string">int</item>
+                                    <item name="display_name" xsi:type="string">Position</item>
+                                    <item name="scope" xsi:type="string">global</item>
+                                    <item name="form_position" xsi:type="string">4</item>
+                                    <item name="db_size" xsi:type="number">3</item>
+                                    <item name="nullable" xsi:type="boolean">false</item>
+                                    <item name="default" xsi:type="number">0</item>
+                                </item>
+                                <item name="400" xsi:type="array">
+                                    <item name="name" xsi:type="string">name</item>
+                                    <item name="camelcase" xsi:type="string">name</item>
+                                    <item name="type" xsi:type="string">string</item>
+                                    <item name="display_name" xsi:type="string">Name</item>
+                                    <item name="length" xsi:type="string">255</item>
+                                    <item name="nullable" xsi:type="boolean">false</item>
+                                    <item name="scope" xsi:type="string">store</item>
+                                    <item name="form_position" xsi:type="string">1</item>
+                                    <item name="required" xsi:type="boolean">true</item>
+                                </item>
+                            </item>
+                            <item name="entity_generators" xsi:type="array">
+                                <!-- Api -->
+                                <item name="api_data_entity_interface" xsi:type="string">api_data_entity_interface</item>
+                                <item name="api_data_entity_search_result_interface" xsi:type="string">api_data_entity_search_result_interface</item>
+                                <item name="api_entity_repository_interface" xsi:type="string">api_entity_repository_interface</item>
+                                <!-- Controllers -->
+                                <item name="controller_adminhtml_entity_delete" xsi:type="string">controller_adminhtml_entity_delete</item>
+                                <item name="controller_adminhtml_entity_edit" xsi:type="string">controller_adminhtml_entity_edit</item>
+                                <item name="controller_adminhtml_entity_index" xsi:type="string">controller_adminhtml_entity_index</item>
+                                <item name="controller_adminhtml_entity_inline_edit" xsi:type="string">controller_adminhtml_entity_inline_edit</item>
+                                <item name="controller_adminhtml_entity_mass_delete" xsi:type="string">controller_adminhtml_entity_mass_delete</item>
+                                <item name="controller_adminhtml_entity_mass_status" xsi:type="string">controller_adminhtml_entity_mass_status</item>
+                                <item name="controller_adminhtml_entity_new" xsi:type="string">controller_adminhtml_entity_new</item>
+                                <item name="controller_adminhtml_entity_save" xsi:type="string">controller_adminhtml_entity_save</item>
+                                <item name="controller_adminhtml_entity_validate" xsi:type="string">controller_adminhtml_entity_validate</item>
+                                <!-- Model -->
+                                <item name="model_entity_resourcemodel_entitycollection" xsi:type="string">model_entity_resourcemodel_entitycollection</item>
+                                <item name="model_entity_resourcemodel_entity" xsi:type="string">model_entity_resourcemodel_entity</item>
+                                <item name="model_entity_entity" xsi:type="string">model_entity_entity</item>
+                                <item name="model_entity_validator_validatorchain" xsi:type="string">model_entity_validator_validatorchain</item>
+                                <item name="model_entity_validator_name_validator" xsi:type="string">model_entity_validator_name_validator</item>
+                                <item name="model_entity_validator_entityvalidatorinterface" xsi:type="string">model_entity_validator_entityvalidatorinterface</item>
+                                <item name="model_entity_entityrepository" xsi:type="string">model_entity_entityrepository</item>
+                                <item name="model_entity_searchresult" xsi:type="string">model_entity_searchresult</item>
+                                <!-- SPI Commands -->
+                                <item name="model_entity_deletebyid" xsi:type="string">model_entity_deletebyid</item>
+                                <item name="model_entity_deletebyidinterface" xsi:type="string">model_entity_deletebyidinterface</item>
+                                <item name="model_entity_get" xsi:type="string">model_entity_get</item>
+                                <item name="model_entity_getinterface" xsi:type="string">model_entity_getinterface</item>
+                                <item name="model_entity_getlist" xsi:type="string">model_entity_getlist</item>
+                                <item name="model_entity_getlistinterface" xsi:type="string">model_entity_getlistinterface</item>
+                                <item name="model_entity_save" xsi:type="string">model_entity_save</item>
+                                <item name="model_entity_saveinterface" xsi:type="string">model_entity_saveinterface</item>
+                                <!-- Setup -->
+                                <item name="setup_operation_createentitytable" xsi:type="string">setup_operation_createentitytable</item>
+                                <!-- Test Api -->
+                                <item name="test_api_entityrepository_createtest" xsi:type="string">test_api_entityrepository_createtest</item>
+                                <item name="test_api_entityrepository_gettest" xsi:type="string">test_api_entityrepository_gettest</item>
+                                <item name="test_api_entityrepository_getlisttest" xsi:type="string">test_api_entityrepository_getlisttest</item>
+                                <item name="test_api_entityrepository_updatetest" xsi:type="string">test_api_entityrepository_updatetest</item>
+                                <item name="test_api_entityrepository_validationtest" xsi:type="string">test_api_entityrepository_validationtest</item>
+                                <!-- Test Integration -->
+                                <item name="test_integration_controller_adminhtml_entity_save_createtest" xsi:type="string">test_integration_controller_adminhtml_entity_save_createtest</item>
+                                <item name="test_integration_controller_adminhtml_entity_save_updatetest" xsi:type="string">test_integration_controller_adminhtml_entity_save_updatetest</item>
+                                <item name="test_integration_controller_adminhtml_entity_save_validationtest" xsi:type="string">test_integration_controller_adminhtml_entity_save_validationtest</item>
+                                <item name="test_integration_controller_adminhtml_entity_deletetest" xsi:type="string">test_integration_controller_adminhtml_entity_deletetest</item>
+                                <item name="test_integration_controller_adminhtml_entity_edittest" xsi:type="string">test_integration_controller_adminhtml_entity_edittest</item>
+                                <item name="test_integration_controller_adminhtml_entity_indextest" xsi:type="string">test_integration_controller_adminhtml_entity_indextest</item>
+                                <item name="test_integration_controller_adminhtml_entity_inlineedittest" xsi:type="string">test_integration_controller_adminhtml_entity_inlineedittest</item>
+                                <item name="test_integration_controller_adminhtml_entity_massdeletetest" xsi:type="string">test_integration_controller_adminhtml_entity_massdeletetest</item>
+                                <item name="test_integration_controller_adminhtml_entity_massstatustest" xsi:type="string">test_integration_controller_adminhtml_entity_massstatustest</item>
+                                <item name="test_integration_controller_adminhtml_entity_newactiontest" xsi:type="string">test_integration_controller_adminhtml_entity_newactiontest</item>
+                                <item name="test_integration_controller_adminhtml_entity_validate" xsi:type="string">test_integration_controller_adminhtml_entity_validate</item>
+                                <!-- Test fixtures -->
+                                <item name="test_fixture_entity" xsi:type="string">test_fixture_entity</item>
+                                <item name="test_fixture_entity_rollback" xsi:type="string">test_fixture_entity_rollback</item>
+                                <item name="test_fixture_entities" xsi:type="string">test_fixture_entities</item>
+                                <item name="test_fixture_entities_rollback" xsi:type="string">test_fixture_entities_rollback</item>
+                                <!-- Ui -->
+                                <item name="test_ui_dataprovider_entitydataprovider" xsi:type="string">test_ui_dataprovider_entitydataprovider</item>
+                                <!-- view layout -->
+                                <item name="view_adminhtml_layout_edit" xsi:type="string">view_adminhtml_layout_edit</item>
+                                <item name="view_adminhtml_layout_index" xsi:type="string">view_adminhtml_layout_index</item>
+                                <item name="view_adminhtml_layout_new" xsi:type="string">view_adminhtml_layout_new</item>
+                                <!-- view ui component -->
+                                <item name="view_adminhtml_ui_component_form" xsi:type="string">view_adminhtml_ui_component_form</item>
+                                <item name="view_adminhtml_ui_component_listing" xsi:type="string">view_adminhtml_ui_component_listing</item>
+                            </item>
+                        </item>
+                    </item>
+                    <item name="generators" xsi:type="array">
+                        <!-- Setup -->
+                        <item name="setup_installschema" xsi:type="string">setup_installschema</item>
+                        <!-- Test Integration -->
+                        <item name="test_integration_backend_menutest" xsi:type="string">test_integration_backend_menutest</item>
+                        <!-- etc -->
+                        <item name="etc_adminhtml_menu" xsi:type="string">etc_adminhtml_menu</item>
+                        <item name="etc_adminhtml_routes" xsi:type="string">etc_adminhtml_routes</item>
+                        <item name="etc_adminhtml_di" xsi:type="string">etc_adminhtml_di</item>
+                        <item name="etc_acl" xsi:type="string">etc_acl</item>
+                        <item name="etc_di" xsi:type="string">etc_di</item>
+                        <item name="etc_module" xsi:type="string">etc_module</item>
+                        <item name="etc_webapi" xsi:type="string">etc_webapi</item>
+                        <!-- root -->
+                        <item name="composer" xsi:type="string">composer</item>
+                        <item name="registration" xsi:type="string">registration</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

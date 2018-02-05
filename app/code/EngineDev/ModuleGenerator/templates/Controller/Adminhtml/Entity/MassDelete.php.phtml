@@ -1,0 +1,77 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Controller\Adminhtml\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use Engine\Magento\Ui\Component\MassAction\Filter;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\NoSuchEntityException;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class MassDelete extends Action
+{
+    /**
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = '<?=$data['acl_resource']?>::<?=$data['entity_acl_resource']?>';
+
+    /**
+     * @var <?=$data['entity_class_name']?>RepositoryInterface
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Repository;
+
+    /**
+     * @var Filter
+     */
+    private $massActionFilter;
+
+    /**
+     * @param Context $context
+     * @param <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository
+     * @param Filter $massActionFilter
+     */
+    public function __construct(
+        Context $context,
+        <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository,
+        Filter $massActionFilter
+    ) {
+        parent::__construct($context);
+        $this-><?=lcfirst($data['entity_class_name'])?>Repository = $<?=lcfirst($data['entity_class_name'])?>Repository;
+        $this->massActionFilter = $massActionFilter;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function execute(): ResultInterface
+    {
+        if (false === $this->getRequest()->isPost()) {
+            $this->messageManager->addErrorMessage(__('Wrong request.'));
+            return $this->resultRedirectFactory->create()->setPath('*/*');
+        }
+
+        $deletedItemsCount = 0;
+        foreach ($this->massActionFilter->getIds() as $<?=$data['entity_camelcase_id_field']?>) {
+            try {
+                $<?=$data['entity_camelcase_id_field']?> = (int)$<?=$data['entity_camelcase_id_field']?>;
+                $this-><?=lcfirst($data['entity_class_name'])?>Repository->deleteById($<?=$data['entity_camelcase_id_field']?>);
+                $deletedItemsCount++;
+            } catch (NoSuchEntityException $e) {
+                $errorMessage = __('[ID: %id] %message', ['id' => $<?=$data['entity_camelcase_id_field']?>, 'message' => $e->getMessage()]);
+                $this->messageManager->addErrorMessage($errorMessage);
+            } catch (CouldNotDeleteException $e) {
+                $errorMessage = __('[ID: %id] %message', ['id' => $<?=$data['entity_camelcase_id_field']?>, 'message' => $e->getMessage()]);
+                $this->messageManager->addErrorMessage($errorMessage);
+            }
+        }
+
+        $this->messageManager->addSuccessMessage(__('You deleted %count <?=$data['entity_display_name']?>(s).', ['count' => $deletedItemsCount]));
+        return $this->resultRedirectFactory->create()->setPath('*/*');
+    }
+}

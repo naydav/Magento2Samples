@@ -1,0 +1,110 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Ui\DataProvider;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\ReportingInterface;
+use Magento\Framework\Api\Search\SearchCriteriaBuilder;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
+use Magento\Ui\DataProvider\SearchResultFactory;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ * @api
+ */
+class <?=$data['entity_class_name']?>DataProvider extends DataProvider
+{
+    /**
+     * @var <?=$data['entity_class_name']?>RepositoryInterface
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Repository;
+
+    /**
+     * @var SearchResultFactory
+     */
+    private $searchResultFactory;
+
+    /**
+     * @param string $name
+     * @param string $primaryFieldName
+     * @param string $requestFieldName
+     * @param ReportingInterface $reporting
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param RequestInterface $request
+     * @param FilterBuilder $filterBuilder
+     * @param <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository
+     * @param SearchResultFactory $searchResultFactory
+     * @param array $meta
+     * @param array $data
+     */
+    public function __construct(
+        $name,
+        $primaryFieldName,
+        $requestFieldName,
+        ReportingInterface $reporting,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        RequestInterface $request,
+        FilterBuilder $filterBuilder,
+        <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository,
+        SearchResultFactory $searchResultFactory,
+        array $meta = [],
+        array $data = []
+    ) {
+        parent::__construct(
+            $name,
+            $primaryFieldName,
+            $requestFieldName,
+            $reporting,
+            $searchCriteriaBuilder,
+            $request,
+            $filterBuilder,
+            $meta,
+            $data
+        );
+        $this-><?=lcfirst($data['entity_class_name'])?>Repository = $<?=lcfirst($data['entity_class_name'])?>Repository;
+        $this->searchResultFactory = $searchResultFactory;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getData()
+    {
+        $data = parent::getData();
+        if ('<?=$data['entity_ui_name']?>_form_data_source' === $this->name) {
+            // It is need for support of several fieldsets.
+            // For details see \Magento\Ui\Component\Form::getDataSourceData
+            if ($data['totalRecords'] > 0) {
+                $<?=$data['entity_camelcase_id_field']?> = $data['items'][0][<?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>];
+                $dataForSingle[$<?=$data['entity_camelcase_id_field']?>] = [
+                    'general' => $data['items'][0],
+                ];
+                $data = $dataForSingle;
+            } else {
+                $data = [];
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSearchResult()
+    {
+        $searchCriteria = $this->getSearchCriteria();
+        $result = $this-><?=lcfirst($data['entity_class_name'])?>Repository->getList($searchCriteria);
+
+        $searchResult = $this->searchResultFactory->create(
+            $result->getItems(),
+            $result->getTotalCount(),
+            $searchCriteria,
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?><?="\n"?>
+        );
+        return $searchResult;
+    }
+}

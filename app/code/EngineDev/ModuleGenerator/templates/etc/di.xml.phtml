@@ -1,0 +1,38 @@
+<?='<?xml version="1.0"?>'?><?="\n"?>
+
+<config <?='xmlns'?>:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="<?='urn'?>:magento:framework:ObjectManager/etc/config.xsd">
+<?php foreach ($data['entities'] as $key => $entityData): ?>
+    <!-- <?=$entityData['entity_class_name']?> -->
+    <preference for="<?=$data['namespace']?>\Api\<?=$entityData['entity_class_name']?>RepositoryInterface" type="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\<?=$entityData['entity_class_name']?>Repository"/>
+    <preference for="<?=$data['namespace']?>\Api\Data\<?=$entityData['entity_class_name']?>Interface" type="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\<?=$entityData['entity_class_name']?>"/>
+    <preference for="<?=$data['namespace']?>\Api\Data\<?=$entityData['entity_class_name']?>SearchResultInterface" type="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\<?=$entityData['entity_class_name']?>SearchResult"/>
+    <preference for="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Delete<?=$entityData['entity_class_name']?>ByIdInterface" type="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Delete<?=$entityData['entity_class_name']?>ById"/>
+    <preference for="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Get<?=$entityData['entity_class_name']?>Interface" type="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Get<?=$entityData['entity_class_name']?>"/>
+    <preference for="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Get<?=$entityData['entity_class_name']?>ListInterface" type="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Get<?=$entityData['entity_class_name']?>List"/>
+    <preference for="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Save<?=$entityData['entity_class_name']?>Interface" type="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Save<?=$entityData['entity_class_name']?>"/>
+    <preference for="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Validator\<?=$entityData['entity_class_name']?>ValidatorInterface" type="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Validator\ValidatorChain"/>
+    <type name="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Validator\ValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="name" xsi:type="object"><?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Validator\NameValidator</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Collection processor: extension point for possibility to add custom collection filter processing  -->
+    <virtualType name="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Api\SearchCriteria\CollectionProcessor\<?=$entityData['entity_class_name']?>FilterProcessor"
+                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor"/>
+    <virtualType name="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Api\SearchCriteria\<?=$entityData['entity_class_name']?>CollectionProcessor"
+                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object"><?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Api\SearchCriteria\CollectionProcessor\<?=$entityData['entity_class_name']?>FilterProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="<?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\<?=$entityData['entity_class_name']?>Repository">
+        <arguments>
+             <argument name="collectionProcessor" xsi:type="object"><?=$data['namespace']?>\Model\<?=$entityData['entity_class_name']?>\Api\SearchCriteria\<?=$entityData['entity_class_name']?>CollectionProcessor</argument>
+         </arguments>
+     </type>
+<?php endforeach; ?>
+</config>

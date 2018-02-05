@@ -1,0 +1,51 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Test\Integration\Controller\Adminhtml\<?=$data['entity_class_name']?>;
+
+use Engine\Test\Backend\AssertFormField;
+use Engine\Test\AssertPageHeader;
+use Engine\Test\AssertPageTitle;
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use Magento\Framework\Message\MessageInterface;
+use Magento\TestFramework\TestCase\AbstractBackendController;
+use Zend\Http\Response;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class NewActionTest extends AbstractBackendController
+{
+    /**
+     * Request uri
+     */
+    const REQUEST_URI = 'backend/<?=$data['route_front_name']?>/<?=lcfirst($data['entity_class_name'])?>/new';
+
+    /**
+     * @var string
+     */
+    private $formName = '<?=$data['entity_ui_name']?>_form';
+
+    public function testNew()
+    {
+        $this->dispatch(self::REQUEST_URI);
+        self::assertEquals(Response::STATUS_CODE_200, $this->getResponse()->getStatusCode());
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
+
+        $body = $this->getResponse()->getBody();
+        self::assertNotEmpty($body);
+
+        AssertPageTitle::assert($body, __('New <?=$data['entity_display_name']?>'));
+        AssertPageHeader::assert($body, __('New <?=$data['entity_display_name']?>'));
+
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']) { continue; } ?>
+        AssertFormField::assert(
+            $body,
+            $this->formName,
+            'general',
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?><?="\n"?>
+        );
+<?php endforeach; ?>
+    }
+}

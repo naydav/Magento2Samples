@@ -1,0 +1,34 @@
+<?='<?xml version="1.0"?>'?><?="\n"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="<?='urn'?>:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="<?=$data['module']?>::<?=strtolower($data['name'])?>"
+             title="<?=$data['display_name']?>"
+             translate="title"
+             module="<?=$data['module']?>"
+             sortOrder="<?=$data['sort_order']?>"
+             parent="Engine_Backend::backend"
+             resource="<?=$data['acl_resource']?>::<?=strtolower($data['name'])?>"/>
+<?php $order = 0; ?>
+<?php foreach ($data['entities'] as $entityData): ?>
+
+        <add id="<?=$data['module']?>::<?=$entityData['entity_name']?>_index"
+             title="<?=$entityData['entity_display_name']?> List"
+             translate="title"
+             module="<?=$data['module']?>"
+             sortOrder="<?=++$order * 100?>"
+             parent="<?=$data['module']?>::<?=strtolower($data['name'])?>"
+             action="<?=$data['route_id']?>/<?=lcfirst($entityData['entity_class_name'])?>/index"
+             resource="<?=$data['acl_resource']?>::<?=$entityData['entity_acl_resource']?>"/>
+
+        <add id="<?=$data['module']?>::<?=$entityData['entity_name']?>_new"
+             title="Add <?=$entityData['entity_display_name']?>"
+             translate="title"
+             module="<?=$data['module']?>"
+             sortOrder="<?=++$order * 100?>"
+             parent="<?=$data['module']?>::<?=strtolower($data['name'])?>"
+             action="<?=$data['route_id']?>/<?=lcfirst($entityData['entity_class_name'])?>/new"
+             resource="<?=$data['acl_resource']?>::<?=$entityData['entity_acl_resource']?>"/>
+<?php endforeach; ?>
+    </menu>
+</config>

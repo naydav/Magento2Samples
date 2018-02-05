@@ -1,0 +1,84 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Setup\Operation;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\ResourceModel\<?=$data['entity_class_name']?> as <?=$data['entity_class_name']?>ResourceModel;
+use Magento\Framework\DB\Ddl\Table;
+use Magento\Framework\Setup\SchemaSetupInterface;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class Create<?=$data['entity_class_name']?>Table
+{
+    /**
+     * @param SchemaSetupInterface $setup
+     * @return void
+     */
+    public function execute(SchemaSetupInterface $setup)
+    {
+        $<?=lcfirst($data['entity_class_name'])?>Table = $this->create<?=$data['entity_class_name']?>Table($setup);
+
+        $setup->getConnection()->createTable($<?=lcfirst($data['entity_class_name'])?>Table);
+    }
+
+    /**
+     * @param SchemaSetupInterface $setup
+     * @return Table
+     */
+    private function create<?=$data['entity_class_name']?>Table(SchemaSetupInterface $setup): Table
+    {
+        $<?=lcfirst($data['entity_class_name'])?>Table = $setup->getTable(<?=$data['entity_class_name']?>ResourceModel::TABLE_NAME_<?=strtoupper($data['entity_name'])?>);
+
+        return $setup->getConnection()->newTable(
+            $<?=lcfirst($data['entity_class_name'])?>Table
+        )->addColumn(
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>,
+            Table::TYPE_INTEGER,
+            null,
+            [
+                Table::OPTION_IDENTITY => true,
+                Table::OPTION_UNSIGNED => true,
+                Table::OPTION_NULLABLE => false,
+                Table::OPTION_PRIMARY => true,
+            ],
+            '<?=$data['entity_display_name']?> Id'
+        )<?php foreach ($data['entity_fields'] as $field): ?><?php
+            if ($field['name'] === $data['entity_id_field']) { continue; }
+            ?><?php if ('bool' === $field['type']):?>->addColumn(
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?>,
+            Table::TYPE_SMALLINT,
+            1,
+            [
+                Table::OPTION_UNSIGNED => true,
+                Table::OPTION_NULLABLE => false,
+                Table::OPTION_DEFAULT => <?php if (isset($field['default']) && 1 == $field['default']): ?>1<?php else: ?>0<?php endif;?>,
+            ],
+            '<?=$field['display_name']?>'
+        )<?php elseif ('string' === $field['type']): ?>->addColumn(
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?>,
+            Table::TYPE_TEXT,
+            <?=$field['length']?>,
+            [Table::OPTION_NULLABLE => <?php if (true === $field['nullable']): ?>true]<?php else: ?>false<?php endif; ?>],
+            '<?=$field['display_name']?>'
+        )<?php elseif ('int' === $field['type']): ?>->addColumn(
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?>,
+            <?php if (isset($field['db_type'])): ?><?=$field['db_type']?><?php else:?>Table::TYPE_SMALLINT<?php endif; ?>,
+            <?php if (isset($field['db_size'])): ?><?=$field['db_size']?><?php else:?>null<?php endif; ?>,
+            [
+                Table::OPTION_UNSIGNED => true,
+                Table::OPTION_NULLABLE => <?php if (true === $field['nullable']): ?>true<?php else: ?>false<?php endif; ?>,
+<?php if (isset($field['default'])): ?>                Table::OPTION_DEFAULT => <?=$field['default']?>,<?="\n"?><?php endif; ?>
+            ],
+            '<?=$field['display_name']?>'
+        )<?php endif;?><?php endforeach; ?>->addIndex(
+            $setup->getIdxName($<?=lcfirst($data['entity_class_name'])?>Table, [
+                <?=$data['entity_class_name']?>Interface::ENABLED,
+                <?=$data['entity_class_name']?>Interface::POSITION,
+             ]),
+            [<?=$data['entity_class_name']?>Interface::ENABLED, <?=$data['entity_class_name']?>Interface::POSITION]
+        );
+    }
+}

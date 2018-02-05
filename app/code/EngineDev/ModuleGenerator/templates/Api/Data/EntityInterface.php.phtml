@@ -1,0 +1,49 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Api\Data;
+
+use Magento\Framework\Api\ExtensibleDataInterface;
+
+/**
+ * Used fully qualified namespaces in annotations for proper work of WebApi request parser
+ *
+ * @api
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+interface <?=$data['entity_class_name']?>Interface extends ExtensibleDataInterface
+{
+    /**#@+
+     * Constants defined for keys of data array. Identical to the name of the getter in snake case
+     */
+<?php foreach ($data['entity_fields'] as $field): ?>
+    const <?=strtoupper($field['name'])?> = '<?=$field['name']?>';
+<?php endforeach; ?>
+    /**#@-*/
+<?php foreach ($data['entity_fields'] as $field): ?>
+
+    /**
+     * @return <?=$field['type']?>|null<?="\n"?>
+     */
+    public function <?php if ('bool' === $field['type']):?>is<?php else: ?>get<?php endif;?><?=ucfirst($field['camelcase'])?>();
+
+    /**
+     * @param <?=$field['type']?>|null $<?=$field['camelcase']?><?="\n"?>
+     * @return void
+     */
+    public function set<?=ucfirst($field['camelcase'])?>($<?=$field['camelcase']?>);
+<?php endforeach; ?>
+
+    /**
+     * Null for return is specified for proper work SOAP requests parser
+     *
+     * @return \<?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>ExtensionInterface|null
+     */
+    public function getExtensionAttributes();
+
+    /**
+     * @param \<?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>ExtensionInterface $extensionAttributes
+     * @return void
+     */
+    public function setExtensionAttributes(<?=$data['entity_class_name']?>ExtensionInterface $extensionAttributes);
+}

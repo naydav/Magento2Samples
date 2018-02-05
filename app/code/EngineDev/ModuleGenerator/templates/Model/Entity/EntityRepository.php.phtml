@@ -1,0 +1,85 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>SearchResultInterface;
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaInterface;
+
+/**
+ * @inheritdoc
+ */
+class <?=$data['entity_class_name']?>Repository implements <?=$data['entity_class_name']?>RepositoryInterface
+{
+    /**
+     * @var Save<?=$data['entity_class_name']?>Interface
+     */
+    private $save<?=$data['entity_class_name']?>;
+
+    /**
+     * @var Get<?=$data['entity_class_name']?>Interface
+     */
+    private $get<?=$data['entity_class_name']?>;
+
+    /**
+     * @var Delete<?=$data['entity_class_name']?>ByIdInterface
+     */
+    private $delete<?=$data['entity_class_name']?>ById;
+
+    /**
+     * @var Get<?=$data['entity_class_name']?>ListInterface
+     */
+    private $get<?=$data['entity_class_name']?>List;
+
+    /**
+     * @param Save<?=$data['entity_class_name']?>Interface $save<?=$data['entity_class_name']?><?="\n"?>
+     * @param Get<?=$data['entity_class_name']?>Interface $get<?=$data['entity_class_name']?><?="\n"?>
+     * @param Delete<?=$data['entity_class_name']?>ByIdInterface $delete<?=$data['entity_class_name']?>ById
+     * @param Get<?=$data['entity_class_name']?>ListInterface $get<?=$data['entity_class_name']?>List
+     */
+    public function __construct(
+        Save<?=$data['entity_class_name']?>Interface $save<?=$data['entity_class_name']?>,
+        Get<?=$data['entity_class_name']?>Interface $get<?=$data['entity_class_name']?>,
+        Delete<?=$data['entity_class_name']?>ByIdInterface $delete<?=$data['entity_class_name']?>ById,
+        Get<?=$data['entity_class_name']?>ListInterface $get<?=$data['entity_class_name']?>List
+    ) {
+        $this->save<?=$data['entity_class_name']?> = $save<?=$data['entity_class_name']?>;
+        $this->get<?=$data['entity_class_name']?> = $get<?=$data['entity_class_name']?>;
+        $this->delete<?=$data['entity_class_name']?>ById = $delete<?=$data['entity_class_name']?>ById;
+        $this->get<?=$data['entity_class_name']?>List = $get<?=$data['entity_class_name']?>List;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function save(<?=$data['entity_class_name']?>Interface $<?=lcfirst($data['entity_class_name'])?>): int
+    {
+        return $this->save<?=$data['entity_class_name']?>->execute($<?=lcfirst($data['entity_class_name'])?>);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function get(int $<?=$data['entity_camelcase_id_field']?>): <?=$data['entity_class_name']?>Interface
+    {
+        return $this->get<?=$data['entity_class_name']?>->execute($<?=$data['entity_camelcase_id_field']?>);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteById(int $<?=$data['entity_camelcase_id_field']?>)
+    {
+        $this->delete<?=$data['entity_class_name']?>ById->execute($<?=$data['entity_camelcase_id_field']?>);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getList(SearchCriteriaInterface $searchCriteria = null): <?=$data['entity_class_name']?>SearchResultInterface
+    {
+        return $this->get<?=$data['entity_class_name']?>List->execute($searchCriteria);
+    }
+}

@@ -1,0 +1,24 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\TestFramework\Helper\Bootstrap;
+
+/** @var <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository */
+$<?=lcfirst($data['entity_class_name'])?>Repository = Bootstrap::getObjectManager()->get(<?=$data['entity_class_name']?>RepositoryInterface::class);
+/** @var SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory */
+$searchCriteriaBuilderFactory = Bootstrap::getObjectManager()->get(SearchCriteriaBuilderFactory::class);
+/** @var SearchCriteriaBuilder $searchCriteriaBuilder */
+$searchCriteriaBuilder = $searchCriteriaBuilderFactory->create();
+
+$searchCriteria = $searchCriteriaBuilder
+    ->addFilter(<?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>, [100, 200, 300, 400], 'in')
+    ->create();
+
+$<?=$data['entities_name_camelcase']?> = $<?=lcfirst($data['entity_class_name'])?>Repository->getList($searchCriteria)->getItems();
+foreach ($<?=$data['entities_name_camelcase']?> as $<?=lcfirst($data['entity_class_name'])?>) {
+    $<?=lcfirst($data['entity_class_name'])?>Repository->deleteById((int)$<?=lcfirst($data['entity_class_name'])?>->get<?=ucfirst($data['entity_camelcase_id_field'])?>());
+}

@@ -1,0 +1,76 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>InterfaceFactory;
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use Magento\Framework\Api\DataObjectHelper;
+use Magento\TestFramework\Helper\Bootstrap;
+
+/** @var <?=$data['entity_class_name']?>InterfaceFactory $<?=lcfirst($data['entity_class_name'])?>Factory */
+$<?=lcfirst($data['entity_class_name'])?>Factory = Bootstrap::getObjectManager()->get(<?=$data['entity_class_name']?>InterfaceFactory::class);
+/** @var DataObjectHelper $dataObjectHelper */
+$dataObjectHelper = Bootstrap::getObjectManager()->get(DataObjectHelper::class);
+/** @var <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository */
+$<?=lcfirst($data['entity_class_name'])?>Repository = Bootstrap::getObjectManager()->get(<?=$data['entity_class_name']?>RepositoryInterface::class);
+
+$<?=$data['entities_name_camelcase']?>Data = [
+    [
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?> => 100,
+<?php elseif ('bool' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => true,
+<?php elseif ('string' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>-1',
+<?php elseif ('int' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 300,
+<?php endif;?>
+<?php endforeach; ?>
+    ],
+    [
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?> => 200,
+<?php elseif ('bool' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => true,
+<?php elseif ('string' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>-2',
+<?php elseif ('int' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 200,
+<?php endif;?>
+<?php endforeach; ?>
+    ],
+    [
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?> => 300,
+<?php elseif ('bool' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => false,
+<?php elseif ('string' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>-2',
+<?php elseif ('int' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 200,
+<?php endif;?>
+<?php endforeach; ?>
+    ],
+    [
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?> => 400,
+<?php elseif ('bool' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => false,
+<?php elseif ('string' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>-3',
+<?php elseif ('int' === $field['type']): ?>
+        <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 100,
+<?php endif;?>
+<?php endforeach; ?>
+    ],
+];
+foreach ($<?=$data['entities_name_camelcase']?>Data as $<?=lcfirst($data['entity_class_name'])?>Data) {
+    /** @var <?=$data['entity_class_name']?>Interface $<?=lcfirst($data['entity_class_name'])?> */
+    $<?=lcfirst($data['entity_class_name'])?> = $<?=lcfirst($data['entity_class_name'])?>Factory->create();
+    $dataObjectHelper->populateWithArray($<?=lcfirst($data['entity_class_name'])?>, $<?=lcfirst($data['entity_class_name'])?>Data, <?=$data['entity_class_name']?>Interface::class);
+    $<?=lcfirst($data['entity_class_name'])?>Repository->save($<?=lcfirst($data['entity_class_name'])?>);
+}

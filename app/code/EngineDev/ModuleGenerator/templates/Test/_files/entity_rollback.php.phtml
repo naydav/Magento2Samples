@@ -1,0 +1,14 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\TestFramework\Helper\Bootstrap;
+
+/** @var <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository */
+$<?=lcfirst($data['entity_class_name'])?>Repository = Bootstrap::getObjectManager()->get(<?=$data['entity_class_name']?>RepositoryInterface::class);
+try {
+    $<?=lcfirst($data['entity_class_name'])?>Repository->deleteById(100);
+} catch (NoSuchEntityException $e) {
+    // Tests which are wrapped with MySQL transaction clear all data by transaction rollback.
+}

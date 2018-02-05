@@ -1,0 +1,147 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Test\Integration\Controller\Adminhtml\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use Engine\Test\AssertArrayContains;
+use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\EntityManager\HydratorInterface;
+use Magento\Framework\Message\MessageInterface;
+use Magento\TestFramework\TestCase\AbstractBackendController;
+use Zend\Http\Request;
+use Zend\Http\Response;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ * @magentoAppArea adminhtml
+ */
+class UpdateTest extends AbstractBackendController
+{
+    /**
+     * Request uri
+     */
+    const REQUEST_URI = 'backend/<?=$data['route_front_name']?>/<?=lcfirst($data['entity_class_name'])?>/save/back/edit';
+
+    /**
+     * @var FormKey
+     */
+    private $formKey;
+
+    /**
+     * @var HydratorInterface
+     */
+    private $hydrator;
+
+    /**
+     * @var <?=$data['entity_class_name']?>RepositoryInterface
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Repository;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->formKey = $this->_objectManager->get(FormKey::class);
+        $this->hydrator = $this->_objectManager->get(HydratorInterface::class);
+        $this-><?=lcfirst($data['entity_class_name'])?>Repository = $this->_objectManager->get(
+            <?=$data['entity_class_name']?>RepositoryInterface::class
+        );
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/<?=$data['namespace_prefix']?>/<?=$data['name_camelcase']?>/Test/_files/<?=$data['entity_name']?>.php
+     */
+    public function testUpdate()
+    {
+        $<?=$data['entity_camelcase_id_field']?> = 100;
+        $data = [
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?> => $<?=$data['entity_camelcase_id_field']?>,
+<?php foreach ($data['entity_fields'] as $field): ?>
+<?php if ($field['name'] === $data['entity_id_field']) { continue; } ?>
+<?php if ('bool' === $field['type']): ?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => false,
+<?php elseif ('string' === $field['type']): ?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>-updated',
+<?php elseif ('int' === $field['type']): ?>
+            <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 200,
+<?php endif;?>
+<?php endforeach; ?>
+        ];
+
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => $data,
+        ]);
+        $this->dispatch(self::REQUEST_URI);
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertRedirect(
+            $this->stringContains(
+                'backend/<?=$data['route_front_name']?>/<?=lcfirst($data['entity_class_name'])?>/edit/<?=$data['entity_id_field']?>/'
+                . $<?=$data['entity_camelcase_id_field']?><?="\n"?>
+            )
+        );
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
+        $this->assertSessionMessages(
+            $this->contains('The <?=$data['entity_display_name']?> has been saved.'),
+            MessageInterface::TYPE_SUCCESS
+        );
+
+        $<?=lcfirst($data['entity_class_name'])?> = $this-><?=lcfirst($data['entity_class_name'])?>Repository->get($<?=$data['entity_camelcase_id_field']?>);
+        AssertArrayContains::assert($data, $this->hydrator->extract($<?=lcfirst($data['entity_class_name'])?>));
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/<?=$data['namespace_prefix']?>/<?=$data['name_camelcase']?>/Test/_files/<?=$data['entity_name']?>.php
+     */
+    public function testUpdateWithWrongRequestMethod()
+    {
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_GET);
+        $request->setQueryValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => [
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?> => 100,
+<?php $field = $data['entity_fields'][100]; ?>
+<?php if ('string' === $field['type']): ?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => '<?=$data['entity_class_name']?>-<?=$field['camelcase']?>',
+<?php elseif ('bool' === $field['type']): ?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => false,
+<?php elseif ('int' === $field['type']): ?>
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($field['name'])?> => 1000,
+<?php endif; ?>
+            ],
+        ]);
+        $this->dispatch(self::REQUEST_URI);
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertRedirect($this->stringContains('backend/<?=$data['route_front_name']?>/<?=lcfirst($data['entity_class_name'])?>'));
+        $this->assertSessionMessages($this->contains('Wrong request.'), MessageInterface::TYPE_ERROR);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/<?=$data['namespace_prefix']?>/<?=$data['name_camelcase']?>/Test/_files/<?=$data['entity_name']?>.php
+     */
+    public function testUpdateWithNotExistEntityId()
+    {
+        $request = $this->getRequest();
+        $request->setMethod(Request::METHOD_POST);
+        $request->setPostValue([
+            'form_key' => $this->formKey->getFormKey(),
+            'general' => [
+                <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?> => -1,
+            ],
+        ]);
+        $this->dispatch(self::REQUEST_URI);
+
+        self::assertEquals(Response::STATUS_CODE_302, $this->getResponse()->getStatusCode());
+        $this->assertRedirect($this->stringContains('backend/<?=$data['route_front_name']?>/<?=lcfirst($data['entity_class_name'])?>'));
+        $this->assertSessionMessages(
+            $this->contains('The <?=$data['entity_display_name']?> does not exist.'),
+            MessageInterface::TYPE_ERROR
+        );
+    }
+}

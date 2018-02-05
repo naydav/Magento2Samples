@@ -1,0 +1,53 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Setup;
+
+<?php foreach ($data['entities'] as $key => $entityData): ?>
+use <?=$data['namespace']?>\Setup\Operation\Create<?=$entityData['entity_class_name']?>Table;
+<?php endforeach; ?>
+use Magento\Framework\Setup\InstallSchemaInterface;
+use Magento\Framework\Setup\ModuleContextInterface;
+use Magento\Framework\Setup\SchemaSetupInterface;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class InstallSchema implements InstallSchemaInterface
+{
+<?php foreach ($data['entities'] as $key => $entityData): ?>
+    /**
+     * @var Create<?=$entityData['entity_class_name']?>Table
+     */
+    private $create<?=$entityData['entity_class_name']?>Table;
+
+<?php endforeach; ?>
+    /**
+<?php foreach ($data['entities'] as $key => $entityData): ?>
+     * @param Create<?=$entityData['entity_class_name']?>Table $create<?=$entityData['entity_class_name']?>Table
+<?php endforeach; ?>
+     */
+    public function __construct(
+<?php $count = count($data['entities']); foreach ($data['entities'] as $key => $entityData): ?>
+        Create<?=$entityData['entity_class_name']?>Table $create<?=$entityData['entity_class_name']?>Table<?php if ($key + 1 != $count):?>,<?php endif;?><?="\n"?>
+<?php endforeach; ?>
+    ) {
+<?php foreach ($data['entities'] as $key => $entityData): ?>
+        $this->create<?=$entityData['entity_class_name']?>Table = $create<?=$entityData['entity_class_name']?>Table;
+<?php endforeach; ?>
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    {
+        $setup->startSetup();
+
+<?php foreach ($data['entities'] as $key => $entityData): ?>
+        $this->create<?=$entityData['entity_class_name']?>Table->execute($setup);
+<?php endforeach; ?>
+
+        $setup->endSetup();
+    }
+}

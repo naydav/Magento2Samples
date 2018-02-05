@@ -1,0 +1,69 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>ExtensionInterface;
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\ResourceModel\<?=$data['entity_class_name']?> as <?=$data['entity_class_name']?>ResourceModel;
+use Magento\Framework\Model\AbstractExtensibleModel;
+
+/**
+ * @inheritdoc
+ */
+class <?=$data['entity_class_name']?> extends AbstractExtensibleModel implements <?=$data['entity_class_name']?>Interface
+{
+    /**
+     * Prefix of model events names
+     *
+     * @var string
+     */
+    protected $_eventPrefix = '<?=strtolower($data['module'])?>_<?=strtolower($data['entity_name'])?>';
+
+    /**
+     * @return void
+     */
+    protected function _construct()
+    {
+        $this->_init(<?=$data['entity_class_name']?>ResourceModel::class);
+    }
+<?php foreach ($data['entity_fields'] as $field): ?>
+
+    /**
+     * @inheritdoc
+     */
+    public function <?php if ('bool' === $field['type']):?>is<?php else: ?>get<?php endif;?><?=ucfirst($field['camelcase'])?>()
+    {
+        return $this->getData(self::<?=strtoupper($field['name'])?>);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function set<?=ucfirst($field['camelcase'])?>($<?=$field['camelcase']?>)
+    {
+        $this->setData(self::<?=strtoupper($field['name'])?>, $<?=$field['camelcase']?>);
+    }
+<?php endforeach; ?>
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtensionAttributes()
+    {
+        $extensionAttributes = $this->_getExtensionAttributes();
+        if (!$extensionAttributes) {
+            $extensionAttributes = $this->extensionAttributesFactory->create(<?=$data['entity_class_name']?>Interface::class);
+            $this->setExtensionAttributes($extensionAttributes);
+        }
+        return $extensionAttributes;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setExtensionAttributes(<?=$data['entity_class_name']?>ExtensionInterface $extensionAttributes)
+    {
+        $this->_setExtensionAttributes($extensionAttributes);
+    }
+}

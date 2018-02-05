@@ -1,0 +1,52 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>InterfaceFactory;
+use <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\ResourceModel\<?=$data['entity_class_name']?> as <?=$data['entity_class_name']?>ResourceModel;
+use Magento\Framework\Exception\NoSuchEntityException;
+
+/**
+ * @inheritdoc
+ */
+class Get<?=$data['entity_class_name']?> implements Get<?=$data['entity_class_name']?>Interface
+{
+    /**
+     * @var <?=$data['entity_class_name']?>ResourceModel
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Resource;
+
+    /**
+     * @var <?=$data['entity_class_name']?>InterfaceFactory
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Factory;
+
+    /**
+     * @param <?=$data['entity_class_name']?>ResourceModel $<?=lcfirst($data['entity_class_name'])?>Resource
+     * @param <?=$data['entity_class_name']?>InterfaceFactory $<?=lcfirst($data['entity_class_name'])?>Factory
+     */
+    public function __construct(
+        <?=$data['entity_class_name']?>ResourceModel $<?=lcfirst($data['entity_class_name'])?>Resource,
+        <?=$data['entity_class_name']?>InterfaceFactory $<?=lcfirst($data['entity_class_name'])?>Factory
+    ) {
+        $this-><?=lcfirst($data['entity_class_name'])?>Resource = $<?=lcfirst($data['entity_class_name'])?>Resource;
+        $this-><?=lcfirst($data['entity_class_name'])?>Factory = $<?=lcfirst($data['entity_class_name'])?>Factory;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function execute(int $<?=$data['entity_camelcase_id_field']?>): <?=$data['entity_class_name']?>Interface
+    {
+        /** @var <?=$data['entity_class_name']?>Interface $<?=lcfirst($data['entity_class_name'])?> */
+        $<?=lcfirst($data['entity_class_name'])?> = $this-><?=lcfirst($data['entity_class_name'])?>Factory->create();
+        $this-><?=lcfirst($data['entity_class_name'])?>Resource->load($<?=lcfirst($data['entity_class_name'])?>, $<?=$data['entity_camelcase_id_field']?>, <?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>);
+
+        if (null === $<?=lcfirst($data['entity_class_name'])?>->get<?=ucfirst($data['entity_camelcase_id_field'])?>()) {
+            throw new NoSuchEntityException(__('<?=$data['entity_class_name']?> with id "%id" does not exist.', ['id' => $<?=$data['entity_camelcase_id_field']?>]));
+        }
+        return $<?=lcfirst($data['entity_class_name'])?>;
+    }
+}

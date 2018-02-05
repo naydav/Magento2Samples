@@ -1,0 +1,29 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use Magento\Framework\Exception\NoSuchEntityException;
+
+/**
+ * Get <?=$data['entity_class_name']?> by <?=$data['entity_camelcase_id_field']?> command (Service Provider Interface - SPI)
+ *
+ * Separate command interface to which Repository proxies initial Get call, could be considered as SPI - Interfaces
+ * that you should extend and implement to customize current behaviour, but NOT expected to be used (called) in the code
+ * of business logic directly
+ *
+ * @see \<?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface
+ * @api
+ */
+interface Get<?=$data['entity_class_name']?>Interface
+{
+    /**
+     * Get <?=$data['entity_class_name']?> data by given <?=$data['entity_camelcase_id_field']?><?="\n"?>
+     *
+     * @param int $<?=$data['entity_camelcase_id_field']?><?="\n"?>
+     * @return <?=$data['entity_class_name']?>Interface
+     * @throws NoSuchEntityException
+     */
+    public function execute(int $<?=$data['entity_camelcase_id_field']?>): <?=$data['entity_class_name']?>Interface;
+}

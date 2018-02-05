@@ -1,0 +1,23 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\Validator;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use Magento\Framework\Validation\ValidationResult;
+
+/**
+ * Responsible for <?=$data['entity_display_name']?> validation
+ * Extension point for base validation
+ *
+ * @api
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+interface <?=$data['entity_class_name']?>ValidatorInterface
+{
+    /**
+     * @param <?=$data['entity_class_name']?>Interface $<?=lcfirst($data['entity_class_name'])?><?="\n"?>
+     * @return ValidationResult
+     */
+    public function validate(<?=$data['entity_class_name']?>Interface $<?=lcfirst($data['entity_class_name'])?>): ValidationResult;
+}

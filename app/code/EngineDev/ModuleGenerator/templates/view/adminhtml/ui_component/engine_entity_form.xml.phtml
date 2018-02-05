@@ -1,0 +1,104 @@
+<?='<?xml version="1.0"?>'?><?="\n"?>
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string"><?=$data['entity_ui_name']?>_form.<?=$data['entity_ui_name']?>_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true"><?=$data['entity_display_name']?> Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <dataScope>data</dataScope>
+        <namespace><?=$data['entity_ui_name']?>_form</namespace>
+        <deps>
+            <dep><?=$data['entity_ui_name']?>_form.<?=$data['entity_ui_name']?>_form_data_source</dep>
+        </deps>
+        <buttons>
+            <button name="back">
+                <url path="<?=$data['route_id']?>/<?=lcfirst($data['entity_class_name'])?>/index"/>
+                <class>back</class>
+                <label translate="true">Back</label>
+            </button>
+            <button name="reset">
+                <class>reset</class>
+                <label translate="true">Reset</label>
+            </button>
+            <button name="delete" class="<?=$data['namespace']?>\Ui\Component\Control\<?=$data['entity_class_name']?>\DeleteButton"/>
+            <button name="save" class="<?=$data['namespace']?>\Ui\Component\Control\<?=$data['entity_class_name']?>\SaveSplitButton"/>
+        </buttons>
+    </settings>
+    <dataSource name="<?=$data['entity_ui_name']?>_form_data_source" component="Magento_Ui/js/form/provider">
+        <settings>
+            <submitUrl path="<?=$data['route_id']?>/<?=lcfirst($data['entity_class_name'])?>/save"/>
+            <validateUrl path="<?=$data['route_id']?>/<?=lcfirst($data['entity_class_name'])?>/validate"/>
+        </settings>
+        <dataProvider class="<?=$data['namespace']?>\Ui\DataProvider\<?=$data['entity_class_name']?>DataProvider" name="<?=$data['entity_ui_name']?>_form_data_source">
+            <settings>
+                <requestFieldName><?=$data['entity_id_field']?></requestFieldName>
+                <primaryFieldName><?=$data['entity_id_field']?></primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general" sortOrder="10">
+        <settings>
+            <label translate="true">General</label>
+            <collapsible>true</collapsible>
+            <opened>true</opened>
+            <dataScope>general</dataScope>
+        </settings>
+<?php if (!empty($data['entity_fields'])):
+    usort($data['entity_fields'], function ($a, $b) {
+        return isset($a['form_position'], $b['form_position']) ? strcmp($a['form_position'], $b['form_position']) : 0;
+        });
+    ?><?php $position = 1; foreach ($data['entity_fields'] as $field):
+    if ($field['name'] === $data['entity_id_field']) { continue; } ?>
+        <field name="<?=$field['name']?>" formElement="<?php if (!empty($field['form_element'])):?><?=$field['form_element']?><?php else: ?>input<?php endif;?>" sortOrder="<?=$position * 100?>">
+<?php if ('bool' === $field['type']):?>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="number"><?=$field['default']?></item>
+                </item>
+            </argument>
+<?php endif; ?>
+            <settings>
+<?php if ('string' === $field['type'] || 'number' === $field['type'] || 'int' === $field['type']):?>
+                <validation>
+<?php if (!empty($field['required'])): ?>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+<?php endif; ?>
+<?php if (!empty($field['length']) && 'string' === $field['type']): ?>
+                    <rule name="max_text_length" xsi:type="number"><?=$field['length']?></rule>
+<?php endif; ?>
+<?php if (!empty($field['length']) && ('number' === $field['type'] || 'int' === $field['type'])): ?>
+                    <rule name="less-than-equals-to" xsi:type="number"><?=str_repeat(9, $field['length'])?></rule>
+<?php endif; ?>
+<?php if ('number' === $field['type']):?>
+                    <rule name="validate-number" xsi:type="boolean">true</rule>
+<?php endif; ?>
+<?php if ('int' === $field['type']):?>
+                    <rule name="validate-integer" xsi:type="boolean">true</rule>
+<?php endif; ?>
+                </validation>
+<?php endif;?>
+                <dataType><?php if ('bool' === $field['type']):?>boolean<?php elseif ('number' === $field['type']):?>number<?php else: ?>text<?php endif;?></dataType>
+                <label translate="true"><?=$field['display_name']?></label>
+                <scopeLabel>[GLOBAL]</scopeLabel>
+            </settings>
+<?php if ('bool' === $field['type']):?>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="number">0</map>
+                            <map name="true" xsi:type="number">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+<?php endif;?>
+        </field>
+<?php $position++; endforeach; ?><?php endif; ?>
+    </fieldset>
+</form>

@@ -1,0 +1,135 @@
+<?="<?php\n"?>
+declare(strict_types=1);
+
+namespace <?=$data['namespace']?>\Controller\Adminhtml\<?=$data['entity_class_name']?>;
+
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>Interface;
+use <?=$data['namespace']?>\Api\Data\<?=$data['entity_class_name']?>InterfaceFactory;
+use <?=$data['namespace']?>\Api\<?=$data['entity_class_name']?>RepositoryInterface;
+use <?=$data['namespace']?>\Model\<?=$data['entity_class_name']?>\Validator\<?=$data['entity_class_name']?>ValidatorInterface;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\Api\DataObjectHelper;
+use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+
+/**
+ * @author naydav <valeriy.nayda@gmail.com>
+ */
+class Validate extends Action
+{
+    /**
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = '<?=$data['acl_resource']?>::<?=$data['entity_acl_resource']?>';
+
+    /**
+     * @var <?=$data['entity_class_name']?>InterfaceFactory
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Factory;
+
+    /**
+     * @var <?=$data['entity_class_name']?>RepositoryInterface
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Repository;
+
+    /**
+     * @var DataObjectHelper
+     */
+    private $dataObjectHelper;
+
+    /**
+     * @var <?=$data['entity_class_name']?>ValidatorInterface
+     */
+    private $<?=lcfirst($data['entity_class_name'])?>Validator;
+
+    /**
+     * @param Context $context
+     * @param <?=$data['entity_class_name']?>InterfaceFactory $<?=lcfirst($data['entity_class_name'])?>Factory
+     * @param <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository
+     * @param DataObjectHelper $dataObjectHelper
+     * @param <?=$data['entity_class_name']?>ValidatorInterface $<?=lcfirst($data['entity_class_name'])?>Validator
+     */
+    public function __construct(
+        Context $context,
+        <?=$data['entity_class_name']?>InterfaceFactory $<?=lcfirst($data['entity_class_name'])?>Factory,
+        <?=$data['entity_class_name']?>RepositoryInterface $<?=lcfirst($data['entity_class_name'])?>Repository,
+        DataObjectHelper $dataObjectHelper,
+        <?=$data['entity_class_name']?>ValidatorInterface $<?=lcfirst($data['entity_class_name'])?>Validator
+    ) {
+        parent::__construct($context);
+        $this-><?=lcfirst($data['entity_class_name'])?>Factory = $<?=lcfirst($data['entity_class_name'])?>Factory;
+        $this-><?=lcfirst($data['entity_class_name'])?>Repository = $<?=lcfirst($data['entity_class_name'])?>Repository;
+        $this->dataObjectHelper = $dataObjectHelper;
+        $this-><?=lcfirst($data['entity_class_name'])?>Validator = $<?=lcfirst($data['entity_class_name'])?>Validator;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function execute(): ResultInterface
+    {
+        $request = $this->getRequest();
+        $requestData = $request->getParams();
+
+        if (false === $request->isXmlHttpRequest() || false === $request->isPost() || empty($requestData['general'])) {
+            return $this->createJsonResult([__('Please correct the data sent.')]);
+        }
+
+        $<?=$data['entity_camelcase_id_field']?> = isset($requestData['general'][<?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>])
+            ? (int)$requestData['general'][<?=$data['entity_class_name']?>Interface::<?=strtoupper($data['entity_id_field'])?>]
+            : null;
+
+        try {
+            $errorMessages = $this->processValidate($requestData, $<?=$data['entity_camelcase_id_field']?>);
+        } catch (NoSuchEntityException $e) {
+            $errorMessages[] = __('The <?=$data['entity_display_name']?> does not exist.');
+        }
+        return $this->createJsonResult($errorMessages);
+    }
+
+    /**
+     * @param array $requestData
+     * @param int|null $<?=$data['entity_camelcase_id_field']?><?="\n"?>
+     * @return array
+     */
+    private function processValidate(array $requestData, int $<?=$data['entity_camelcase_id_field']?> = null): array
+    {
+        if (null === $<?=$data['entity_camelcase_id_field']?>) {
+            /** @var <?=$data['entity_class_name']?>Interface $<?=lcfirst($data['entity_class_name'])?> */
+            $<?=lcfirst($data['entity_class_name'])?> = $this-><?=lcfirst($data['entity_class_name'])?>Factory->create();
+        } else {
+            $<?=lcfirst($data['entity_class_name'])?> = $this-><?=lcfirst($data['entity_class_name'])?>Repository->get($<?=$data['entity_camelcase_id_field']?>);
+        }
+        $this->dataObjectHelper->populateWithArray($<?=lcfirst($data['entity_class_name'])?>, $requestData['general'], <?=$data['entity_class_name']?>Interface::class);
+
+        // event is needed for populating entity with custom data from form
+        $this->_eventManager->dispatch(
+            'controller_action_<?=$data['name']?>_<?=lcfirst($data['entity_class_name'])?>_save_entity_before',
+            [
+                'request' => $this->getRequest(),
+                '<?=lcfirst($data['entity_class_name'])?>' => $<?=lcfirst($data['entity_class_name'])?>,
+            ]
+        );
+        $validationResult = $this-><?=lcfirst($data['entity_class_name'])?>Validator->validate($<?=lcfirst($data['entity_class_name'])?>);
+        $errorMessages = $validationResult->getErrors();
+        return $errorMessages;
+    }
+
+    /**
+     * @param array $errorMessages
+     * @return Json
+     */
+    private function createJsonResult(array $errorMessages): Json
+    {
+        /** @var Json $resultJson */
+        $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $resultJson->setData([
+            'messages' => $errorMessages,
+            'error' => count($errorMessages),
+        ]);
+        return $resultJson;
+    }
+}
